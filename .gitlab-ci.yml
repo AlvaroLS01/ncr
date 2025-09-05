@@ -1,0 +1,41 @@
+stages:
+  - build
+  - release
+  
+image: maven:3.6-jdk-8-slim
+
+variables:
+  GIT_SUBMODULE_STRATEGY: normal
+  MAVEN_OPTS: "-Djava.awt.headless=true -Dmaven.repo.local=.m2/repository"  
+  MAVEN_CLI_OPTS: "-s .m2/settings.xml -DaltReleaseDeploymentRepository=comerzzia::default::http://artifactory.tier1.es/artifactory/comerzzia-releases.local -DaltSnapshotDeploymentRepository=comerzzia::default::http://artifactory.tier1.es/artifactory/comerzzia-snapshots.local --batch-mode --errors --fail-at-end --show-version -s .m2/settings.xml"
+  
+cache:
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+  - .m2/repository
+  
+build:maven:
+  stage: build
+  only:
+  - master
+  - /^support/.*$/
+  - /^release/.*$/
+  script:
+  - mvn $MAVEN_CLI_OPTS package -DskipTests
+  artifacts:
+    paths:
+    - comerzzia-ncr-pos-application/target/*.jar
+    expire_in: 1 hour
+
+
+build_release:
+  stage: release
+  only:
+  - tags
+  script:
+  - mvn $MAVEN_CLI_OPTS versions:set -DnewVersion=$CI_COMMIT_TAG
+  - mvn $MAVEN_CLI_OPTS deploy -DskipTests
+  artifacts:
+    paths:
+    - comerzzia-ncr-pos-application/target/*.jar
+    expire_in: 1 day
