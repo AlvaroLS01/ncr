@@ -28,7 +28,6 @@ public class AmetllerInitializeManager extends InitializeManager {
             Command command = (Command) message;
             String cmd = command.getFieldValue(Command.Command);
             if ("descuento".equalsIgnoreCase(cmd)) {
-                // A2
                 DataNeeded dataNeeded = new DataNeeded();
                 dataNeeded.setFieldValue(DataNeeded.Type, "1");
                 dataNeeded.setFieldValue(DataNeeded.Id, "2");
