@@ -20,7 +20,7 @@ build_maven:
     - develop
     - branches
   script:
-    - mvn $MAVEN_CLI_OPTS deploy -DskipTests
+    - mvn $MAVEN_CLI_OPTS clean package -DskipTests
   artifacts:
     paths:
     - comerzzia-ncr-pos-application/target/*.jar
