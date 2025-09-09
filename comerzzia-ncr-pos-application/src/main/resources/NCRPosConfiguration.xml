@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ncrPosConfiguration>
+    <forceAutoSignOn>true</forceAutoSignOn>
+    <autoSignOnTimeoutMs>1200</autoSignOnTimeoutMs>
+    <defaultUserIdWhenMissing>0</defaultUserIdWhenMissing>
+    <defaultPasswordWhenMissing>1</defaultPasswordWhenMissing>
+    <defaultRoleWhenMissing>Operator</defaultRoleWhenMissing>
+    <defaultLaneNumber>27</defaultLaneNumber>
+    <defaultMenuUid>MENU_POR_DEFECTO</defaultMenuUid>
+</ncrPosConfiguration>
