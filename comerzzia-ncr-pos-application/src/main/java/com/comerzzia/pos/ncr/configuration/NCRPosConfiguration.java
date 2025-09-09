@@ -20,14 +20,6 @@ public class NCRPosConfiguration {
    protected boolean authenticationBypass = false;
    protected boolean sendLinesDiscounts = true;
    protected boolean simulateAllPayAsCash = false;
-
-   protected boolean forceAutoSignOn = false;
-   protected long autoSignOnTimeoutMs = 1200L;
-   protected String defaultUserIdWhenMissing = "0";
-   protected String defaultPasswordWhenMissing = "1";
-   protected String defaultRoleWhenMissing = "Operator";
-   protected String defaultLaneNumber = "1";
-   protected String defaultMenuUid = "MENU_POR_DEFECTO";
       
    @XmlJavaTypeAdapter(MapAdapter.class)
    protected Map<String, String> paymentsCodesMapping = new HashMap<String, String>();
@@ -74,65 +66,9 @@ public class NCRPosConfiguration {
 		return simulateAllPayAsCash;
 	}
 
-        public void setSimulateAllPayAsCash(boolean simulateAllPayAsCash) {
-                this.simulateAllPayAsCash = simulateAllPayAsCash;
-        }
-
-       public boolean isForceAutoSignOn() {
-               return forceAutoSignOn;
-       }
-
-       public void setForceAutoSignOn(boolean forceAutoSignOn) {
-               this.forceAutoSignOn = forceAutoSignOn;
-       }
-
-       public long getAutoSignOnTimeoutMs() {
-               return autoSignOnTimeoutMs;
-       }
-
-       public void setAutoSignOnTimeoutMs(long autoSignOnTimeoutMs) {
-               this.autoSignOnTimeoutMs = autoSignOnTimeoutMs;
-       }
-
-       public String getDefaultUserIdWhenMissing() {
-               return defaultUserIdWhenMissing;
-       }
-
-       public void setDefaultUserIdWhenMissing(String defaultUserIdWhenMissing) {
-               this.defaultUserIdWhenMissing = defaultUserIdWhenMissing;
-       }
-
-       public String getDefaultPasswordWhenMissing() {
-               return defaultPasswordWhenMissing;
-       }
-
-       public void setDefaultPasswordWhenMissing(String defaultPasswordWhenMissing) {
-               this.defaultPasswordWhenMissing = defaultPasswordWhenMissing;
-       }
-
-       public String getDefaultRoleWhenMissing() {
-               return defaultRoleWhenMissing;
-       }
-
-       public void setDefaultRoleWhenMissing(String defaultRoleWhenMissing) {
-               this.defaultRoleWhenMissing = defaultRoleWhenMissing;
-       }
-
-       public String getDefaultLaneNumber() {
-               return defaultLaneNumber;
-       }
-
-       public void setDefaultLaneNumber(String defaultLaneNumber) {
-               this.defaultLaneNumber = defaultLaneNumber;
-       }
-
-       public String getDefaultMenuUid() {
-               return defaultMenuUid;
-       }
-
-       public void setDefaultMenuUid(String defaultMenuUid) {
-               this.defaultMenuUid = defaultMenuUid;
-       }
+	public void setSimulateAllPayAsCash(boolean simulateAllPayAsCash) {
+		this.simulateAllPayAsCash = simulateAllPayAsCash;
+	}
 
 	public Map<String, String> getPaymentsCodesMapping() {
 		return paymentsCodesMapping;
