@@ -10,8 +10,6 @@ public class DataNeeded extends BasicNCRMessage {
 	public static final String ButtonText1 = "ButtonText.1";
 	public static final String HideGoBack = "HideGoBack";
 	public static final String EnableScanner = "EnableScanner";
-	public static final String ButtonData2 = "ButtonData.2";
-	public static final String ButtonText2 = "ButtonText.2";
 	
 	public DataNeeded() {
 		addField(new NCRField<String>(Type, "int"));
@@ -23,7 +21,6 @@ public class DataNeeded extends BasicNCRMessage {
 		addField(new NCRField<String>(ButtonText1, "string"));
 		addField(new NCRField<String>(HideGoBack, "int"));
 		addField(new NCRField<String>(EnableScanner, "int"));
-		addField(new NCRField<String>(ButtonData2, "string"));
-		addField(new NCRField<String>(ButtonText2, "string"));
+		
    }
 }

@@ -671,7 +671,7 @@ public class ItemsManager implements ActionManager {
 		String cantCodBar = codBarrasEspecial.getCantidad();
 		
 		if (cantCodBar != null) {
-			cantidad = new BigDecimal(cantCodBar);
+			cantidad = FormatUtil.getInstance().desformateaBigDecimal(cantCodBar, 3);
 		} else {
 			if (message.getFieldValue(Item.Weight) != null) {
 				cantidad = new BigDecimal(message.getFieldValue(Item.Weight)).divide(new BigDecimal(1000));

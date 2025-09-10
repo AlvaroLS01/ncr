@@ -18,44 +18,23 @@
 		<java.version>1.8</java.version>
 	</properties>
 	
-        <repositories>
-                <repository>
-                        <id>comerzzia</id>
-                        <url>http://artifactory.tier1.es/artifactory/comerzzia/</url>
-                </repository>
-        </repositories>
+	<repositories>
+		<repository>
+			<id>comerzzia</id>
+			<url>https://repo.comerzzia.com/artifactory/comerzzia/</url>
+		</repository>
+	</repositories>
 
-        <pluginRepositories>
-                <pluginRepository>
-                        <id>comerzzia</id>
-                        <url>http://artifactory.tier1.es/artifactory/comerzzia/</url>
-                </pluginRepository>
-        </pluginRepositories>
+	<pluginRepositories>
+		<pluginRepository>
+			<id>comerzzia</id>
+			<url>https://repo.comerzzia.com/artifactory/comerzzia/</url>
+		</pluginRepository>
+	</pluginRepositories>
 	
 	<modules>
 		<module>comerzzia-ncr-pos-application</module>
 	</modules>
-	
-	<dependencies>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>3.8.1</version>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>com.comerzzia.ametller.pos</groupId>
-      <artifactId>comerzzia-ametller-pos-gui</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
-    </dependency>
-
-    <dependency>
-      <groupId>commons-validator</groupId>
-      <artifactId>commons-validator</artifactId>
-      <version>1.4.0</version>
-    </dependency>
-  </dependencies>
 	
 	<build>
 	   <plugins>
