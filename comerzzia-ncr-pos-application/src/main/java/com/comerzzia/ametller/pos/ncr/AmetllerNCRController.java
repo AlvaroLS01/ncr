@@ -15,7 +15,7 @@ import com.comerzzia.pos.ncr.messages.BasicNCRMessage;
  * system can understand the additional messages used in the 25% discount flow
  * such as {@code ExitAssistMode}.
  */
-@Service
+@Service("NCRController")
 @Primary
 public class AmetllerNCRController extends NCRController {
 
