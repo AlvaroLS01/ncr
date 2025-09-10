@@ -20,7 +20,9 @@ public class ItemSold extends BasicNCRMessage {
 
 	public static final String DiscountAmount = "DiscountAmount";
 	public static final String DiscountDescription = "DiscountDescription.1";
-	public static final String AssociatedItemNumber = "AssociatedItemNumber";	
+	public static final String AssociatedItemNumber = "AssociatedItemNumber";
+	public static final String LinkedItem = "LinkedItem";
+	public static final String VisualVerifyRequired = "VisualVerifyRequired";
 	public static final String RewardLocation = "RewardLocation";
 	public static final String ShowRewardPoints = "ShowRewardPoints";
 	
@@ -47,6 +49,8 @@ public class ItemSold extends BasicNCRMessage {
 		addField(new NCRField<String>(DiscountAmount, "int"));
 		addField(new NCRField<String>(DiscountDescription, "string"));
 		addField(new NCRField<String>(AssociatedItemNumber, "int"));
+		addField(new NCRField<String>(LinkedItem, "string"));
+		addField(new NCRField<String>(VisualVerifyRequired, "string"));
 		addField(new NCRField<String>(RewardLocation, "int"));
 		addField(new NCRField<String>(ShowRewardPoints, "int"));		
 	}
