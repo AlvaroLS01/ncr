@@ -13,8 +13,10 @@ import com.comerzzia.pos.ncr.messages.BasicNCRMessage;
 import com.comerzzia.pos.ncr.messages.Command;
 import com.comerzzia.pos.ncr.messages.DataNeeded;
 import com.comerzzia.pos.ncr.messages.DataNeededReply;
+import com.comerzzia.pos.ncr.messages.Item;
 import com.comerzzia.pos.ncr.ticket.ScoTicketManager;
 import com.comerzzia.ametller.pos.ncr.ticket.AmetllerScoTicketManager;
+import com.comerzzia.pos.ncr.actions.sale.ItemsManager;
 
 @Lazy(false)
 @Service
@@ -28,6 +30,9 @@ public class AmetllerCommandManager implements ActionManager {
     @Autowired
     private ScoTicketManager ticketManager;
 
+    @Autowired
+    private ItemsManager itemsManager;
+
     @Override
     public void processMessage(BasicNCRMessage message) {
         if (message instanceof Command) {
@@ -35,6 +40,7 @@ public class AmetllerCommandManager implements ActionManager {
             if (cmd != null && cmd.equalsIgnoreCase("Descuento")) {
                 activarDescuento25();
                 enviarDataNeeded25();
+                escanearArticulo101();
             } else if ("EnteredCustomerMode".equalsIgnoreCase(cmd)) {
                 desactivarDescuento25();
             }
@@ -77,6 +83,18 @@ public class AmetllerCommandManager implements ActionManager {
                 "Escanee los artículos con fecha próxima de caducidad.\n" +
                 "Pulse OK para continuar.");
         ncrController.sendMessage(dn);
+    }
+
+    private void escanearArticulo101() {
+        if (itemsManager != null) {
+            Item item = new Item();
+            item.setFieldValue(Item.UPC, "101");
+            item.setFieldValue(Item.ScanCodeType, "0");
+            item.setFieldValue(Item.Scanned, "1");
+            itemsManager.processMessage(item);
+        } else {
+            log.warn("ItemsManager not available");
+        }
     }
 
     @PostConstruct
