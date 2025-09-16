@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import com.comerzzia.pos.ncr.NCRController;
 import com.comerzzia.pos.ncr.actions.ActionManager;
-import com.comerzzia.pos.ncr.actions.sale.PayManager;
 import com.comerzzia.pos.ncr.messages.BasicNCRMessage;
 import com.comerzzia.pos.ncr.messages.Command;
 import com.comerzzia.pos.ncr.messages.DataNeeded;
@@ -29,9 +28,6 @@ public class AmetllerCommandManager implements ActionManager {
     @Autowired
     private ScoTicketManager ticketManager;
 
-    @Autowired
-    private PayManager payManager;
-
     @Override
     public void processMessage(BasicNCRMessage message) {
         if (message instanceof Command) {
@@ -43,10 +39,6 @@ public class AmetllerCommandManager implements ActionManager {
                 desactivarDescuento25();
             }
         } else if (message instanceof DataNeededReply) {
-            if (payManager != null && payManager.handleDataNeededReply((DataNeededReply) message)) {
-                return;
-            }
-
             String type = message.getFieldValue(DataNeededReply.Type);
             String id = message.getFieldValue(DataNeededReply.Id);
             if ("1".equals(type) && "2".equals(id)) {
