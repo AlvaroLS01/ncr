@@ -10,6 +10,7 @@ import com.comerzzia.ametller.pos.ncr.giftcard.GiftCardProvider;
 import com.comerzzia.ametller.pos.ncr.giftcard.GiftCardProvider.RedeemResponse;
 import com.comerzzia.ametller.pos.ncr.giftcard.GiftCardException;
 import com.comerzzia.ametller.pos.ncr.ticket.AmetllerScoTicketManager;
+import com.comerzzia.ametller.pos.services.payments.methods.types.BalanceCardManager;
 import com.comerzzia.pos.ncr.actions.sale.PayManager;
 import com.comerzzia.pos.ncr.messages.Tender;
 import com.comerzzia.pos.ncr.messages.TenderException;
@@ -18,7 +19,6 @@ import com.comerzzia.pos.services.payments.PaymentsManager;
 import com.comerzzia.pos.services.payments.events.PaymentErrorEvent;
 import com.comerzzia.pos.services.payments.events.PaymentsErrorEvent;
 import com.comerzzia.pos.services.payments.methods.PaymentMethodManager;
-import com.comerzzia.pos.services.payments.methods.types.GiftCardManager;
 import com.comerzzia.pos.persistence.giftcard.GiftCardBean;
 
 @Service
@@ -38,18 +38,34 @@ public class AmetllerPayManager extends PayManager {
 
     @Override
     protected void trayPay(Tender message) {
-        if ("Gift Card".equalsIgnoreCase(message.getFieldValue(Tender.TenderType))) {
-            payWithGiftCard(message);
-        } else {
+        if (ticketManager.isTrainingMode()) {
             super.trayPay(message);
+            return;
         }
+
+        PaymentsManager paymentsManager = ticketManager.getPaymentsManager();
+        String tenderType = message.getFieldValue(Tender.TenderType);
+
+        String paymentCode;
+        try {
+            paymentCode = scoTenderTypeToComerzziaPaymentCode(tenderType);
+        } catch (RuntimeException ex) {
+            super.trayPay(message);
+            return;
+        }
+
+        PaymentMethodManager manager = paymentsManager.getPaymentsMehtodManagerAvailables().get(paymentCode);
+        if (manager instanceof BalanceCardManager) {
+            payWithGiftCard(message, paymentsManager, (BalanceCardManager) manager, paymentCode);
+            return;
+        }
+
+        super.trayPay(message);
     }
 
-    private void payWithGiftCard(Tender message) {
+    private void payWithGiftCard(Tender message, PaymentsManager paymentsManager,
+            BalanceCardManager manager, String paymentCode) {
         String barcode = message.getFieldValue(Tender.UPC);
-        PaymentsManager paymentsManager = ticketManager.getPaymentsManager();
-        String paymentCode = scoTenderTypeToComerzziaPaymentCode(message.getFieldValue(Tender.TenderType));
-        PaymentMethodManager manager = paymentsManager.getPaymentsMehtodManagerAvailables().get(paymentCode);
         try {
             BigDecimal balance = giftCardProvider.getBalance(barcode);
             BigDecimal pending = ticketManager.getTicket().getTotales().getPendiente();
@@ -72,7 +88,7 @@ public class AmetllerPayManager extends PayManager {
             card.setSaldoProvisional(approvedAmount);
             card.setImportePago(approvedAmount);
             card.setUidTransaccion(redeem.getTransactionId());
-            manager.addParameter(GiftCardManager.PARAM_TARJETA, card);
+            manager.addParameter(BalanceCardManager.PARAM_TARJETA, card);
 
             paymentsManager.pay(paymentCode, approvedAmount);
         } catch (GiftCardException e) {
