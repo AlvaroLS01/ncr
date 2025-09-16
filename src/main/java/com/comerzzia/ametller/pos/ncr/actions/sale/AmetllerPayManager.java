@@ -57,14 +57,24 @@ public class AmetllerPayManager extends PayManager {
             RedeemResponse redeem = giftCardProvider.redeem(barcode, apply,
                     String.valueOf(ticketManager.getTicket().getIdTicket()));
 
+            BigDecimal approvedAmount = redeem.getApprovedAmount();
+            if (approvedAmount == null) {
+                approvedAmount = BigDecimal.ZERO;
+            }
+            BigDecimal remainingBalance = redeem.getRemainingBalance();
+            if (remainingBalance == null) {
+                remainingBalance = BigDecimal.ZERO;
+            }
+
             GiftCardBean card = new GiftCardBean();
             card.setNumTarjetaRegalo(barcode);
-            card.setSaldoTotal(balance);
-            card.setSaldo(balance);
-            card.setSaldoProvisional(redeem.getRemainingBalance());
+            card.setSaldo(remainingBalance);
+            card.setSaldoProvisional(approvedAmount);
+            card.setImportePago(approvedAmount);
+            card.setUidTransaccion(redeem.getTransactionId());
             manager.addParameter(GiftCardManager.PARAM_TARJETA, card);
 
-            paymentsManager.pay(paymentCode, redeem.getApprovedAmount());
+            paymentsManager.pay(paymentCode, approvedAmount);
         } catch (GiftCardException e) {
             TenderException ex = new TenderException();
             ex.setFieldValue(TenderException.ExceptionId, "0");
