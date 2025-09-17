@@ -38,7 +38,6 @@ public class AmetllerPayManager extends PayManager {
     private static final String DIALOG_CONFIRM_TYPE = "4";
     private static final String DIALOG_CONFIRM_ID = "1";
     private static final String DEFAULT_GIFT_CARD_PARAMETER = "PARAM_NUMERO_TARJETA";
-    private static final String DEFAULT_GIFT_CARD_PARAMETER_ALTERNATIVE = "PARAM_TARJETA";
     private static final String[] PREFIJOS_TARJETAS_BEAN_NAMES = {
             "prefijosTarjetasService",
             "prefijosTarjetasSrv"
@@ -361,12 +360,14 @@ public class AmetllerPayManager extends PayManager {
         boolean waitStateSent = false;
 
         try {
+            Object giftCardData = null;
+
             if (paymentRequest.giftCard) {
                 ncrController.sendWaitState("Validando tarjeta...");
                 waitStateSent = true;
 
                 try {
-                    configureGiftCardManager(paymentRequest.paymentMethodManager, paymentRequest.numeroTarjeta);
+                    giftCardData = configureGiftCardManager(paymentRequest);
 
                     BigDecimal balance = consultGiftCardBalance(paymentRequest.paymentMethodManager, paymentRequest.numeroTarjeta);
 
@@ -377,6 +378,8 @@ public class AmetllerPayManager extends PayManager {
                     }
                 } catch (Exception e) {
                     LOG.error("executePayment() - Error preparing gift card payment: " + e.getMessage(), e);
+                } finally {
+                    updateGiftCardBeanAmount(giftCardData, paymentRequest.amount);
                 }
             }
 
@@ -398,29 +401,111 @@ public class AmetllerPayManager extends PayManager {
         }
     }
 
-    private void configureGiftCardManager(PaymentMethodManager paymentMethodManager, String numeroTarjeta) {
+    private Object configureGiftCardManager(PendingPaymentRequest paymentRequest) {
+        PaymentMethodManager paymentMethodManager = paymentRequest.paymentMethodManager;
+        String numeroTarjeta = paymentRequest.numeroTarjeta;
+
         if (paymentMethodManager == null || StringUtils.isBlank(numeroTarjeta)) {
-            return;
+            return null;
         }
 
-        String parameterName = resolveCardNumberParameterName(paymentMethodManager);
+        String beanParameterName = resolveGiftCardBeanParameterName(paymentMethodManager);
+        String numberParameterName = resolveCardNumberParameterName(paymentMethodManager);
 
-        paymentMethodManager.addParameter(parameterName, numeroTarjeta);
+        if (StringUtils.isBlank(numberParameterName) && StringUtils.isBlank(beanParameterName)) {
+            numberParameterName = DEFAULT_GIFT_CARD_PARAMETER;
+        }
+
+        if (StringUtils.isNotBlank(numberParameterName)
+                && !StringUtils.equals(numberParameterName, beanParameterName)) {
+            paymentMethodManager.addParameter(numberParameterName, numeroTarjeta);
+        }
+
+        Object giftCardBean = createGiftCardBean(numeroTarjeta, paymentRequest.amount);
+
+        if (giftCardBean != null) {
+            String targetParameterName = StringUtils.isNotBlank(beanParameterName) ? beanParameterName : numberParameterName;
+
+            if (StringUtils.isBlank(targetParameterName)) {
+                targetParameterName = DEFAULT_GIFT_CARD_PARAMETER;
+            }
+
+            paymentMethodManager.addParameter(targetParameterName, giftCardBean);
+        } else if (StringUtils.isNotBlank(beanParameterName)
+                && !StringUtils.equals(beanParameterName, numberParameterName)) {
+            paymentMethodManager.addParameter(beanParameterName, numeroTarjeta);
+        }
+
+        return giftCardBean;
     }
 
     private String resolveCardNumberParameterName(PaymentMethodManager paymentMethodManager) {
-        List<String> possibleNames = Arrays.asList("PARAM_NUMERO_TARJETA", "PARAM_TARJETA", DEFAULT_GIFT_CARD_PARAMETER,
-                DEFAULT_GIFT_CARD_PARAMETER_ALTERNATIVE);
+        return resolveParameterName(paymentMethodManager.getClass(), Arrays.asList("PARAM_NUMERO_TARJETA", "PARAM_CARD_NUMBER",
+                "PARAM_NUM_TARJETA"));
+    }
 
-        for (String fieldName : possibleNames) {
-            String value = findStaticStringField(paymentMethodManager.getClass(), fieldName);
+    private String resolveGiftCardBeanParameterName(PaymentMethodManager paymentMethodManager) {
+        return resolveParameterName(paymentMethodManager.getClass(), Arrays.asList("PARAM_TARJETA", "PARAM_TARJETA_REGALO",
+                "PARAM_GIFT_CARD", "PARAM_GIFTCARD"));
+    }
+
+    private String resolveParameterName(Class<?> clazz, List<String> fieldNames) {
+        for (String fieldName : fieldNames) {
+            String value = findStaticStringField(clazz, fieldName);
 
             if (StringUtils.isNotBlank(value)) {
                 return value;
             }
         }
 
-        return DEFAULT_GIFT_CARD_PARAMETER;
+        return null;
+    }
+
+    private Object createGiftCardBean(String numeroTarjeta, BigDecimal amount) {
+        try {
+            Class<?> beanClass = Class.forName("com.comerzzia.pos.persistence.giftcard.GiftCardBean");
+            Object bean = beanClass.getDeclaredConstructor().newInstance();
+
+            invokeSetter(bean, "setNumTarjetaRegalo", String.class, numeroTarjeta);
+            invokeSetter(bean, "setNumeroTarjeta", String.class, numeroTarjeta);
+            invokeSetter(bean, "setImportePago", BigDecimal.class, amount);
+            invokeSetter(bean, "setImporte", BigDecimal.class, amount);
+
+            return bean;
+        } catch (ClassNotFoundException e) {
+            LOG.debug("createGiftCardBean() - GiftCardBean class not available");
+        } catch (Exception e) {
+            LOG.error("createGiftCardBean() - Error creating GiftCardBean: " + e.getMessage(), e);
+        }
+
+        return null;
+    }
+
+    private void updateGiftCardBeanAmount(Object giftCardBean, BigDecimal amount) {
+        if (giftCardBean == null || amount == null) {
+            return;
+        }
+
+        invokeSetter(giftCardBean, "setImportePago", BigDecimal.class, amount);
+        invokeSetter(giftCardBean, "setImporte", BigDecimal.class, amount);
+    }
+
+    private void invokeSetter(Object target, String methodName, Class<?> parameterType, Object value) {
+        if (target == null || value == null) {
+            return;
+        }
+
+        Method method = findMethod(target.getClass(), methodName, parameterType);
+
+        if (method == null) {
+            return;
+        }
+
+        try {
+            method.invoke(target, value);
+        } catch (Exception e) {
+            LOG.debug(String.format("invokeSetter() - Unable to invoke %s on %s", methodName, target.getClass().getName()), e);
+        }
     }
 
     private String findStaticStringField(Class<?> clazz, String fieldName) {
@@ -510,12 +595,12 @@ public class AmetllerPayManager extends PayManager {
         return null;
     }
 
-    private Method findMethod(Class<?> clazz, String methodName) {
+    private Method findMethod(Class<?> clazz, String methodName, Class<?>... parameterTypes) {
         Class<?> current = clazz;
 
         while (current != null) {
             try {
-                Method method = current.getDeclaredMethod(methodName);
+                Method method = current.getDeclaredMethod(methodName, parameterTypes);
                 method.setAccessible(true);
                 return method;
             } catch (NoSuchMethodException e) {
