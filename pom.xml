@@ -1,21 +1,16 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-
-	<groupId>com.comerzzia.ametller.pos.ncr</groupId>
+	<groupId>com.comerzzia.ametller.pos</groupId>
 	<artifactId>comerzzia-ametller-pos-ncr</artifactId>
 	<version>${revision}</version>
 	<packaging>jar</packaging>
-
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java.version>1.8</java.version>
 		<maven.test.skip>true</maven.test.skip>
-		<revision>25-SNAPSHOT</revision>
+		<revision>1.0.0-SNAPSHOT</revision>
 		<czz.ncr.so.version>1.0.8</czz.ncr.so.version>
 	</properties>
-
 	<repositories>
 		<repository>
 			<id>artifactory</id>
@@ -26,27 +21,13 @@
 			<url>http://software.tier1.es/artifactory/clientes.local/</url>
 		</repository>
 	</repositories>
-
 	<pluginRepositories>
 		<pluginRepository>
 			<id>comerzzia</id>
 			<url>http://repo.comerzzia.com/artifactory/comerzzia/</url>
 		</pluginRepository>
 	</pluginRepositories>
-
-	<distributionManagement>
-		<repository>
-			<id>artifactory</id>
-			<name>vm-bugtrac.mpcorporacion.com-releases</name>
-			<url>http://software.tier1.es/artifactory/clientes.local</url>
-		</repository>
-		<snapshotRepository>
-			<id>artifactory</id>
-			<name>vm-bugtrac.mpcorporacion.com-snapshots</name>
-			<url>http://software.tier1.es/artifactory/clientes.local</url>
-		</snapshotRepository>
-	</distributionManagement>
-
+	
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>
@@ -71,7 +52,6 @@
 			<version>1.4.0</version>
 		</dependency>
 	</dependencies>
-
 	<build>
 		<resources>
 			<resource>

@@ -23,7 +23,7 @@ build:maven:
     - mvn $MAVEN_CLI_OPTS package -DskipTests
   artifacts:
     paths:
-      - comerzzia-ncr-pos-application/target/*.jar
+      - target/*.jar
     expire_in: 1 hour
 
 # Build cuando se crea un tag
