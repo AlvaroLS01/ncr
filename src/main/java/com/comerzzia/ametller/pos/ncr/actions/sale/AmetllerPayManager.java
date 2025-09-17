@@ -54,6 +54,9 @@ public class AmetllerPayManager extends PayManager {
     private static final String DIALOG_CONFIRM_TYPE = "4";
     private static final String DIALOG_CONFIRM_ID   = "1";
 
+    private static final String DESCUENTO25_DIALOG_TYPE = "1";
+    private static final String DESCUENTO25_DIALOG_ID   = "2";
+
     // WAIT overlay del SCO (ojo: en tu log abre Type=1, Id=1 "Validando tarjeta...")
     private static final String WAIT_TYPE = "1";
     private static final String WAIT_ID   = "1";
@@ -73,11 +76,14 @@ public class AmetllerPayManager extends PayManager {
     @Override
     public void processMessage(BasicNCRMessage message) {
         if (message instanceof DataNeededReply) {
-            if (!handleDataNeededReply((DataNeededReply) message)) {
+            DataNeededReply reply = (DataNeededReply) message;
+            if (handleDescuento25DataNeededReply(reply)) {
+                return;
+            }
+            if (!handleDataNeededReply(reply)) {
                 // Consumir los DataNeededReply vacíos (Type=0/Id=0) para no dejar colas abiertas
-                DataNeededReply r = (DataNeededReply) message;
-                String t = StringUtils.defaultString(r.getFieldValue(DataNeededReply.Type));
-                String i = StringUtils.defaultString(r.getFieldValue(DataNeededReply.Id));
+                String t = StringUtils.trimToEmpty(reply.getFieldValue(DataNeededReply.Type));
+                String i = StringUtils.trimToEmpty(reply.getFieldValue(DataNeededReply.Id));
                 if ("0".equals(t) && "0".equals(i)) return;
                 log.warn("processMessage() - DataNeededReply not managed by gift card flow");
             }
@@ -193,10 +199,13 @@ public class AmetllerPayManager extends PayManager {
     }
 
     private boolean handleDataNeededReply(DataNeededReply reply) {
-        String type = reply.getFieldValue(DataNeededReply.Type);
-        String id   = reply.getFieldValue(DataNeededReply.Id);
+        String type = StringUtils.trimToEmpty(reply.getFieldValue(DataNeededReply.Type));
+        String id   = StringUtils.trimToEmpty(reply.getFieldValue(DataNeededReply.Id));
 
-        if (!DIALOG_CONFIRM_TYPE.equals(type) || !DIALOG_CONFIRM_ID.equals(id)) return false;
+        if (!StringUtils.equals(type, DIALOG_CONFIRM_TYPE)
+                || !StringUtils.equals(id, DIALOG_CONFIRM_ID)) {
+            return false;
+        }
 
         PendingPayment payment = pendingPayment;
         pendingPayment = null;
@@ -213,6 +222,23 @@ public class AmetllerPayManager extends PayManager {
             sendGiftCardError(I18N.getTexto("Operación cancelada por el usuario"), payment.context.scoTenderType);
             itemsManager.sendTotals();
         }
+        return true;
+    }
+
+    private boolean handleDescuento25DataNeededReply(DataNeededReply reply) {
+        String type = StringUtils.trimToEmpty(reply.getFieldValue(DataNeededReply.Type));
+        String id   = StringUtils.trimToEmpty(reply.getFieldValue(DataNeededReply.Id));
+
+        if (!StringUtils.equals(type, DESCUENTO25_DIALOG_TYPE)
+                || !StringUtils.equals(id, DESCUENTO25_DIALOG_ID)) {
+            return false;
+        }
+
+        if (log.isDebugEnabled()) {
+            log.debug("handleDescuento25DataNeededReply() - Closing Descuento25 dialog");
+        }
+
+        sendCloseDialog();
         return true;
     }
 
