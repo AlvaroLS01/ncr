@@ -369,13 +369,7 @@ public class AmetllerPayManager extends PayManager {
                 try {
                     giftCardData = configureGiftCardManager(paymentRequest);
 
-                    BigDecimal balance = extractBalanceFromGiftCardBean(giftCardData);
-
-                    if (balance == null) {
-                        balance = consultGiftCardBalance(paymentRequest.paymentMethodManager, paymentRequest.numeroTarjeta);
-                    }
-
-                    updateGiftCardBeanBalance(giftCardData, balance);
+                    BigDecimal balance = consultGiftCardBalance(paymentRequest.paymentMethodManager, paymentRequest.numeroTarjeta);
 
                     if (balance != null && amountToPay.compareTo(balance) > 0) {
                         amountToPay = balance;
@@ -427,7 +421,7 @@ public class AmetllerPayManager extends PayManager {
             paymentMethodManager.addParameter(numberParameterName, numeroTarjeta);
         }
 
-        Object giftCardBean = obtainGiftCardBean(paymentMethodManager, numeroTarjeta, paymentRequest.amount);
+        Object giftCardBean = createGiftCardBean(numeroTarjeta, paymentRequest.amount);
 
         if (giftCardBean != null) {
             String targetParameterName = StringUtils.isNotBlank(beanParameterName) ? beanParameterName : numberParameterName;
@@ -476,7 +470,6 @@ public class AmetllerPayManager extends PayManager {
             invokeSetter(bean, "setNumeroTarjeta", String.class, numeroTarjeta);
             invokeSetter(bean, "setImportePago", BigDecimal.class, amount);
             invokeSetter(bean, "setImporte", BigDecimal.class, amount);
-            ensureGiftCardBalanceInitialized(bean, BigDecimal.ZERO, BigDecimal.ZERO);
 
             return bean;
         } catch (ClassNotFoundException e) {
@@ -495,180 +488,6 @@ public class AmetllerPayManager extends PayManager {
 
         invokeSetter(giftCardBean, "setImportePago", BigDecimal.class, amount);
         invokeSetter(giftCardBean, "setImporte", BigDecimal.class, amount);
-    }
-
-    private Object obtainGiftCardBean(PaymentMethodManager paymentMethodManager, String numeroTarjeta, BigDecimal amount) {
-        Object bean = loadGiftCardBean(paymentMethodManager, numeroTarjeta);
-
-        if (bean == null) {
-            bean = createGiftCardBean(numeroTarjeta, amount);
-        } else {
-            invokeSetter(bean, "setNumTarjetaRegalo", String.class, numeroTarjeta);
-            invokeSetter(bean, "setNumeroTarjeta", String.class, numeroTarjeta);
-            updateGiftCardBeanAmount(bean, amount);
-        }
-
-        ensureGiftCardBalanceDefaults(bean);
-
-        return bean;
-    }
-
-    private Object loadGiftCardBean(PaymentMethodManager paymentMethodManager, String numeroTarjeta) {
-        if (paymentMethodManager == null || StringUtils.isBlank(numeroTarjeta)) {
-            return null;
-        }
-
-        Method consultarSaldo = findMethod(paymentMethodManager.getClass(), "consultarSaldo", String.class);
-
-        if (consultarSaldo == null) {
-            return null;
-        }
-
-        try {
-            Object result = consultarSaldo.invoke(paymentMethodManager, numeroTarjeta);
-
-            if (result == null) {
-                return null;
-            }
-
-            if (isGiftCardBean(result)) {
-                return result;
-            }
-
-            if (result instanceof BigDecimal) {
-                Object bean = createGiftCardBean(numeroTarjeta, (BigDecimal) result);
-                updateGiftCardBeanBalance(bean, (BigDecimal) result);
-                return bean;
-            }
-
-            BigDecimal saldo = extractBigDecimal(result, "getSaldo");
-            BigDecimal saldoProvisional = extractBigDecimal(result, "getSaldoProvisional");
-
-            if (saldo != null || saldoProvisional != null) {
-                Object bean = createGiftCardBean(numeroTarjeta, null);
-                ensureGiftCardBalanceInitialized(bean, saldo, saldoProvisional);
-                return bean;
-            }
-        } catch (Exception e) {
-            LOG.error("loadGiftCardBean() - Error invoking consultarSaldo: " + e.getMessage(), e);
-        }
-
-        return null;
-    }
-
-    private boolean isGiftCardBean(Object candidate) {
-        if (candidate == null) {
-            return false;
-        }
-
-        try {
-            Class<?> giftCardClass = Class.forName("com.comerzzia.pos.persistence.giftcard.GiftCardBean");
-
-            return giftCardClass.isInstance(candidate);
-        } catch (ClassNotFoundException e) {
-            return StringUtils.containsIgnoreCase(candidate.getClass().getName(), "GiftCardBean");
-        }
-    }
-
-    private BigDecimal extractBigDecimal(Object source, String getterName) {
-        if (source == null) {
-            return null;
-        }
-
-        Method getter = findMethod(source.getClass(), getterName);
-
-        if (getter == null) {
-            return null;
-        }
-
-        try {
-            Object value = getter.invoke(source);
-
-            if (value instanceof BigDecimal) {
-                return (BigDecimal) value;
-            }
-
-            if (value != null) {
-                return new BigDecimal(value.toString());
-            }
-        } catch (NumberFormatException e) {
-            LOG.debug(String.format("extractBigDecimal() - Value returned by %s is not numeric", getterName));
-        } catch (Exception e) {
-            LOG.debug(String.format("extractBigDecimal() - Unable to invoke %s on %s", getterName, source.getClass().getName()), e);
-        }
-
-        return null;
-    }
-
-    private void ensureGiftCardBalanceDefaults(Object giftCardBean) {
-        if (giftCardBean == null) {
-            return;
-        }
-
-        BigDecimal saldo = extractBigDecimal(giftCardBean, "getSaldo");
-        BigDecimal saldoProvisional = extractBigDecimal(giftCardBean, "getSaldoProvisional");
-
-        if (saldo == null || saldoProvisional == null) {
-            ensureGiftCardBalanceInitialized(giftCardBean, saldo, saldoProvisional);
-        }
-    }
-
-    private void ensureGiftCardBalanceInitialized(Object giftCardBean, BigDecimal saldo, BigDecimal saldoProvisional) {
-        if (giftCardBean == null) {
-            return;
-        }
-
-        BigDecimal saldoValue = saldo != null ? saldo : BigDecimal.ZERO;
-        BigDecimal saldoProvisionalValue = saldoProvisional != null ? saldoProvisional : BigDecimal.ZERO;
-
-        invokeSetter(giftCardBean, "setSaldo", BigDecimal.class, saldoValue);
-        invokeSetter(giftCardBean, "setSaldoProvisional", BigDecimal.class, saldoProvisionalValue);
-    }
-
-    private void updateGiftCardBeanBalance(Object giftCardBean, BigDecimal balance) {
-        if (giftCardBean == null || balance == null) {
-            return;
-        }
-
-        BigDecimal currentSaldo = extractBigDecimal(giftCardBean, "getSaldo");
-        BigDecimal currentSaldoProvisional = extractBigDecimal(giftCardBean, "getSaldoProvisional");
-
-        if (currentSaldo == null && currentSaldoProvisional == null) {
-            ensureGiftCardBalanceInitialized(giftCardBean, balance, BigDecimal.ZERO);
-            return;
-        }
-
-        BigDecimal total = (currentSaldo != null ? currentSaldo : BigDecimal.ZERO)
-                .add(currentSaldoProvisional != null ? currentSaldoProvisional : BigDecimal.ZERO);
-
-        if (total.compareTo(balance) != 0) {
-            invokeSetter(giftCardBean, "setSaldo", BigDecimal.class, balance);
-            invokeSetter(giftCardBean, "setSaldoProvisional", BigDecimal.class, BigDecimal.ZERO);
-        }
-    }
-
-    private BigDecimal extractBalanceFromGiftCardBean(Object giftCardBean) {
-        if (giftCardBean == null) {
-            return null;
-        }
-
-        BigDecimal saldoTotal = extractBigDecimal(giftCardBean, "getSaldoTotal");
-
-        if (saldoTotal != null) {
-            return saldoTotal;
-        }
-
-        BigDecimal saldo = extractBigDecimal(giftCardBean, "getSaldo");
-        BigDecimal saldoProvisional = extractBigDecimal(giftCardBean, "getSaldoProvisional");
-
-        if (saldo == null && saldoProvisional == null) {
-            return null;
-        }
-
-        BigDecimal saldoValue = saldo != null ? saldo : BigDecimal.ZERO;
-        BigDecimal saldoProvisionalValue = saldoProvisional != null ? saldoProvisional : BigDecimal.ZERO;
-
-        return saldoValue.add(saldoProvisionalValue);
     }
 
     private void invokeSetter(Object target, String methodName, Class<?> parameterType, Object value) {
