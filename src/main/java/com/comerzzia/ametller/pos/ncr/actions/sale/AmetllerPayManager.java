@@ -1148,16 +1148,107 @@ public class AmetllerPayManager extends PayManager {
         }
 
         Method method = findMethod(target.getClass(), methodName, parameterType);
+        Object argument = value;
+
+        if (method == null && BigDecimal.class.equals(parameterType) && value instanceof BigDecimal) {
+            BigDecimal decimalValue = (BigDecimal) value;
+            List<Class<?>> candidateTypes = Arrays.asList(BigDecimal.class, Number.class, Double.class, double.class,
+                    Float.class, float.class, Long.class, long.class, Integer.class, int.class, Short.class, short.class,
+                    String.class, Object.class);
+
+            Method compatibleMethod = null;
+            Object compatibleArgument = null;
+
+            for (Class<?> candidateType : candidateTypes) {
+                Method candidateMethod = findMethod(target.getClass(), methodName, candidateType);
+
+                if (candidateMethod == null) {
+                    continue;
+                }
+
+                Object convertedValue = convertBigDecimalValue(decimalValue, candidateType);
+
+                if (convertedValue == null) {
+                    continue;
+                }
+
+                compatibleMethod = candidateMethod;
+                compatibleArgument = convertedValue;
+                break;
+            }
+
+            if (compatibleMethod != null) {
+                method = compatibleMethod;
+                argument = compatibleArgument;
+            }
+        }
 
         if (method == null) {
             return;
         }
 
         try {
-            method.invoke(target, value);
+            method.invoke(target, argument);
         } catch (Exception e) {
             LOG.debug(String.format("invokeSetter() - Unable to invoke %s on %s", methodName, target.getClass().getName()), e);
         }
+    }
+
+    private Object convertBigDecimalValue(BigDecimal value, Class<?> targetType) {
+        if (value == null || targetType == null) {
+            return null;
+        }
+
+        if (targetType.isPrimitive()) {
+            if (double.class.equals(targetType)) {
+                return value.doubleValue();
+            }
+            if (float.class.equals(targetType)) {
+                return value.floatValue();
+            }
+            if (long.class.equals(targetType)) {
+                return value.longValue();
+            }
+            if (int.class.equals(targetType)) {
+                return value.intValue();
+            }
+            if (short.class.equals(targetType)) {
+                return value.shortValue();
+            }
+
+            return null;
+        }
+
+        if (BigDecimal.class.equals(targetType) || Number.class.equals(targetType)
+                || Object.class.equals(targetType)) {
+            return value;
+        }
+
+        if (Double.class.equals(targetType)) {
+            return value.doubleValue();
+        }
+
+        if (Float.class.equals(targetType)) {
+            return value.floatValue();
+        }
+
+        if (Long.class.equals(targetType)) {
+            return value.longValue();
+        }
+
+        if (Integer.class.equals(targetType)) {
+            return value.intValue();
+        }
+
+        if (Short.class.equals(targetType)) {
+            return value.shortValue();
+        }
+
+        if (String.class.equals(targetType)) {
+            return value.stripTrailingZeros().toPlainString();
+        }
+
+        return null;
     }
 
     private String findStaticStringField(Class<?> clazz, String fieldName) {
