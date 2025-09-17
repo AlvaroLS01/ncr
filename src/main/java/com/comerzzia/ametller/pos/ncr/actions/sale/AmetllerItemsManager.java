@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import com.comerzzia.ametller.pos.ncr.ticket.AmetllerScoTicketManager;
 import com.comerzzia.pos.ncr.actions.sale.ItemsManager;
 import com.comerzzia.pos.ncr.messages.ItemSold;
+import com.comerzzia.pos.ncr.messages.Totals;
+import com.comerzzia.pos.services.ticket.cabecera.ITotalesTicket;
 import com.comerzzia.pos.services.ticket.lineas.LineaTicket;
 import com.comerzzia.pos.util.bigdecimal.BigDecimalUtil;
 
@@ -23,7 +25,7 @@ public class AmetllerItemsManager extends ItemsManager {
 
     @Override
     protected ItemSold lineaTicketToItemSold(LineaTicket linea) {
-		ItemSold itemSold = super.lineaTicketToItemSold(linea);
+        ItemSold itemSold = super.lineaTicketToItemSold(linea);
 
         if (linea != null && itemSold != null && ticketManager instanceof AmetllerScoTicketManager) {
             AmetllerScoTicketManager ametllerScoTicketManager = (AmetllerScoTicketManager) ticketManager;
@@ -44,5 +46,41 @@ public class AmetllerItemsManager extends ItemsManager {
         }
 
         return itemSold;
+    }
+
+    @Override
+    public void sendTotals() {
+        ITotalesTicket totales = ticketManager.getTicket().getTotales();
+
+        BigDecimal headerDiscounts = getHeaderDiscounts();
+        BigDecimal totalAmount = totales.getTotalAPagar().subtract(headerDiscounts);
+        BigDecimal entregado = totales.getEntregado();
+
+        if (ticketManager.isTenderMode()) {
+            entregado = entregado.subtract(headerDiscounts);
+        }
+
+        Totals totals = new Totals();
+        totals.setFieldIntValue(Totals.TaxAmount, totales.getImpuestos());
+
+        BigDecimal balanceDue = totalAmount.subtract(entregado);
+
+        if (balanceDue.compareTo(BigDecimal.ZERO) > 0) {
+            totals.setFieldIntValue(Totals.TotalAmount, totalAmount);
+            totals.setFieldIntValue(Totals.BalanceDue, balanceDue);
+        } else {
+            totals.setFieldIntValue(Totals.TotalAmount, BigDecimal.ZERO);
+            totals.setFieldIntValue(Totals.BalanceDue, BigDecimal.ZERO);
+
+            if (balanceDue.compareTo(BigDecimal.ZERO) < 0) {
+                totals.setFieldIntValue(Totals.ChangeDue, balanceDue.abs());
+            }
+        }
+
+        totals.setFieldValue(Totals.ItemCount, String.valueOf(ticketManager.getTicket().getLineas().size()));
+        totals.setFieldIntValue(Totals.DiscountAmount, totales.getTotalPromociones());
+        totals.setFieldValue(Totals.Points, String.valueOf(totales.getPuntos()));
+
+        ncrController.sendMessage(totals);
     }
 }
