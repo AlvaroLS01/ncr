@@ -220,21 +220,26 @@ public class ItemsManager implements ActionManager {
 		   entregado = entregado.subtract(headerDiscounts);			
 		}		
 				
-		Totals totals = new Totals();
-		totals.setFieldIntValue(Totals.TotalAmount, totalAmount);
-		totals.setFieldIntValue(Totals.TaxAmount, totales.getImpuestos());
-				
-		// pay control for change
-		if (totalAmount.compareTo(entregado) >= 0) {
-		   totals.setFieldIntValue(Totals.BalanceDue, totalAmount.subtract(entregado));
-		} else {
-			totals.setFieldIntValue(Totals.BalanceDue, BigDecimal.ZERO);
-			totals.setFieldIntValue(Totals.ChangeDue, entregado.subtract(totalAmount));
-			
-		}
-		totals.setFieldValue(Totals.ItemCount, String.valueOf(ticketManager.getTicket().getLineas().size()));
-		totals.setFieldIntValue(Totals.DiscountAmount, totales.getTotalPromociones());
-		totals.setFieldValue(Totals.Points, String.valueOf(totales.getPuntos()));
+                Totals totals = new Totals();
+                totals.setFieldIntValue(Totals.TaxAmount, totales.getImpuestos());
+
+                BigDecimal balanceDue = totalAmount.subtract(entregado);
+
+                // pay control for change
+                if (balanceDue.compareTo(BigDecimal.ZERO) > 0) {
+                        totals.setFieldIntValue(Totals.TotalAmount, totalAmount);
+                        totals.setFieldIntValue(Totals.BalanceDue, balanceDue);
+                } else {
+                        totals.setFieldIntValue(Totals.TotalAmount, BigDecimal.ZERO);
+                        totals.setFieldIntValue(Totals.BalanceDue, BigDecimal.ZERO);
+
+                        if (balanceDue.compareTo(BigDecimal.ZERO) < 0) {
+                                totals.setFieldIntValue(Totals.ChangeDue, balanceDue.abs());
+                        }
+                }
+                totals.setFieldValue(Totals.ItemCount, String.valueOf(ticketManager.getTicket().getLineas().size()));
+                totals.setFieldIntValue(Totals.DiscountAmount, totales.getTotalPromociones());
+                totals.setFieldValue(Totals.Points, String.valueOf(totales.getPuntos()));
 
 		ncrController.sendMessage(totals);
 	}
