@@ -2,15 +2,19 @@ package com.comerzzia.ametller.pos.ncr.actions.sale;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.math.BigDecimal;
 import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
@@ -369,9 +373,16 @@ public class AmetllerPayManager extends PayManager {
                 try {
                     giftCardData = configureGiftCardManager(paymentRequest);
 
-                    BigDecimal balance = consultGiftCardBalance(paymentRequest.paymentMethodManager, paymentRequest.numeroTarjeta);
+                    BigDecimal balance = extractBalanceFromGiftCardBean(giftCardData);
 
-                    if (balance != null && amountToPay.compareTo(balance) > 0) {
+                    if (balance == null) {
+                        balance = consultGiftCardBalance(paymentRequest.paymentMethodManager, paymentRequest.numeroTarjeta);
+                    }
+
+                    updateGiftCardBeanBalance(giftCardData, balance);
+
+                    if (balance != null && balance.compareTo(BigDecimal.ZERO) > 0
+                            && amountToPay.compareTo(balance) > 0) {
                         amountToPay = balance;
                         paymentRequest.amount = balance;
                         paymentRequest.tenderMessage.setFieldIntValue(Tender.Amount, balance);
@@ -421,7 +432,11 @@ public class AmetllerPayManager extends PayManager {
             paymentMethodManager.addParameter(numberParameterName, numeroTarjeta);
         }
 
-        Object giftCardBean = createGiftCardBean(numeroTarjeta, paymentRequest.amount);
+        Object giftCardBean = obtainGiftCardBean(paymentMethodManager, numeroTarjeta, paymentRequest.amount);
+
+        if (giftCardBean == null) {
+            giftCardBean = findGiftCardBean(numeroTarjeta, paymentRequest.amount);
+        }
 
         if (giftCardBean != null) {
             String targetParameterName = StringUtils.isNotBlank(beanParameterName) ? beanParameterName : numberParameterName;
@@ -470,6 +485,7 @@ public class AmetllerPayManager extends PayManager {
             invokeSetter(bean, "setNumeroTarjeta", String.class, numeroTarjeta);
             invokeSetter(bean, "setImportePago", BigDecimal.class, amount);
             invokeSetter(bean, "setImporte", BigDecimal.class, amount);
+            ensureGiftCardBalanceInitialized(bean, BigDecimal.ZERO, BigDecimal.ZERO);
 
             return bean;
         } catch (ClassNotFoundException e) {
@@ -488,6 +504,512 @@ public class AmetllerPayManager extends PayManager {
 
         invokeSetter(giftCardBean, "setImportePago", BigDecimal.class, amount);
         invokeSetter(giftCardBean, "setImporte", BigDecimal.class, amount);
+    }
+
+    private Object obtainGiftCardBean(PaymentMethodManager paymentMethodManager, String numeroTarjeta, BigDecimal amount) {
+        Object bean = loadGiftCardBean(paymentMethodManager, numeroTarjeta);
+
+        if (bean == null) {
+            bean = createGiftCardBean(numeroTarjeta, amount);
+        } else {
+            invokeSetter(bean, "setNumTarjetaRegalo", String.class, numeroTarjeta);
+            invokeSetter(bean, "setNumeroTarjeta", String.class, numeroTarjeta);
+            updateGiftCardBeanAmount(bean, amount);
+        }
+
+        ensureGiftCardBalanceDefaults(bean);
+
+        return bean;
+    }
+
+    private Object findGiftCardBean(String numeroTarjeta, BigDecimal amount) {
+        Object bean = adaptGiftCardResult(lookupGiftCardBeanInContext(numeroTarjeta), numeroTarjeta, amount);
+
+        if (bean == null) {
+            bean = adaptGiftCardResult(lookupGiftCardBeanFromRest(numeroTarjeta), numeroTarjeta, amount);
+        }
+
+        if (bean == null) {
+            bean = createGiftCardBean(numeroTarjeta, amount);
+        }
+
+        if (bean != null) {
+            ensureGiftCardBalanceDefaults(bean);
+            updateGiftCardBeanAmount(bean, amount);
+        }
+
+        return bean;
+    }
+
+    private Object lookupGiftCardBeanInContext(String numeroTarjeta) {
+        ApplicationContext context = ContextHolder.get();
+
+        if (context == null) {
+            LOG.debug("lookupGiftCardBeanInContext() - Spring context not available");
+            return null;
+        }
+
+        Set<String> inspected = new LinkedHashSet<>();
+
+        try {
+            String[] beanNames = context.getBeanDefinitionNames();
+
+            for (String beanName : beanNames) {
+                if (!StringUtils.containsIgnoreCase(beanName, "gift")
+                        && !StringUtils.containsIgnoreCase(beanName, "balance")) {
+                    continue;
+                }
+
+                Object candidate = context.getBean(beanName);
+                Object result = invokeGiftCardLookup(candidate, numeroTarjeta);
+
+                if (result != null) {
+                    return result;
+                }
+
+                if (candidate != null) {
+                    inspected.add(candidate.getClass().getName());
+                }
+            }
+
+            for (String beanName : beanNames) {
+                Object candidate = context.getBean(beanName);
+
+                if (candidate == null) {
+                    continue;
+                }
+
+                String className = candidate.getClass().getName();
+
+                if (inspected.contains(className)) {
+                    continue;
+                }
+
+                if (!StringUtils.containsIgnoreCase(className, "giftcard")
+                        && !StringUtils.containsIgnoreCase(className, "balancecard")
+                        && !StringUtils.containsIgnoreCase(className, "virtualmoney")) {
+                    continue;
+                }
+
+                Object result = invokeGiftCardLookup(candidate, numeroTarjeta);
+
+                if (result != null) {
+                    return result;
+                }
+            }
+        } catch (Exception e) {
+            LOG.debug("lookupGiftCardBeanInContext() - Error resolving bean: " + e.getMessage(), e);
+        }
+
+        return null;
+    }
+
+    private Object lookupGiftCardBeanFromRest(String numeroTarjeta) {
+        if (StringUtils.isBlank(numeroTarjeta)) {
+            return null;
+        }
+
+        try {
+            Class<?> restClass = Class.forName("com.comerzzia.api.rest.client.movimientos.MovimientosRest");
+            Set<String> methodNames = new LinkedHashSet<>(Arrays.asList("consultarSaldoTarjetaRegalo",
+                    "consultarTarjetaRegalo", "consultarSaldoTarjeta"));
+
+            for (Method method : restClass.getMethods()) {
+                if (!methodNames.contains(method.getName()) || !Modifier.isStatic(method.getModifiers())) {
+                    continue;
+                }
+
+                Object[] arguments = buildRestArguments(method.getParameterTypes(), numeroTarjeta);
+
+                if (arguments == null) {
+                    continue;
+                }
+
+                try {
+                    return method.invoke(null, arguments);
+                } catch (Exception e) {
+                    LOG.debug(String.format("lookupGiftCardBeanFromRest() - Unable to invoke %s: %s", method.getName(),
+                            e.getMessage()), e);
+                }
+            }
+        } catch (ClassNotFoundException e) {
+            LOG.debug("lookupGiftCardBeanFromRest() - MovimientosRest class not available");
+        }
+
+        return null;
+    }
+
+    private Object adaptGiftCardResult(Object result, String numeroTarjeta, BigDecimal amount) {
+        if (result == null) {
+            return null;
+        }
+
+        if (isGiftCardBean(result)) {
+            populateGiftCardIdentifiers(result, numeroTarjeta);
+            updateGiftCardBeanAmount(result, amount);
+            ensureGiftCardBalanceDefaults(result);
+            return result;
+        }
+
+        Object bean = createGiftCardBean(numeroTarjeta, amount);
+
+        if (bean == null) {
+            return null;
+        }
+
+        if (result instanceof BigDecimal) {
+            updateGiftCardBeanBalance(bean, (BigDecimal) result);
+            return bean;
+        }
+
+        if (result instanceof Map) {
+            BigDecimal saldo = extractBigDecimalFromMap(result, "saldo", "balance");
+            BigDecimal saldoProvisional = extractBigDecimalFromMap(result, "saldoProvisional", "provisionalBalance");
+
+            if (saldo != null || saldoProvisional != null) {
+                ensureGiftCardBalanceInitialized(bean, saldo, saldoProvisional);
+                return bean;
+            }
+
+            BigDecimal saldoTotal = extractBigDecimalFromMap(result, "saldoTotal", "totalBalance");
+
+            if (saldoTotal != null) {
+                updateGiftCardBeanBalance(bean, saldoTotal);
+                return bean;
+            }
+        }
+
+        BigDecimal saldo = extractBigDecimal(result, "getSaldo");
+        BigDecimal saldoProvisional = extractBigDecimal(result, "getSaldoProvisional");
+        BigDecimal saldoTotal = extractBigDecimal(result, "getSaldoTotal");
+
+        if (saldo != null || saldoProvisional != null) {
+            ensureGiftCardBalanceInitialized(bean, saldo, saldoProvisional);
+            return bean;
+        }
+
+        if (saldoTotal != null) {
+            updateGiftCardBeanBalance(bean, saldoTotal);
+            return bean;
+        }
+
+        BigDecimal balance = extractBigDecimal(result, "getBalance");
+
+        if (balance != null) {
+            updateGiftCardBeanBalance(bean, balance);
+            return bean;
+        }
+
+        return null;
+    }
+
+    private Object invokeGiftCardLookup(Object candidate, String numeroTarjeta) {
+        if (candidate == null || StringUtils.isBlank(numeroTarjeta)) {
+            return null;
+        }
+
+        List<String> methodNames = Arrays.asList("consultarSaldo", "consultarTarjeta", "consultarGiftCard",
+                "obtenerTarjeta", "obtenerGiftCard", "getGiftCard", "getTarjetaRegalo");
+
+        for (String methodName : methodNames) {
+            Method method = findMethod(candidate.getClass(), methodName, String.class);
+
+            if (method == null) {
+                continue;
+            }
+
+            try {
+                return method.invoke(candidate, numeroTarjeta);
+            } catch (Exception e) {
+                LOG.debug(String.format("invokeGiftCardLookup() - Unable to invoke %s on %s: %s", methodName,
+                        candidate.getClass().getName(), e.getMessage()));
+            }
+        }
+
+        return null;
+    }
+
+    private Object[] buildRestArguments(Class<?>[] parameterTypes, String numeroTarjeta) {
+        if (parameterTypes.length == 1 && String.class.equals(parameterTypes[0])) {
+            return new Object[] { numeroTarjeta };
+        }
+
+        if (parameterTypes.length == 2 && String.class.equals(parameterTypes[0])
+                && String.class.equals(parameterTypes[1])) {
+            String uidActividad = resolveUidActividad();
+
+            if (StringUtils.isBlank(uidActividad)) {
+                return null;
+            }
+
+            return new Object[] { uidActividad, numeroTarjeta };
+        }
+
+        return null;
+    }
+
+    private Object findBeanByType(ApplicationContext context, String className) {
+        if (context == null || StringUtils.isBlank(className)) {
+            return null;
+        }
+
+        try {
+            Class<?> type = Class.forName(className);
+            return context.getBean(type);
+        } catch (ClassNotFoundException e) {
+            LOG.debug("findBeanByType() - Class not available: " + className);
+        } catch (Exception e) {
+            LOG.debug("findBeanByType() - Unable to obtain bean for " + className + ": " + e.getMessage(), e);
+        }
+
+        return null;
+    }
+
+    private String resolveUidActividad() {
+        ApplicationContext context = ContextHolder.get();
+
+        if (context == null) {
+            return null;
+        }
+
+        try {
+            Object sesion;
+
+            try {
+                sesion = context.getBean("sesion");
+            } catch (Exception e) {
+                sesion = findBeanByType(context, "com.comerzzia.pos.services.core.sesion.Sesion");
+            }
+
+            if (sesion == null) {
+                return null;
+            }
+
+            Method getAplicacion = findMethod(sesion.getClass(), "getAplicacion");
+
+            if (getAplicacion == null) {
+                return null;
+            }
+
+            Object aplicacion = getAplicacion.invoke(sesion);
+
+            if (aplicacion == null) {
+                return null;
+            }
+
+            Method getUidActividad = findMethod(aplicacion.getClass(), "getUidActividad");
+
+            if (getUidActividad == null) {
+                return null;
+            }
+
+            Object uid = getUidActividad.invoke(aplicacion);
+
+            return uid != null ? uid.toString() : null;
+        } catch (Exception e) {
+            LOG.debug("resolveUidActividad() - Unable to resolve UID: " + e.getMessage(), e);
+            return null;
+        }
+    }
+
+    private void populateGiftCardIdentifiers(Object giftCardBean, String numeroTarjeta) {
+        invokeSetter(giftCardBean, "setNumTarjetaRegalo", String.class, numeroTarjeta);
+        invokeSetter(giftCardBean, "setNumeroTarjeta", String.class, numeroTarjeta);
+    }
+
+    private Object loadGiftCardBean(PaymentMethodManager paymentMethodManager, String numeroTarjeta) {
+        if (paymentMethodManager == null || StringUtils.isBlank(numeroTarjeta)) {
+            return null;
+        }
+
+        Method consultarSaldo = findMethod(paymentMethodManager.getClass(), "consultarSaldo", String.class);
+
+        if (consultarSaldo == null) {
+            return null;
+        }
+
+        try {
+            Object result = consultarSaldo.invoke(paymentMethodManager, numeroTarjeta);
+
+            if (result == null) {
+                return null;
+            }
+
+            if (isGiftCardBean(result)) {
+                return result;
+            }
+
+            if (result instanceof BigDecimal) {
+                Object bean = createGiftCardBean(numeroTarjeta, (BigDecimal) result);
+                updateGiftCardBeanBalance(bean, (BigDecimal) result);
+                return bean;
+            }
+
+            BigDecimal saldo = extractBigDecimal(result, "getSaldo");
+            BigDecimal saldoProvisional = extractBigDecimal(result, "getSaldoProvisional");
+
+            if (saldo != null || saldoProvisional != null) {
+                Object bean = createGiftCardBean(numeroTarjeta, null);
+                ensureGiftCardBalanceInitialized(bean, saldo, saldoProvisional);
+                return bean;
+            }
+        } catch (Exception e) {
+            LOG.error("loadGiftCardBean() - Error invoking consultarSaldo: " + e.getMessage(), e);
+        }
+
+        return null;
+    }
+
+    private boolean isGiftCardBean(Object candidate) {
+        if (candidate == null) {
+            return false;
+        }
+
+        try {
+            Class<?> giftCardClass = Class.forName("com.comerzzia.pos.persistence.giftcard.GiftCardBean");
+
+            return giftCardClass.isInstance(candidate);
+        } catch (ClassNotFoundException e) {
+            return StringUtils.containsIgnoreCase(candidate.getClass().getName(), "GiftCardBean");
+        }
+    }
+
+    private BigDecimal extractBigDecimal(Object source, String getterName) {
+        if (source == null) {
+            return null;
+        }
+
+        Method getter = findMethod(source.getClass(), getterName);
+
+        if (getter == null) {
+            return null;
+        }
+
+        try {
+            Object value = getter.invoke(source);
+
+            return toBigDecimal(value);
+        } catch (NumberFormatException e) {
+            LOG.debug(String.format("extractBigDecimal() - Value returned by %s is not numeric", getterName));
+        } catch (Exception e) {
+            LOG.debug(String.format("extractBigDecimal() - Unable to invoke %s on %s", getterName, source.getClass().getName()), e);
+        }
+
+        return null;
+    }
+
+    private BigDecimal extractBigDecimalFromMap(Object source, String... keys) {
+        if (!(source instanceof Map)) {
+            return null;
+        }
+
+        Map<?, ?> map = (Map<?, ?>) source;
+
+        if (keys == null) {
+            return null;
+        }
+
+        for (String key : keys) {
+            if (StringUtils.isBlank(key)) {
+                continue;
+            }
+
+            BigDecimal value = toBigDecimal(map.get(key));
+
+            if (value != null) {
+                return value;
+            }
+        }
+
+        return null;
+    }
+
+    private BigDecimal toBigDecimal(Object value) {
+        if (value == null) {
+            return null;
+        }
+
+        if (value instanceof BigDecimal) {
+            return (BigDecimal) value;
+        }
+
+        try {
+            return new BigDecimal(value.toString());
+        } catch (NumberFormatException e) {
+            LOG.debug("toBigDecimal() - Value is not numeric: " + value);
+            return null;
+        }
+    }
+
+    private void ensureGiftCardBalanceDefaults(Object giftCardBean) {
+        if (giftCardBean == null) {
+            return;
+        }
+
+        BigDecimal saldo = extractBigDecimal(giftCardBean, "getSaldo");
+        BigDecimal saldoProvisional = extractBigDecimal(giftCardBean, "getSaldoProvisional");
+
+        if (saldo == null || saldoProvisional == null) {
+            ensureGiftCardBalanceInitialized(giftCardBean, saldo, saldoProvisional);
+        }
+    }
+
+    private void ensureGiftCardBalanceInitialized(Object giftCardBean, BigDecimal saldo, BigDecimal saldoProvisional) {
+        if (giftCardBean == null) {
+            return;
+        }
+
+        BigDecimal saldoValue = saldo != null ? saldo : BigDecimal.ZERO;
+        BigDecimal saldoProvisionalValue = saldoProvisional != null ? saldoProvisional : BigDecimal.ZERO;
+
+        invokeSetter(giftCardBean, "setSaldo", BigDecimal.class, saldoValue);
+        invokeSetter(giftCardBean, "setSaldoProvisional", BigDecimal.class, saldoProvisionalValue);
+    }
+
+    private void updateGiftCardBeanBalance(Object giftCardBean, BigDecimal balance) {
+        if (giftCardBean == null || balance == null) {
+            return;
+        }
+
+        BigDecimal currentSaldo = extractBigDecimal(giftCardBean, "getSaldo");
+        BigDecimal currentSaldoProvisional = extractBigDecimal(giftCardBean, "getSaldoProvisional");
+
+        if (currentSaldo == null && currentSaldoProvisional == null) {
+            ensureGiftCardBalanceInitialized(giftCardBean, balance, BigDecimal.ZERO);
+            return;
+        }
+
+        BigDecimal total = (currentSaldo != null ? currentSaldo : BigDecimal.ZERO)
+                .add(currentSaldoProvisional != null ? currentSaldoProvisional : BigDecimal.ZERO);
+
+        if (total.compareTo(balance) != 0) {
+            invokeSetter(giftCardBean, "setSaldo", BigDecimal.class, balance);
+            invokeSetter(giftCardBean, "setSaldoProvisional", BigDecimal.class, BigDecimal.ZERO);
+        }
+    }
+
+    private BigDecimal extractBalanceFromGiftCardBean(Object giftCardBean) {
+        if (giftCardBean == null) {
+            return null;
+        }
+
+        BigDecimal saldoTotal = extractBigDecimal(giftCardBean, "getSaldoTotal");
+
+        if (saldoTotal != null) {
+            return saldoTotal;
+        }
+
+        BigDecimal saldo = extractBigDecimal(giftCardBean, "getSaldo");
+        BigDecimal saldoProvisional = extractBigDecimal(giftCardBean, "getSaldoProvisional");
+
+        if (saldo == null && saldoProvisional == null) {
+            return null;
+        }
+
+        BigDecimal saldoValue = saldo != null ? saldo : BigDecimal.ZERO;
+        BigDecimal saldoProvisionalValue = saldoProvisional != null ? saldoProvisional : BigDecimal.ZERO;
+
+        return saldoValue.add(saldoProvisionalValue);
     }
 
     private void invokeSetter(Object target, String methodName, Class<?> parameterType, Object value) {
