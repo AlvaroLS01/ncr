@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
-import com.comerzzia.ametller.pos.ncr.actions.sale.AmetllerPayManager;
 import com.comerzzia.pos.ncr.NCRController;
 import com.comerzzia.pos.ncr.actions.ActionManager;
 import com.comerzzia.pos.ncr.messages.BasicNCRMessage;
@@ -29,9 +28,6 @@ public class AmetllerCommandManager implements ActionManager {
     @Autowired
     private ScoTicketManager ticketManager;
 
-    @Autowired
-    private AmetllerPayManager payManager;
-
     @Override
     public void processMessage(BasicNCRMessage message) {
         if (message instanceof Command) {
@@ -43,10 +39,6 @@ public class AmetllerCommandManager implements ActionManager {
                 desactivarDescuento25();
             }
         } else if (message instanceof DataNeededReply) {
-            if (payManager != null && payManager.handleDataNeededReply((DataNeededReply) message)) {
-                return;
-            }
-
             String type = message.getFieldValue(DataNeededReply.Type);
             String id = message.getFieldValue(DataNeededReply.Id);
             if ("1".equals(type) && "2".equals(id)) {
