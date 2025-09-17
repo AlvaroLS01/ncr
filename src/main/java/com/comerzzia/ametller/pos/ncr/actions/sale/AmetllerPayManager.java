@@ -373,30 +373,65 @@ public class AmetllerPayManager extends PayManager {
                 try {
                     giftCardData = configureGiftCardManager(paymentRequest);
 
-                    BigDecimal balance = extractBalanceFromGiftCardBean(giftCardData);
+                    BigDecimal balance = null;
 
-                    if (balance == null || balance.compareTo(BigDecimal.ZERO) <= 0) {
+                    Object restGiftCard = fetchGiftCardBeanFromFidelizados(paymentRequest.numeroTarjeta);
+
+                    if (restGiftCard != null) {
+                        balance = applyGiftCardRestData(giftCardData, restGiftCard);
+
+                        if (LOG.isDebugEnabled()) {
+                            LOG.debug(String.format(
+                                    "executePayment() - Obtained gift card balance from REST service: %s",
+                                    balance));
+                        }
+                    }
+
+                    if (balance == null) {
+                        balance = extractBalanceFromGiftCardBean(giftCardData);
+                    }
+
+                    if (balance == null) {
+                        LOG.debug(
+                                "executePayment() - Gift card balance not available from REST, falling back to legacy consultation");
+
                         BigDecimal consultedBalance = consultGiftCardBalance(paymentRequest.paymentMethodManager,
                                 paymentRequest.numeroTarjeta);
 
                         if (consultedBalance != null) {
                             balance = consultedBalance;
+
+                            if (giftCardData != null) {
+                                ensureGiftCardBalanceInitialized(giftCardData, balance, BigDecimal.ZERO);
+                                invokeSetter(giftCardData, "setSaldoTotal", BigDecimal.class, balance);
+                            }
                         }
                     }
 
-                    updateGiftCardBeanBalance(giftCardData, balance);
+                    if (giftCardData != null && balance != null) {
+                        invokeSetter(giftCardData, "setSaldoTotal", BigDecimal.class, balance);
+                        updateGiftCardBeanBalance(giftCardData, balance);
+                    }
 
                     if (balance != null && balance.compareTo(BigDecimal.ZERO) > 0
                             && amountToPay.compareTo(balance) > 0) {
+                        LOG.info(String.format(
+                                "executePayment() - Gift card balance %s lower than requested amount %s. Adjusting tender amount.",
+                                balance, amountToPay));
                         amountToPay = balance;
-                        paymentRequest.amount = balance;
-                        paymentRequest.tenderMessage.setFieldIntValue(Tender.Amount, balance);
                     }
                 } catch (Exception e) {
                     LOG.error("executePayment() - Error preparing gift card payment: " + e.getMessage(), e);
                 } finally {
-                    updateGiftCardBeanAmount(giftCardData, paymentRequest.amount);
+                    paymentRequest.amount = amountToPay;
+                    updateGiftCardBeanAmount(giftCardData, amountToPay);
                 }
+            }
+
+            paymentRequest.amount = amountToPay;
+
+            if (paymentRequest.tenderMessage != null && amountToPay != null) {
+                paymentRequest.tenderMessage.setFieldIntValue(Tender.Amount, amountToPay);
             }
 
             if (StringUtils.equalsIgnoreCase("Credit", paymentRequest.scoTenderType)) {
@@ -644,6 +679,43 @@ public class AmetllerPayManager extends PayManager {
         return null;
     }
 
+    private Object fetchGiftCardBeanFromFidelizados(String numeroTarjeta) {
+        if (StringUtils.isBlank(numeroTarjeta)) {
+            return null;
+        }
+
+        try {
+            Class<?> restClass = Class.forName("com.comerzzia.api.rest.client.fidelizados.FidelizadosRest");
+
+            for (Method method : restClass.getMethods()) {
+                if (!StringUtils.equals(method.getName(), "getTarjetaRegalo")
+                        || !Modifier.isStatic(method.getModifiers())) {
+                    continue;
+                }
+
+                Object[] arguments = buildRestArguments(method.getParameterTypes(), numeroTarjeta);
+
+                if (arguments == null) {
+                    LOG.debug("fetchGiftCardBeanFromFidelizados() - Unsupported getTarjetaRegalo signature");
+                    continue;
+                }
+
+                try {
+                    return method.invoke(null, arguments);
+                } catch (Exception e) {
+                    LOG.error("fetchGiftCardBeanFromFidelizados() - Error invoking getTarjetaRegalo: "
+                            + e.getMessage(), e);
+                }
+            }
+
+            LOG.debug("fetchGiftCardBeanFromFidelizados() - getTarjetaRegalo method not available");
+        } catch (ClassNotFoundException e) {
+            LOG.debug("fetchGiftCardBeanFromFidelizados() - FidelizadosRest class not available");
+        }
+
+        return null;
+    }
+
     private Object adaptGiftCardResult(Object result, String numeroTarjeta, BigDecimal amount) {
         if (result == null) {
             return null;
@@ -706,6 +778,59 @@ public class AmetllerPayManager extends PayManager {
         }
 
         return null;
+    }
+
+    private BigDecimal applyGiftCardRestData(Object giftCardBean, Object restGiftCard) {
+        if (restGiftCard == null) {
+            return null;
+        }
+
+        BigDecimal saldo = extractBigDecimal(restGiftCard, "getSaldo");
+        BigDecimal saldoProvisional = extractBigDecimal(restGiftCard, "getSaldoProvisional");
+        BigDecimal saldoTotal = extractBigDecimal(restGiftCard, "getSaldoTotal");
+
+        if (giftCardBean != null) {
+            if (saldo != null) {
+                invokeSetter(giftCardBean, "setSaldo", BigDecimal.class, saldo);
+            }
+
+            if (saldoProvisional != null) {
+                invokeSetter(giftCardBean, "setSaldoProvisional", BigDecimal.class, saldoProvisional);
+            }
+
+            if (saldo != null || saldoProvisional != null) {
+                ensureGiftCardBalanceInitialized(giftCardBean, saldo, saldoProvisional);
+            }
+
+            BigDecimal totalToApply = saldoTotal;
+
+            if (totalToApply == null && (saldo != null || saldoProvisional != null)) {
+                BigDecimal saldoValue = saldo != null ? saldo : BigDecimal.ZERO;
+                BigDecimal provisionalValue = saldoProvisional != null ? saldoProvisional : BigDecimal.ZERO;
+                totalToApply = saldoValue.add(provisionalValue);
+            }
+
+            if (totalToApply != null) {
+                invokeSetter(giftCardBean, "setSaldoTotal", BigDecimal.class, totalToApply);
+
+                if (saldo == null && saldoProvisional == null) {
+                    ensureGiftCardBalanceInitialized(giftCardBean, totalToApply, BigDecimal.ZERO);
+                }
+            }
+        }
+
+        if (saldoTotal != null) {
+            return saldoTotal;
+        }
+
+        if (saldo == null && saldoProvisional == null) {
+            return null;
+        }
+
+        BigDecimal saldoValue = saldo != null ? saldo : BigDecimal.ZERO;
+        BigDecimal provisionalValue = saldoProvisional != null ? saldoProvisional : BigDecimal.ZERO;
+
+        return saldoValue.add(provisionalValue);
     }
 
     private Object invokeGiftCardLookup(Object candidate, String numeroTarjeta) {
@@ -1023,16 +1148,107 @@ public class AmetllerPayManager extends PayManager {
         }
 
         Method method = findMethod(target.getClass(), methodName, parameterType);
+        Object argument = value;
+
+        if (method == null && BigDecimal.class.equals(parameterType) && value instanceof BigDecimal) {
+            BigDecimal decimalValue = (BigDecimal) value;
+            List<Class<?>> candidateTypes = Arrays.asList(BigDecimal.class, Number.class, Double.class, double.class,
+                    Float.class, float.class, Long.class, long.class, Integer.class, int.class, Short.class, short.class,
+                    String.class, Object.class);
+
+            Method compatibleMethod = null;
+            Object compatibleArgument = null;
+
+            for (Class<?> candidateType : candidateTypes) {
+                Method candidateMethod = findMethod(target.getClass(), methodName, candidateType);
+
+                if (candidateMethod == null) {
+                    continue;
+                }
+
+                Object convertedValue = convertBigDecimalValue(decimalValue, candidateType);
+
+                if (convertedValue == null) {
+                    continue;
+                }
+
+                compatibleMethod = candidateMethod;
+                compatibleArgument = convertedValue;
+                break;
+            }
+
+            if (compatibleMethod != null) {
+                method = compatibleMethod;
+                argument = compatibleArgument;
+            }
+        }
 
         if (method == null) {
             return;
         }
 
         try {
-            method.invoke(target, value);
+            method.invoke(target, argument);
         } catch (Exception e) {
             LOG.debug(String.format("invokeSetter() - Unable to invoke %s on %s", methodName, target.getClass().getName()), e);
         }
+    }
+
+    private Object convertBigDecimalValue(BigDecimal value, Class<?> targetType) {
+        if (value == null || targetType == null) {
+            return null;
+        }
+
+        if (targetType.isPrimitive()) {
+            if (double.class.equals(targetType)) {
+                return value.doubleValue();
+            }
+            if (float.class.equals(targetType)) {
+                return value.floatValue();
+            }
+            if (long.class.equals(targetType)) {
+                return value.longValue();
+            }
+            if (int.class.equals(targetType)) {
+                return value.intValue();
+            }
+            if (short.class.equals(targetType)) {
+                return value.shortValue();
+            }
+
+            return null;
+        }
+
+        if (BigDecimal.class.equals(targetType) || Number.class.equals(targetType)
+                || Object.class.equals(targetType)) {
+            return value;
+        }
+
+        if (Double.class.equals(targetType)) {
+            return value.doubleValue();
+        }
+
+        if (Float.class.equals(targetType)) {
+            return value.floatValue();
+        }
+
+        if (Long.class.equals(targetType)) {
+            return value.longValue();
+        }
+
+        if (Integer.class.equals(targetType)) {
+            return value.intValue();
+        }
+
+        if (Short.class.equals(targetType)) {
+            return value.shortValue();
+        }
+
+        if (String.class.equals(targetType)) {
+            return value.stripTrailingZeros().toPlainString();
+        }
+
+        return null;
     }
 
     private String findStaticStringField(Class<?> clazz, String fieldName) {
