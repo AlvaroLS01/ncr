@@ -375,8 +375,13 @@ public class AmetllerPayManager extends PayManager {
 
                     BigDecimal balance = extractBalanceFromGiftCardBean(giftCardData);
 
-                    if (balance == null) {
-                        balance = consultGiftCardBalance(paymentRequest.paymentMethodManager, paymentRequest.numeroTarjeta);
+                    if (balance == null || balance.compareTo(BigDecimal.ZERO) <= 0) {
+                        BigDecimal consultedBalance = consultGiftCardBalance(paymentRequest.paymentMethodManager,
+                                paymentRequest.numeroTarjeta);
+
+                        if (consultedBalance != null) {
+                            balance = consultedBalance;
+                        }
                     }
 
                     updateGiftCardBeanBalance(giftCardData, balance);
