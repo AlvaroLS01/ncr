@@ -1,17 +1,25 @@
 package com.comerzzia.ametller.pos.ncr.actions.sale;
 
+import java.io.ByteArrayOutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.MessageFormat;
+import java.text.SimpleDateFormat;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.List;
 
 import javax.annotation.PostConstruct;
 
@@ -24,10 +32,15 @@ import org.springframework.stereotype.Service;
 
 import com.comerzzia.ametller.pos.ncr.ticket.AmetllerScoTicketManager;
 import com.comerzzia.core.servicios.variables.Variables;
+import com.comerzzia.pos.core.dispositivos.Dispositivos;
+import com.comerzzia.pos.core.dispositivos.dispositivo.impresora.IPrinter;
 import com.comerzzia.pos.ncr.actions.sale.PayManager;
+import com.comerzzia.pos.ncr.devices.printer.NCRSCOPrinter;
 import com.comerzzia.pos.ncr.messages.BasicNCRMessage;
 import com.comerzzia.pos.ncr.messages.DataNeeded;
 import com.comerzzia.pos.ncr.messages.DataNeededReply;
+import com.comerzzia.pos.ncr.messages.EndTransaction;
+import com.comerzzia.pos.ncr.messages.Receipt;
 import com.comerzzia.pos.ncr.messages.Tender;
 import com.comerzzia.pos.ncr.messages.TenderException;
 import com.comerzzia.pos.persistence.giftcard.GiftCardBean;
@@ -37,6 +50,10 @@ import com.comerzzia.pos.services.core.variables.VariablesServices;
 import com.comerzzia.pos.services.payments.PaymentsManager;
 import com.comerzzia.pos.services.payments.methods.PaymentMethodManager;
 import com.comerzzia.pos.services.payments.methods.types.GiftCardManager;
+import com.comerzzia.pos.services.ticket.ITicket;
+import com.comerzzia.pos.services.ticket.cabecera.ITotalesTicket;
+import com.comerzzia.pos.services.ticket.lineas.LineaTicket;
+import com.comerzzia.pos.services.ticket.pagos.PagoTicket;
 import com.comerzzia.pos.util.i18n.I18N;
 
 @Lazy(false)
@@ -60,6 +77,9 @@ public class AmetllerPayManager extends PayManager {
     // WAIT overlay del SCO (ojo: en tu log abre Type=1, Id=1 "Validando tarjeta...")
     private static final String WAIT_TYPE = "1";
     private static final String WAIT_ID   = "1";
+
+    private static final String RECEIPT_SEPARATOR = "------------------------------";
+    private static final Locale RECEIPT_LOCALE    = new Locale("es", "ES");
 
     @Autowired private Sesion sesion;
     @Autowired private VariablesServices variablesServices;
@@ -211,6 +231,7 @@ public class AmetllerPayManager extends PayManager {
         pendingPayment = null;
 
         // cerrar el diálogo de confirmación
+        sendCloseDialog(DIALOG_CONFIRM_TYPE, DIALOG_CONFIRM_ID);
         sendCloseDialog();
 
         if (payment == null) return true;
@@ -238,6 +259,7 @@ public class AmetllerPayManager extends PayManager {
             log.debug("handleDescuento25DataNeededReply() - Closing Descuento25 dialog");
         }
 
+        sendCloseDialog(DESCUENTO25_DIALOG_TYPE, DESCUENTO25_DIALOG_ID);
         sendCloseDialog();
         return true;
     }
@@ -260,11 +282,21 @@ public class AmetllerPayManager extends PayManager {
         w.setFieldValue(DataNeeded.Mode, "1");            // close THIS wait (Type=1/Id=1)
         ncrController.sendMessage(w);
     }
+    private void sendCloseDialog(String type, String id) {
+        if (StringUtils.isBlank(type) || StringUtils.isBlank(id)) {
+            return;
+        }
+        DataNeeded close = new DataNeeded();
+        close.setFieldValue(DataNeeded.Type, type);
+        close.setFieldValue(DataNeeded.Id,   id);
+        close.setFieldValue(DataNeeded.Mode, "1");
+        ncrController.sendMessage(close);
+    }
     private void sendCloseDialog() {
         DataNeeded close = new DataNeeded();
         close.setFieldValue(DataNeeded.Type, "0");
         close.setFieldValue(DataNeeded.Id,   "0");
-        close.setFieldValue(DataNeeded.Mode, "0");
+        close.setFieldValue(DataNeeded.Mode, "1");
         ncrController.sendMessage(close);
     }
 
@@ -322,6 +354,250 @@ public class AmetllerPayManager extends PayManager {
             sendHideWait();
             sendCloseDialog();
         }
+    }
+
+    @Override
+    protected void finishSale() {
+        ticketManager.saveTicket();
+
+        sendReceiptMessage();
+
+        EndTransaction message = new EndTransaction();
+        message.setFieldValue(EndTransaction.Id, itemsManager.getTransactionId());
+
+        ncrController.sendMessage(message);
+
+        itemsManager.resetTicket();
+    }
+
+    private void sendReceiptMessage() {
+        Receipt receipt = new Receipt();
+        receipt.setFieldValue(Receipt.Id, itemsManager.getTransactionId());
+        receipt.setFieldValue(Receipt.Complete, Receipt.COMPLETE_OK);
+
+        IPrinter impresora = Dispositivos.getInstance().getImpresora1();
+
+        if (impresora instanceof NCRSCOPrinter) {
+            ((NCRSCOPrinter) impresora).setRecepipt(receipt);
+            try {
+                ticketManager.printDocument();
+            } catch (Exception e) {
+                log.error("sendReceiptMessage() - Error while printing document: " + e.getMessage(), e);
+            }
+        } else {
+            if (impresora != null && log.isWarnEnabled()) {
+                log.warn("sendReceiptMessage() - Unexpected printer implementation: " + impresora.getClass().getName());
+            } else if (log.isWarnEnabled()) {
+                log.warn("sendReceiptMessage() - No printer configured for SCO lane");
+            }
+        }
+
+        ensureReceiptHasData(receipt);
+
+        ncrController.sendMessage(receipt);
+    }
+
+    private void ensureReceiptHasData(Receipt receipt) {
+        if (receipt == null) {
+            return;
+        }
+        boolean hasPrinterData = false;
+        for (String fieldName : receipt.getFields().keySet()) {
+            if (StringUtils.startsWith(fieldName, Receipt.PrinterData)) {
+                hasPrinterData = true;
+                break;
+            }
+        }
+
+        if (!hasPrinterData) {
+            populateReceiptPrinterData(receipt);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private void populateReceiptPrinterData(Receipt receipt) {
+        ITicket ticket = ticketManager != null ? ticketManager.getTicket() : null;
+        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+        PrintWriter writer = new PrintWriter(new OutputStreamWriter(buffer, StandardCharsets.UTF_8));
+
+        writer.println(text("Ametller Origen"));
+
+        if (ticket != null && ticket.getCabecera() != null) {
+            Date fecha = ticket.getCabecera().getFecha();
+            if (fecha != null) {
+                writer.println(new SimpleDateFormat("dd/MM/yyyy HH:mm").format(fecha));
+            }
+
+            String uidTicket = ticket.getCabecera().getUidTicket();
+            if (StringUtils.isNotBlank(uidTicket)) {
+                writer.println(text("Ticket") + ": " + uidTicket);
+            }
+        }
+
+        writer.println(RECEIPT_SEPARATOR);
+
+        int itemCount = 0;
+        List<LineaTicket> lineas = ticket != null ? (List<LineaTicket>) ticket.getLineas() : null;
+        if (lineas != null && !lineas.isEmpty()) {
+            for (LineaTicket linea : lineas) {
+                if (linea == null) {
+                    continue;
+                }
+                itemCount++;
+                writer.println(buildReceiptDescription(linea));
+                BigDecimal quantity  = linea.getCantidad();
+                BigDecimal unitPrice = firstNonNull(linea.getPrecioTotalConDto(), linea.getPrecioTotalSinDto());
+                BigDecimal lineTotal = firstNonNull(linea.getImporteTotalConDto(), linea.getImporteTotalSinDto());
+                writer.printf("  %s x %s = %s%n", formatQuantity(quantity), formatCurrency(unitPrice), formatCurrency(lineTotal));
+            }
+        } else {
+            writer.println(text("Sin artículos"));
+        }
+
+        writer.println(RECEIPT_SEPARATOR);
+
+        ITotalesTicket totales = ticket != null ? ticket.getTotales() : null;
+        if (totales != null) {
+            writer.printf("%s: %d%n", text("Artículos"), itemCount);
+
+            BigDecimal total      = firstNonNull(totales.getTotalAPagar(), BigDecimal.ZERO);
+            BigDecimal impuestos  = firstNonNull(totales.getImpuestos(), BigDecimal.ZERO);
+            BigDecimal descuentos = firstNonNull(totales.getTotalPromociones(), BigDecimal.ZERO);
+            BigDecimal entregado  = firstNonNull(totales.getEntregado(), BigDecimal.ZERO);
+            BigDecimal pendiente  = firstNonNull(totales.getPendiente(), BigDecimal.ZERO);
+
+            if (descuentos.compareTo(BigDecimal.ZERO) > 0) {
+                writer.printf("%s: -%s%n", text("Descuentos"), formatCurrency(descuentos));
+            }
+
+            if (impuestos.compareTo(BigDecimal.ZERO) > 0) {
+                writer.printf("%s: %s%n", text("Impuestos"), formatCurrency(impuestos));
+            }
+
+            writer.printf("%s: %s%n", text("Total"), formatCurrency(total));
+
+            if (entregado.compareTo(BigDecimal.ZERO) > 0) {
+                writer.printf("%s: %s%n", text("Pagado"), formatCurrency(entregado));
+            }
+
+            if (pendiente.compareTo(BigDecimal.ZERO) > 0) {
+                writer.printf("%s: %s%n", text("Pendiente"), formatCurrency(pendiente));
+            }
+        }
+
+        appendPayments(writer, ticket);
+
+        writer.println();
+        writer.println(text("Gracias por su compra"));
+
+        writer.flush();
+
+        if (buffer.size() > 0) {
+            receipt.addPrinterData(buffer, StandardCharsets.UTF_8.name());
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private void appendPayments(PrintWriter writer, ITicket ticket) {
+        if (ticket == null) {
+            return;
+        }
+
+        List<PagoTicket> pagos;
+        try {
+            pagos = (List<PagoTicket>) ticket.getPagos();
+        } catch (ClassCastException e) {
+            return;
+        }
+
+        if (pagos == null || pagos.isEmpty()) {
+            return;
+        }
+
+        writer.println(text("Pagos"));
+        for (PagoTicket pago : pagos) {
+            if (pago == null) {
+                continue;
+            }
+
+            MedioPagoBean medio = pago.getMedioPago();
+            String descripcion = medio != null && StringUtils.isNotBlank(medio.getDesMedioPago())
+                    ? medio.getDesMedioPago()
+                    : text("Pago");
+
+            BigDecimal importe = firstNonNull(pago.getImporte(), BigDecimal.ZERO);
+
+            if (importe.compareTo(BigDecimal.ZERO) == 0) {
+                continue;
+            }
+
+            writer.printf("  %s: %s%n", descripcion, formatCurrency(importe));
+        }
+    }
+
+    private BigDecimal firstNonNull(BigDecimal... values) {
+        if (values == null) {
+            return BigDecimal.ZERO;
+        }
+        for (BigDecimal value : values) {
+            if (value != null) {
+                return value;
+            }
+        }
+        return BigDecimal.ZERO;
+    }
+
+    private String formatCurrency(BigDecimal amount) {
+        BigDecimal value = amount != null ? amount : BigDecimal.ZERO;
+        DecimalFormatSymbols symbols = new DecimalFormatSymbols(RECEIPT_LOCALE);
+        symbols.setDecimalSeparator(',');
+        symbols.setGroupingSeparator('.');
+        DecimalFormat formatter = new DecimalFormat("#,##0.00", symbols);
+        return formatter.format(value) + " €";
+    }
+
+    private String formatQuantity(BigDecimal quantity) {
+        BigDecimal value = quantity != null ? quantity : BigDecimal.ONE;
+        DecimalFormatSymbols symbols = new DecimalFormatSymbols(RECEIPT_LOCALE);
+        symbols.setDecimalSeparator(',');
+        symbols.setGroupingSeparator('.');
+        DecimalFormat formatter = new DecimalFormat("#,##0.###", symbols);
+        return formatter.format(value);
+    }
+
+    private String buildReceiptDescription(LineaTicket linea) {
+        if (linea == null) {
+            return text("Artículo");
+        }
+
+        StringBuilder description = new StringBuilder(StringUtils.trimToEmpty(linea.getDesArticulo()));
+
+        if (!StringUtils.equals(linea.getDesglose1(), "*")) {
+            if (description.length() > 0) {
+                description.append(' ');
+            }
+            description.append(StringUtils.trimToEmpty(linea.getDesglose1()));
+        }
+
+        if (!StringUtils.equals(linea.getDesglose2(), "*")) {
+            if (description.length() > 0) {
+                description.append(' ');
+            }
+            description.append(StringUtils.trimToEmpty(linea.getDesglose2()));
+        }
+
+        return description.toString();
+    }
+
+    private String text(String defaultText) {
+        try {
+            String translated = I18N.getTexto(defaultText);
+            if (StringUtils.isNotBlank(translated)) {
+                return translated;
+            }
+        } catch (Exception ignore) {
+        }
+        return defaultText;
     }
 
     private GiftCardBean consultGiftCard(String cardNumber) throws GiftCardException {
