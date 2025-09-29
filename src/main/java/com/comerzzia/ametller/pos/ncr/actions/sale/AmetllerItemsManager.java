@@ -9,9 +9,11 @@ import org.springframework.stereotype.Service;
 
 import com.comerzzia.ametller.pos.ncr.ticket.AmetllerScoTicketManager;
 import com.comerzzia.pos.ncr.actions.sale.ItemsManager;
+import com.comerzzia.pos.ncr.messages.ItemException;
 import com.comerzzia.pos.ncr.messages.ItemSold;
 import com.comerzzia.pos.services.ticket.lineas.LineaTicket;
 import com.comerzzia.pos.util.bigdecimal.BigDecimalUtil;
+import com.comerzzia.pos.util.i18n.I18N;
 
 @Lazy(false)
 @Service
@@ -23,7 +25,7 @@ public class AmetllerItemsManager extends ItemsManager {
 
     @Override
     protected ItemSold lineaTicketToItemSold(LineaTicket linea) {
-		ItemSold itemSold = super.lineaTicketToItemSold(linea);
+        ItemSold itemSold = super.lineaTicketToItemSold(linea);
 
         if (linea != null && itemSold != null && ticketManager instanceof AmetllerScoTicketManager) {
             AmetllerScoTicketManager ametllerScoTicketManager = (AmetllerScoTicketManager) ticketManager;
@@ -45,4 +47,25 @@ public class AmetllerItemsManager extends ItemsManager {
 
         return itemSold;
     }
+    
+	@Override
+	public boolean isCoupon(String code) {
+		boolean couponAlreadyApplied = globalDiscounts.containsKey(GLOBAL_DISCOUNT_COUPON_PREFIX + code);
+
+		boolean handled = super.isCoupon(code);
+
+		boolean couponApplied = globalDiscounts.containsKey(GLOBAL_DISCOUNT_COUPON_PREFIX + code);
+
+		if (handled && couponApplied && !couponAlreadyApplied) {
+			ItemException itemException = new ItemException();
+			itemException.setFieldValue(ItemException.UPC, "");
+			itemException.setFieldValue(ItemException.ExceptionType, "0");
+			itemException.setFieldValue(ItemException.ExceptionId, "25");
+			itemException.setFieldValue(ItemException.Message, I18N.getTexto("Tu cupon ha sido leído correctamente"));
+			itemException.setFieldValue(ItemException.TopCaption, I18N.getTexto("Cupon leído"));
+			ncrController.sendMessage(itemException);
+		}
+
+		return handled;
+	}
 }
