@@ -317,11 +317,11 @@ public class AmetllerPayManager extends PayManager {
 		if (StringUtils.isBlank(type) || StringUtils.isBlank(id)) {
 			return;
 		}
-		DataNeeded close = new DataNeeded();
-		close.setFieldValue(DataNeeded.Type, type);
-		close.setFieldValue(DataNeeded.Id, id);
-		close.setFieldValue(DataNeeded.Mode, "1");
-		ncrController.sendMessage(close);
+//		DataNeeded close = new DataNeeded();
+//		close.setFieldValue(DataNeeded.Type, type);
+//		close.setFieldValue(DataNeeded.Id, id);
+//		close.setFieldValue(DataNeeded.Mode, "1");
+//		ncrController.sendMessage(close);
 	}
 
 	private void sendCloseDialog() {
