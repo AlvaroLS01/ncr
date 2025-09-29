@@ -76,15 +76,6 @@ public class AmetllerPayManager extends PayManager {
 	private static final String WAIT_TYPE = "1";
 	private static final String WAIT_ID = "1";
 
-	/**
-	 * NCR SCO no soporta correctamente los mensajes de cierre de DataNeeded y
-	 * bloquea el flujo cuando se envían tras finalizar la transacción. Para
-	 * evitarlo, se desactiva el envío de los diálogos de espera/cierre
-	 * automáticos.
-	 */
-	private static final boolean ENABLE_WAIT_DIALOG_MESSAGES = false;
-	private static final boolean ENABLE_GENERIC_CLOSE_MESSAGE = false;
-
 	private static final String RECEIPT_SEPARATOR = "------------------------------";
 	private static final Locale RECEIPT_LOCALE = new Locale("es", "ES");
 
@@ -281,14 +272,8 @@ public class AmetllerPayManager extends PayManager {
 		return true;
 	}
 
-        	// ==== WAIT control explícito ====
+	// ==== WAIT control explícito ====
 	private void sendShowWait(String caption) {
-		if (!ENABLE_WAIT_DIALOG_MESSAGES) {
-			if (log.isDebugEnabled()) {
-				log.debug("sendShowWait() - Suppressed wait dialog to avoid NCR lock-up");
-			}
-			return;
-		}
 		DataNeeded w = new DataNeeded();
 		w.setFieldValue(DataNeeded.Type, WAIT_TYPE);
 		w.setFieldValue(DataNeeded.Id, WAIT_ID);
@@ -300,12 +285,6 @@ public class AmetllerPayManager extends PayManager {
 	}
 
 	private void sendHideWait() {
-		if (!ENABLE_WAIT_DIALOG_MESSAGES) {
-			if (log.isDebugEnabled()) {
-				log.debug("sendHideWait() - Suppressed wait dialog close to avoid NCR lock-up");
-			}
-			return;
-		}
 		DataNeeded w = new DataNeeded();
 		w.setFieldValue(DataNeeded.Type, WAIT_TYPE);
 		w.setFieldValue(DataNeeded.Id, WAIT_ID);
@@ -325,12 +304,6 @@ public class AmetllerPayManager extends PayManager {
 	}
 
 	private void sendCloseDialog() {
-		if (!ENABLE_GENERIC_CLOSE_MESSAGE) {
-			if (log.isDebugEnabled()) {
-				log.debug("sendCloseDialog() - Suppressed generic DataNeeded close to avoid NCR lock-up");
-			}
-			return;
-		}
 		DataNeeded close = new DataNeeded();
 		close.setFieldValue(DataNeeded.Type, "0");
 		close.setFieldValue(DataNeeded.Id, "0");
