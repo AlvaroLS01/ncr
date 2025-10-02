@@ -73,8 +73,8 @@ public class AmetllerCommandManager implements ActionManager {
         dn.setFieldValue(DataNeeded.Id, "2");
         dn.setFieldValue(DataNeeded.Mode, "0");
         dn.setFieldValue(DataNeeded.SummaryInstruction1,
-                "Descuento 25% ACTIVADO.\n" +
-                "Escanee los artículos con fecha próxima de caducidad.\n" +
+                "Descuento del 25%% ACTIVADO.\n" +
+                "Escanee los articulos con fecha proxima de caducidad.\n" +
                 "Pulse OK para continuar.");
         ncrController.sendMessage(dn);
     }

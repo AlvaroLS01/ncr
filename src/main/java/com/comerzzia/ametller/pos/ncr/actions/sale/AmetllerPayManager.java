@@ -76,15 +76,6 @@ public class AmetllerPayManager extends PayManager {
 	private static final String WAIT_TYPE = "1";
 	private static final String WAIT_ID = "1";
 
-	/**
-	 * NCR SCO no soporta correctamente los mensajes de cierre de DataNeeded y
-	 * bloquea el flujo cuando se envían tras finalizar la transacción. Para
-	 * evitarlo, se desactiva el envío de los diálogos de espera/cierre
-	 * automáticos.
-	 */
-	private static final boolean ENABLE_WAIT_DIALOG_MESSAGES = false;
-	private static final boolean SUPPRESS_GENERIC_CLOSE_MESSAGE = true;
-
 	private static final String RECEIPT_SEPARATOR = "------------------------------";
 	private static final Locale RECEIPT_LOCALE = new Locale("es", "ES");
 
@@ -277,18 +268,11 @@ public class AmetllerPayManager extends PayManager {
 		}
 
 		sendCloseDialog(DESCUENTO25_DIALOG_TYPE, DESCUENTO25_DIALOG_ID);
-		sendCloseDialog(true);
+		sendCloseDialog();
 		return true;
 	}
 
-        	// ==== WAIT control explícito ====
 	private void sendShowWait(String caption) {
-		if (!ENABLE_WAIT_DIALOG_MESSAGES) {
-			if (log.isDebugEnabled()) {
-				log.debug("sendShowWait() - Suppressed wait dialog to avoid NCR lock-up");
-			}
-			return;
-		}
 		DataNeeded w = new DataNeeded();
 		w.setFieldValue(DataNeeded.Type, WAIT_TYPE);
 		w.setFieldValue(DataNeeded.Id, WAIT_ID);
@@ -300,17 +284,11 @@ public class AmetllerPayManager extends PayManager {
 	}
 
 	private void sendHideWait() {
-		if (!ENABLE_WAIT_DIALOG_MESSAGES) {
-			if (log.isDebugEnabled()) {
-				log.debug("sendHideWait() - Suppressed wait dialog close to avoid NCR lock-up");
-			}
-			return;
-		}
-		DataNeeded w = new DataNeeded();
-		w.setFieldValue(DataNeeded.Type, WAIT_TYPE);
-		w.setFieldValue(DataNeeded.Id, WAIT_ID);
-		w.setFieldValue(DataNeeded.Mode, "1");
-		ncrController.sendMessage(w);
+//		DataNeeded w = new DataNeeded();
+//		w.setFieldValue(DataNeeded.Type, WAIT_TYPE);
+//		w.setFieldValue(DataNeeded.Id, WAIT_ID);
+//		w.setFieldValue(DataNeeded.Mode, "1");
+//		ncrController.sendMessage(w);
 	}
 
 	private void sendCloseDialog(String type, String id) {
@@ -325,16 +303,6 @@ public class AmetllerPayManager extends PayManager {
 	}
 
 	private void sendCloseDialog() {
-		sendCloseDialog(false);
-	}
-
-	private void sendCloseDialog(boolean force) {
-		if (!force && SUPPRESS_GENERIC_CLOSE_MESSAGE) {
-			if (log.isDebugEnabled()) {
-				log.debug("sendCloseDialog(force=false) - Suppressed generic DataNeeded close to avoid NCR lock-up");
-			}
-			return;
-		}
 		DataNeeded close = new DataNeeded();
 		close.setFieldValue(DataNeeded.Type, "0");
 		close.setFieldValue(DataNeeded.Id, "0");
@@ -356,9 +324,7 @@ public class AmetllerPayManager extends PayManager {
 	}
 
 	private void executeGiftCardPayment(PendingPayment payment) {
-                if (ENABLE_WAIT_DIALOG_MESSAGES) {
-                        sendShowWait(I18N.getTexto("Validando tarjeta..."));
-                }
+		sendShowWait(I18N.getTexto("Validando tarjeta..."));
 
 		try {
 			GiftCardBean giftCard = consultGiftCard(payment.cardNumber);
@@ -381,28 +347,22 @@ public class AmetllerPayManager extends PayManager {
 			PaymentsManager pm = ticketManager.getPaymentsManager();
 			pm.pay(payment.context.paymentCode, amountToCharge);
 
-                        if (ENABLE_WAIT_DIALOG_MESSAGES) {
-                                sendHideWait();
-                        }
-                        sendCloseDialog();
+			sendHideWait();
+			sendCloseDialog();
 
-                }
-                catch (GiftCardException e) {
-                        log.error("executeGiftCardPayment() - " + e.getMessage(), e);
-                        sendGiftCardError(e.getMessage(), payment.context.scoTenderType);
-                        if (ENABLE_WAIT_DIALOG_MESSAGES) {
-                                sendHideWait();
-                        }
-                        sendCloseDialog();
-                }
-                catch (Exception e) {
-                        log.error("executeGiftCardPayment() - Unexpected error: " + e.getMessage(), e);
-                        sendGiftCardError(I18N.getTexto("No se ha podido validar la tarjeta regalo."), payment.context.scoTenderType);
-                        if (ENABLE_WAIT_DIALOG_MESSAGES) {
-                                sendHideWait();
-                        }
-                        sendCloseDialog();
-                }
+		}
+		catch (GiftCardException e) {
+			log.error("executeGiftCardPayment() - " + e.getMessage(), e);
+			sendGiftCardError(e.getMessage(), payment.context.scoTenderType);
+			sendHideWait();
+			sendCloseDialog();
+		}
+		catch (Exception e) {
+			log.error("executeGiftCardPayment() - Unexpected error: " + e.getMessage(), e);
+			sendGiftCardError(I18N.getTexto("No se ha podido validar la tarjeta regalo."), payment.context.scoTenderType);
+			sendHideWait();
+			sendCloseDialog();
+		}
 	}
 
 	@Override
