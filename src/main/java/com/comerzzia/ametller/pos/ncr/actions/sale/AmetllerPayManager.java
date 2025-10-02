@@ -26,6 +26,7 @@ import javax.annotation.PostConstruct;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
@@ -59,6 +60,7 @@ import com.comerzzia.pos.util.i18n.I18N;
 @Lazy(false)
 @Service
 @Primary
+@DependsOn("ametllerCommandManager")
 public class AmetllerPayManager extends PayManager {
 
 	private static final Logger log = Logger.getLogger(AmetllerPayManager.class);
