@@ -69,35 +69,50 @@ public class PayManager implements ActionManager {
 	protected MediosPagosService mediosPagosService;
 	
 	@SuppressWarnings("unchecked")
-	protected void addHeaderDiscountsPayments() {
-		ticketManager.getTicket().getPagos().removeIf(p->!((IPagoTicket)p).isIntroducidoPorCajero());
-		ticketManager.getTicket().getCabecera().getTotales().recalcular();
-		
-		Map<String, BigDecimal> descuentosPromocionales = new HashMap<String, BigDecimal>();
-		
-		for(PromocionTicket promocion : (List<PromocionTicket>) ticketManager.getTicket().getPromociones()) {
-			if(promocion.isDescuentoMenosIngreso()) {
-				PromocionTipoBean tipoPromocion = ticketManager.getSesion().getSesionPromociones().getPromocionActiva(promocion.getIdPromocion()).getPromocionBean().getTipoPromocion();
-				String codMedioPago = tipoPromocion.getCodMedioPagoMenosIngreso();
+        protected void addHeaderDiscountsPayments() {
+                Map<String, BigDecimal> descuentosPromocionales = new HashMap<String, BigDecimal>();
+
+                for(PromocionTicket promocion : (List<PromocionTicket>) ticketManager.getTicket().getPromociones()) {
+                        if(promocion.isDescuentoMenosIngreso()) {
+                                PromocionTipoBean tipoPromocion = ticketManager.getSesion().getSesionPromociones().getPromocionActiva(promocion.getIdPromocion()).getPromocionBean().getTipoPromocion();
+                                String codMedioPago = tipoPromocion.getCodMedioPagoMenosIngreso();
 				if(codMedioPago != null) {
 					BigDecimal importeDescPromocional = BigDecimalUtil.redondear(promocion.getImporteTotalAhorro(), 2);
 					BigDecimal importeDescAcum = descuentosPromocionales.get(codMedioPago) != null ? descuentosPromocionales.get(codMedioPago) : BigDecimal.ZERO;
 					importeDescAcum = importeDescAcum.add(importeDescPromocional);
 					descuentosPromocionales.put(codMedioPago, importeDescAcum);
-				}
-			}
-		}
-		
-		for(String codMedioPago : descuentosPromocionales.keySet()) {
-			BigDecimal importe = descuentosPromocionales.get(codMedioPago);
-			
-			if(BigDecimalUtil.isMayorACero(importe)) {
-				ticketManager.addPayToTicket(codMedioPago, importe, null, false, false);
-			}
-		}
-		
-		ticketManager.getTicket().getCabecera().getTotales().recalcular();
-	}
+                                }
+                        }
+                }
+
+                ticketManager.getTicket().getPagos().removeIf(p -> {
+                        if (!(p instanceof IPagoTicket)) {
+                                return false;
+                        }
+
+                        IPagoTicket pagoTicket = (IPagoTicket) p;
+
+                        if (!pagoTicket.isIntroducidoPorCajero()) {
+                                return true;
+                        }
+
+                        MedioPagoBean medioPago = pagoTicket.getMedioPago();
+
+                        return medioPago != null && descuentosPromocionales.containsKey(medioPago.getCodMedioPago());
+                });
+                ticketManager.getTicket().getCabecera().getTotales().recalcular();
+
+                for(Map.Entry<String, BigDecimal> descuento : descuentosPromocionales.entrySet()) {
+                        String codMedioPago = descuento.getKey();
+                        BigDecimal importe = descuento.getValue();
+
+                        if(BigDecimalUtil.isMayorACero(importe)) {
+                                ticketManager.addPayToTicket(codMedioPago, importe, null, true, false);
+                        }
+                }
+
+                ticketManager.getTicket().getCabecera().getTotales().recalcular();
+        }
 
 	@Override
 	public void processMessage(BasicNCRMessage message) {
