@@ -13,7 +13,6 @@ import com.comerzzia.ametller.pos.ncr.ticket.AmetllerScoTicketManager;
 import com.comerzzia.pos.ncr.actions.sale.ItemsManager;
 import com.comerzzia.pos.ncr.messages.ItemException;
 import com.comerzzia.pos.ncr.messages.ItemSold;
-import com.comerzzia.pos.ncr.messages.ItemVoided;
 import com.comerzzia.pos.services.ticket.lineas.LineaTicket;
 import com.comerzzia.pos.util.bigdecimal.BigDecimalUtil;
 import com.comerzzia.pos.util.i18n.I18N;
@@ -48,19 +47,47 @@ public class AmetllerItemsManager extends ItemsManager {
             }
         }
 
+        if (linea != null && itemSold != null) {
+            BigDecimal importePromociones = linea.getImporteTotalPromociones();
+
+            if (BigDecimalUtil.isMayorACero(importePromociones)) {
+                BigDecimal precioConDto = linea.getPrecioTotalConDto();
+                BigDecimal importeConDto = linea.getImporteTotalConDto();
+
+                if (precioConDto != null) {
+                    itemSold.setFieldIntValue(ItemSold.Price, precioConDto);
+                }
+
+                if (importeConDto != null) {
+                    itemSold.setFieldIntValue(ItemSold.ExtendedPrice, importeConDto);
+                }
+
+                ItemSold discountApplied = itemSold.getDiscountApplied();
+
+                if (discountApplied != null) {
+                    String discountDescription = discountApplied.getFieldValue(ItemSold.Description);
+
+                    if (StringUtils.isNotBlank(discountDescription)) {
+                        itemSold.setFieldValue(ItemSold.Description, discountDescription);
+                    }
+
+                    discountApplied.setFieldIntValue(ItemSold.Price, BigDecimal.ZERO);
+                    discountApplied.setFieldIntValue(ItemSold.ExtendedPrice, BigDecimal.ZERO);
+                }
+            }
+        }
+
         return itemSold;
     }
 
 
     @Override
     protected void sendItemSold(final ItemSold itemSold) {
-        ncrController.sendMessage(itemSold);
-
-        if (itemSold != null && itemSold.getDiscountApplied() != null
-                && !StringUtils.equals(itemSold.getDiscountApplied().getFieldValue(ItemSold.Price), "0")) {
-            ncrController.sendMessage(itemSold.getDiscountApplied());
+        if (itemSold == null) {
+            return;
         }
 
+        ncrController.sendMessage(itemSold);
         sendTotals();
     }
 
@@ -78,28 +105,23 @@ public class AmetllerItemsManager extends ItemsManager {
         for (LineaTicket ticketLine : (List<LineaTicket>) ticketManager.getTicket().getLineas()) {
             ItemSold cachedItem = linesCache.get(ticketLine.getIdLinea());
 
-            if (cachedItem == null || cachedItem.getDiscountApplied() == null) {
+            if (cachedItem == null) {
                 continue;
             }
 
             ItemSold refreshedItem = lineaTicketToItemSold(ticketLine);
 
-            if (refreshedItem.getDiscountApplied() == null) {
-                continue;
-            }
+            String cachedPrice = cachedItem.getFieldValue(ItemSold.Price);
+            String refreshedPrice = refreshedItem.getFieldValue(ItemSold.Price);
+            String cachedExtendedPrice = cachedItem.getFieldValue(ItemSold.ExtendedPrice);
+            String refreshedExtendedPrice = refreshedItem.getFieldValue(ItemSold.ExtendedPrice);
+            String cachedDescription = cachedItem.getFieldValue(ItemSold.Description);
+            String refreshedDescription = refreshedItem.getFieldValue(ItemSold.Description);
 
-            String cachedPrice = cachedItem.getDiscountApplied().getFieldValue(ItemSold.Price);
-            String refreshedPrice = refreshedItem.getDiscountApplied().getFieldValue(ItemSold.Price);
-
-            if (!StringUtils.equals(cachedPrice, refreshedPrice)) {
-                if (!StringUtils.equals(refreshedPrice, "0")) {
-                    ncrController.sendMessage(refreshedItem.getDiscountApplied());
-                } else if (!StringUtils.equals(cachedPrice, "0")) {
-                    ItemVoided voidItem = new ItemVoided();
-                    voidItem.setFieldValue(ItemVoided.ItemNumber, cachedItem.getDiscountApplied().getFieldValue(ItemSold.ItemNumber));
-                    ncrController.sendMessage(voidItem);
-                }
-
+            if (!StringUtils.equals(cachedPrice, refreshedPrice)
+                    || !StringUtils.equals(cachedExtendedPrice, refreshedExtendedPrice)
+                    || !StringUtils.equals(cachedDescription, refreshedDescription)) {
+                ncrController.sendMessage(refreshedItem);
                 sendTotals();
                 linesCache.put(ticketLine.getIdLinea(), refreshedItem);
             }
