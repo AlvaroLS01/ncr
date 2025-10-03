@@ -51,6 +51,8 @@ public class AmetllerItemsManager extends ItemsManager {
         return itemSold;
     }
 
+    
+    //Actualizamos linea si el articulo tiene promoción
     @Override
     @SuppressWarnings("unchecked")
     public void updateItems() {

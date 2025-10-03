@@ -127,6 +127,7 @@ public class AmetllerPayManager extends PayManager {
 		super.activateTenderMode();
 	}
 
+	// LUST-141048 Correción pendiente pago de promociones del estandar sobre la clase personalizada
 	@Override
 	@SuppressWarnings("unchecked")
 	protected void addHeaderDiscountsPayments() {
@@ -134,16 +135,11 @@ public class AmetllerPayManager extends PayManager {
 
 		for (PromocionTicket promocion : (List<PromocionTicket>) ticketManager.getTicket().getPromociones()) {
 			if (promocion.isDescuentoMenosIngreso()) {
-				PromocionTipoBean tipoPromocion = ticketManager.getSesion().getSesionPromociones()
-						.getPromocionActiva(promocion.getIdPromocion()).getPromocionBean()
-						.getTipoPromocion();
+				PromocionTipoBean tipoPromocion = ticketManager.getSesion().getSesionPromociones().getPromocionActiva(promocion.getIdPromocion()).getPromocionBean().getTipoPromocion();
 				String codMedioPago = tipoPromocion.getCodMedioPagoMenosIngreso();
 				if (codMedioPago != null) {
-					BigDecimal importeDescPromocional = BigDecimalUtil
-							.redondear(promocion.getImporteTotalAhorro(), 2);
-					BigDecimal importeDescAcum = descuentosPromocionales.get(codMedioPago) != null
-							? descuentosPromocionales.get(codMedioPago)
-							: BigDecimal.ZERO;
+					BigDecimal importeDescPromocional = BigDecimalUtil.redondear(promocion.getImporteTotalAhorro(), 2);
+					BigDecimal importeDescAcum = descuentosPromocionales.get(codMedioPago) != null ? descuentosPromocionales.get(codMedioPago) : BigDecimal.ZERO;
 					importeDescAcum = importeDescAcum.add(importeDescPromocional);
 					descuentosPromocionales.put(codMedioPago, importeDescAcum);
 				}
@@ -343,22 +339,22 @@ public class AmetllerPayManager extends PayManager {
 	}
 
 	private void sendHideWait() {
-//		DataNeeded w = new DataNeeded();
-//		w.setFieldValue(DataNeeded.Type, WAIT_TYPE);
-//		w.setFieldValue(DataNeeded.Id, WAIT_ID);
-//		w.setFieldValue(DataNeeded.Mode, "1");
-//		ncrController.sendMessage(w);
+		// DataNeeded w = new DataNeeded();
+		// w.setFieldValue(DataNeeded.Type, WAIT_TYPE);
+		// w.setFieldValue(DataNeeded.Id, WAIT_ID);
+		// w.setFieldValue(DataNeeded.Mode, "1");
+		// ncrController.sendMessage(w);
 	}
 
 	private void sendCloseDialog(String type, String id) {
 		if (StringUtils.isBlank(type) || StringUtils.isBlank(id)) {
 			return;
 		}
-//		DataNeeded close = new DataNeeded();
-//		close.setFieldValue(DataNeeded.Type, type);
-//		close.setFieldValue(DataNeeded.Id, id);
-//		close.setFieldValue(DataNeeded.Mode, "1");
-//		ncrController.sendMessage(close);
+		// DataNeeded close = new DataNeeded();
+		// close.setFieldValue(DataNeeded.Type, type);
+		// close.setFieldValue(DataNeeded.Id, id);
+		// close.setFieldValue(DataNeeded.Mode, "1");
+		// ncrController.sendMessage(close);
 	}
 
 	private void sendCloseDialog() {
