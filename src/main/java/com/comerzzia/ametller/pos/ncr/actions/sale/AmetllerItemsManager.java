@@ -1,7 +1,9 @@
 package com.comerzzia.ametller.pos.ncr.actions.sale;
 
 import java.math.BigDecimal;
+import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Primary;
@@ -11,6 +13,7 @@ import com.comerzzia.ametller.pos.ncr.ticket.AmetllerScoTicketManager;
 import com.comerzzia.pos.ncr.actions.sale.ItemsManager;
 import com.comerzzia.pos.ncr.messages.ItemException;
 import com.comerzzia.pos.ncr.messages.ItemSold;
+import com.comerzzia.pos.ncr.messages.ItemVoided;
 import com.comerzzia.pos.services.ticket.lineas.LineaTicket;
 import com.comerzzia.pos.util.bigdecimal.BigDecimalUtil;
 import com.comerzzia.pos.util.i18n.I18N;
@@ -46,6 +49,46 @@ public class AmetllerItemsManager extends ItemsManager {
         }
 
         return itemSold;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public void updateItems() {
+        super.updateItems();
+
+        if (ticketManager == null || ticketManager.getTicket() == null) {
+            return;
+        }
+
+        for (LineaTicket ticketLine : (List<LineaTicket>) ticketManager.getTicket().getLineas()) {
+            ItemSold cachedItem = linesCache.get(ticketLine.getIdLinea());
+
+            if (cachedItem == null || cachedItem.getDiscountApplied() == null) {
+                continue;
+            }
+
+            ItemSold refreshedItem = lineaTicketToItemSold(ticketLine);
+
+            if (refreshedItem.getDiscountApplied() == null) {
+                continue;
+            }
+
+            String cachedPrice = cachedItem.getDiscountApplied().getFieldValue(ItemSold.Price);
+            String refreshedPrice = refreshedItem.getDiscountApplied().getFieldValue(ItemSold.Price);
+
+            if (!StringUtils.equals(cachedPrice, refreshedPrice)) {
+                if (!StringUtils.equals(refreshedPrice, "0")) {
+                    ncrController.sendMessage(refreshedItem.getDiscountApplied());
+                } else if (!StringUtils.equals(cachedPrice, "0")) {
+                    ItemVoided voidItem = new ItemVoided();
+                    voidItem.setFieldValue(ItemVoided.ItemNumber, cachedItem.getDiscountApplied().getFieldValue(ItemSold.ItemNumber));
+                    ncrController.sendMessage(voidItem);
+                }
+
+                sendTotals();
+                linesCache.put(ticketLine.getIdLinea(), refreshedItem);
+            }
+        }
     }
     
 	@Override
