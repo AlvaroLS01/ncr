@@ -51,7 +51,20 @@ public class AmetllerItemsManager extends ItemsManager {
         return itemSold;
     }
 
-    
+
+    @Override
+    protected void sendItemSold(final ItemSold itemSold) {
+        ncrController.sendMessage(itemSold);
+
+        if (itemSold != null && itemSold.getDiscountApplied() != null
+                && !StringUtils.equals(itemSold.getDiscountApplied().getFieldValue(ItemSold.Price), "0")) {
+            ncrController.sendMessage(itemSold.getDiscountApplied());
+        }
+
+        sendTotals();
+    }
+
+
     //Actualizamos linea si el articulo tiene promoción
     @Override
     @SuppressWarnings("unchecked")
