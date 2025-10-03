@@ -17,9 +17,11 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import javax.annotation.PostConstruct;
 
@@ -51,10 +53,12 @@ import com.comerzzia.pos.services.core.variables.VariablesServices;
 import com.comerzzia.pos.services.payments.PaymentsManager;
 import com.comerzzia.pos.services.payments.methods.PaymentMethodManager;
 import com.comerzzia.pos.services.payments.methods.types.GiftCardManager;
+import com.comerzzia.pos.persistence.promociones.tipos.PromocionTipoBean;
 import com.comerzzia.pos.services.ticket.ITicket;
 import com.comerzzia.pos.services.ticket.cabecera.ITotalesTicket;
 import com.comerzzia.pos.services.ticket.lineas.LineaTicket;
 import com.comerzzia.pos.services.ticket.pagos.PagoTicket;
+import com.comerzzia.pos.services.ticket.promociones.PromocionTicket;
 import com.comerzzia.pos.util.i18n.I18N;
 
 @Lazy(false)
@@ -121,6 +125,60 @@ public class AmetllerPayManager extends PayManager {
 		}
 		super.activateTenderMode();
 	}
+
+        @Override
+        @SuppressWarnings("unchecked")
+        protected void addHeaderDiscountsPayments() {
+                super.addHeaderDiscountsPayments();
+
+                List<PromocionTicket> promociones = (List<PromocionTicket>) ticketManager.getTicket().getPromociones();
+                if (promociones == null || promociones.isEmpty()) {
+                        return;
+                }
+
+                Set<String> mediosConDescuento = new HashSet<String>();
+
+                for (PromocionTicket promocion : promociones) {
+                        if (!promocion.isDescuentoMenosIngreso()) {
+                                continue;
+                        }
+
+                        PromocionTipoBean tipoPromocion = ticketManager.getSesion().getSesionPromociones()
+                                        .getPromocionActiva(promocion.getIdPromocion()).getPromocionBean()
+                                        .getTipoPromocion();
+                        String codMedioPago = tipoPromocion != null ? tipoPromocion.getCodMedioPagoMenosIngreso() : null;
+                        if (codMedioPago != null) {
+                                mediosConDescuento.add(codMedioPago);
+                        }
+                }
+
+                if (mediosConDescuento.isEmpty()) {
+                        return;
+                }
+
+                List<?> pagos = ticketManager.getTicket().getPagos();
+                for (Object pagoObj : pagos) {
+                        if (!(pagoObj instanceof PagoTicket)) {
+                                continue;
+                        }
+
+                        PagoTicket pago = (PagoTicket) pagoObj;
+                        if (pago.isIntroducidoPorCajero()) {
+                                continue;
+                        }
+
+                        MedioPagoBean medioPago = pago.getMedioPago();
+                        if (medioPago == null) {
+                                continue;
+                        }
+
+                        if (!mediosConDescuento.contains(medioPago.getCodMedioPago())) {
+                                continue;
+                        }
+
+                        pago.setIntroducidoPorCajero(true);
+                }
+        }
 
 	@Override
 	protected void trayPay(Tender message) {
