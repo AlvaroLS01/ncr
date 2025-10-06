@@ -13,6 +13,7 @@ import com.comerzzia.ametller.pos.ncr.ticket.AmetllerScoTicketManager;
 import com.comerzzia.pos.ncr.actions.sale.ItemsManager;
 import com.comerzzia.pos.ncr.messages.ItemException;
 import com.comerzzia.pos.ncr.messages.ItemSold;
+import com.comerzzia.pos.services.ticket.TicketVentaAbono;
 import com.comerzzia.pos.services.ticket.lineas.LineaTicket;
 import com.comerzzia.pos.util.bigdecimal.BigDecimalUtil;
 import com.comerzzia.pos.util.i18n.I18N;
@@ -93,6 +94,27 @@ public class AmetllerItemsManager extends ItemsManager {
     }
 
 
+    @Override
+    public void newItem(final LineaTicket newLine) {
+        if (newLine == null) {
+            return;
+        }
+
+        if (ticketManager != null && ticketManager.getTicket() != null) {
+            ticketManager.getSesion().getSesionPromociones()
+                    .aplicarPromociones((TicketVentaAbono) ticketManager.getTicket());
+            ticketManager.getTicket().getTotales().recalcular();
+            refreshCachedLinesExcept(newLine);
+        }
+
+        ItemSold response = lineaTicketToItemSold(newLine);
+
+        sendItemSold(response);
+
+        linesCache.put(newLine.getIdLinea(), response);
+    }
+
+
     //Actualizamos linea si el articulo tiene promoción
     @Override
     @SuppressWarnings("unchecked")
@@ -147,6 +169,33 @@ public class AmetllerItemsManager extends ItemsManager {
 			ncrController.sendMessage(itemException);
 		}
 
-		return handled;
-	}
+        return handled;
+        }
+
+    @SuppressWarnings("unchecked")
+    private void refreshCachedLinesExcept(final LineaTicket excludedLine) {
+        if (linesCache.isEmpty() || ticketManager == null || ticketManager.getTicket() == null) {
+            return;
+        }
+
+        List<LineaTicket> ticketLines = (List<LineaTicket>) ticketManager.getTicket().getLineas();
+
+        if (ticketLines == null || ticketLines.isEmpty()) {
+            return;
+        }
+
+        for (LineaTicket ticketLine : ticketLines) {
+            if (ticketLine == null || ticketLine.getIdLinea() == null) {
+                continue;
+            }
+
+            if (excludedLine != null && ticketLine.getIdLinea().equals(excludedLine.getIdLinea())) {
+                continue;
+            }
+
+            if (linesCache.containsKey(ticketLine.getIdLinea())) {
+                linesCache.put(ticketLine.getIdLinea(), lineaTicketToItemSold(ticketLine));
+            }
+        }
+    }
 }
