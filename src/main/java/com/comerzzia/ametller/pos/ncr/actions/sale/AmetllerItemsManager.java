@@ -47,6 +47,7 @@ public class AmetllerItemsManager extends ItemsManager {
             }
         }
 
+        //Enviamos un unico ItemSold y un unico Totals para que no salga el problema del embolsado
         if (linea != null && itemSold != null) {
             BigDecimal importePromociones = linea.getImporteTotalPromociones();
 
