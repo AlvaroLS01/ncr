@@ -13,6 +13,7 @@ import com.comerzzia.ametller.pos.ncr.ticket.AmetllerScoTicketManager;
 import com.comerzzia.pos.ncr.actions.sale.ItemsManager;
 import com.comerzzia.pos.ncr.messages.ItemException;
 import com.comerzzia.pos.ncr.messages.ItemSold;
+import com.comerzzia.pos.services.ticket.TicketVentaAbono;
 import com.comerzzia.pos.services.ticket.lineas.LineaTicket;
 import com.comerzzia.pos.util.bigdecimal.BigDecimalUtil;
 import com.comerzzia.pos.util.i18n.I18N;
@@ -90,6 +91,26 @@ public class AmetllerItemsManager extends ItemsManager {
 
         ncrController.sendMessage(itemSold);
         sendTotals();
+    }
+
+
+    @Override
+    public void newItem(final LineaTicket newLine) {
+        if (newLine == null) {
+            return;
+        }
+
+        if (ticketManager != null && ticketManager.getTicket() != null) {
+            ticketManager.getSesion().getSesionPromociones()
+                    .aplicarPromociones((TicketVentaAbono) ticketManager.getTicket());
+            ticketManager.getTicket().getTotales().recalcular();
+        }
+
+        ItemSold response = lineaTicketToItemSold(newLine);
+
+        sendItemSold(response);
+
+        linesCache.put(newLine.getIdLinea(), response);
     }
 
 
