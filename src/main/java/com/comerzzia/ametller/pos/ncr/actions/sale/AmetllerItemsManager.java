@@ -33,6 +33,8 @@ public class AmetllerItemsManager extends ItemsManager {
     private AmetllerPayManager ametllerPayManager;
 
     private Integer lastScannedLineId;
+    private boolean suppressTotals;
+    private boolean pendingTotals;
 
     @Override
     protected ItemSold lineaTicketToItemSold(LineaTicket linea) {
@@ -93,12 +95,43 @@ public class AmetllerItemsManager extends ItemsManager {
 
     @Override
     protected void sendItemSold(final ItemSold itemSold) {
+        sendItemSoldMessage(itemSold, true);
+    }
+
+    @Override
+    public void sendTotals() {
+        if (suppressTotals) {
+            pendingTotals = true;
+            return;
+        }
+
+        super.sendTotals();
+        pendingTotals = false;
+    }
+
+    private void sendItemSoldMessage(final ItemSold itemSold, final boolean includeTotals) {
         if (itemSold == null) {
             return;
         }
 
         ncrController.sendMessage(itemSold);
+
+        if (includeTotals) {
+            sendTotals();
+        } else {
+            pendingTotals = true;
+        }
+    }
+
+    private void flushPendingTotalsIfNeeded() {
+        if (!pendingTotals) {
+            return;
+        }
+
+        boolean previousSuppress = suppressTotals;
+        suppressTotals = false;
         sendTotals();
+        suppressTotals = previousSuppress;
     }
 
 
@@ -129,6 +162,8 @@ public class AmetllerItemsManager extends ItemsManager {
         super.newTicket();
 
         lastScannedLineId = null;
+        suppressTotals = false;
+        pendingTotals = false;
 
         if (ametllerPayManager != null) {
             ametllerPayManager.onTransactionStarted();
@@ -142,6 +177,8 @@ public class AmetllerItemsManager extends ItemsManager {
         }
 
         lastScannedLineId = null;
+        suppressTotals = false;
+        pendingTotals = false;
 
         super.deleteAllItems(message);
     }
@@ -151,9 +188,16 @@ public class AmetllerItemsManager extends ItemsManager {
     @Override
     @SuppressWarnings("unchecked")
     public void updateItems() {
-        super.updateItems();
+        boolean previousSuppress = suppressTotals;
+        suppressTotals = true;
+        try {
+            super.updateItems();
+        } finally {
+            suppressTotals = previousSuppress;
+        }
 
         if (ticketManager == null || ticketManager.getTicket() == null) {
+            flushPendingTotalsIfNeeded();
             return;
         }
 
@@ -169,40 +213,43 @@ public class AmetllerItemsManager extends ItemsManager {
             ItemSold refreshedItem = lineaTicketToItemSold(ticketLine);
 
             if (hasLineChanged(cachedItem, refreshedItem)) {
-                ncrController.sendMessage(refreshedItem);
-                sendTotals();
+                sendItemSoldMessage(refreshedItem, false);
                 linesCache.put(ticketLine.getIdLinea(), refreshedItem);
                 ticketLinesUpdated = true;
             }
         }
 
-        resendLastScannedLine(ticketLinesUpdated);
+        boolean shouldResendLastLine = pendingTotals || ticketLinesUpdated;
+
+        resendLastScannedLine(shouldResendLastLine);
+
+        flushPendingTotalsIfNeeded();
     }
 
-        @Override
-        public boolean isCoupon(String code) {
-		boolean couponAlreadyApplied = globalDiscounts.containsKey(GLOBAL_DISCOUNT_COUPON_PREFIX + code);
+    @Override
+    public boolean isCoupon(String code) {
+        boolean couponAlreadyApplied = globalDiscounts.containsKey(GLOBAL_DISCOUNT_COUPON_PREFIX + code);
 
-		boolean handled = super.isCoupon(code);
+        boolean handled = super.isCoupon(code);
 
-		boolean couponApplied = globalDiscounts.containsKey(GLOBAL_DISCOUNT_COUPON_PREFIX + code);
+        boolean couponApplied = globalDiscounts.containsKey(GLOBAL_DISCOUNT_COUPON_PREFIX + code);
 
-		if (handled && couponApplied && !couponAlreadyApplied) {
-			ItemException itemException = new ItemException();
-			itemException.setFieldValue(ItemException.UPC, "");
-			itemException.setFieldValue(ItemException.ExceptionType, "0");
-			itemException.setFieldValue(ItemException.ExceptionId, "25");
-			itemException.setFieldValue(ItemException.Message, I18N.getTexto("Tu cupon ha sido leído correctamente"));
-			itemException.setFieldValue(ItemException.TopCaption, I18N.getTexto("Cupon leído"));
-			ncrController.sendMessage(itemException);
+        if (handled && couponApplied && !couponAlreadyApplied) {
+            ItemException itemException = new ItemException();
+            itemException.setFieldValue(ItemException.UPC, "");
+            itemException.setFieldValue(ItemException.ExceptionType, "0");
+            itemException.setFieldValue(ItemException.ExceptionId, "25");
+            itemException.setFieldValue(ItemException.Message, I18N.getTexto("Tu cupon ha sido leído correctamente"));
+            itemException.setFieldValue(ItemException.TopCaption, I18N.getTexto("Cupon leído"));
+            ncrController.sendMessage(itemException);
         }
 
         return handled;
     }
 
     @SuppressWarnings("unchecked")
-    private void resendLastScannedLine(boolean ticketLinesUpdated) {
-        if (!ticketLinesUpdated || lastScannedLineId == null
+    private void resendLastScannedLine(boolean shouldResend) {
+        if (!shouldResend || lastScannedLineId == null
                 || ticketManager == null || ticketManager.getTicket() == null) {
             return;
         }
@@ -222,7 +269,7 @@ public class AmetllerItemsManager extends ItemsManager {
 
         ItemSold lastItemSold = lineaTicketToItemSold(lastLine);
 
-        sendItemSold(lastItemSold);
+        sendItemSoldMessage(lastItemSold, false);
 
         linesCache.put(lastLine.getIdLinea(), lastItemSold);
     }
@@ -290,8 +337,7 @@ public class AmetllerItemsManager extends ItemsManager {
             ItemSold refreshedItem = lineaTicketToItemSold(ticketLine);
 
             if (hasLineChanged(cachedItem, refreshedItem)) {
-                ncrController.sendMessage(refreshedItem);
-                sendTotals();
+                sendItemSoldMessage(refreshedItem, false);
                 linesCache.put(ticketLine.getIdLinea(), refreshedItem);
             }
         }
