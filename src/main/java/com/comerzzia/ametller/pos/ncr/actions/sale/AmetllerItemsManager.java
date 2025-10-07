@@ -32,6 +32,8 @@ public class AmetllerItemsManager extends ItemsManager {
     @Lazy
     private AmetllerPayManager ametllerPayManager;
 
+    private Integer lastScannedLineId;
+
     @Override
     protected ItemSold lineaTicketToItemSold(LineaTicket linea) {
         ItemSold itemSold = super.lineaTicketToItemSold(linea);
@@ -117,11 +119,15 @@ public class AmetllerItemsManager extends ItemsManager {
         sendItemSold(response);
 
         linesCache.put(newLine.getIdLinea(), response);
+
+        lastScannedLineId = newLine.getIdLinea();
     }
 
     @Override
     public void newTicket() {
         super.newTicket();
+
+        lastScannedLineId = null;
 
         if (ametllerPayManager != null) {
             ametllerPayManager.onTransactionStarted();
@@ -133,6 +139,8 @@ public class AmetllerItemsManager extends ItemsManager {
         if (ametllerPayManager != null) {
             ametllerPayManager.onTransactionVoided();
         }
+
+        lastScannedLineId = null;
 
         super.deleteAllItems(message);
     }
@@ -147,6 +155,8 @@ public class AmetllerItemsManager extends ItemsManager {
         if (ticketManager == null || ticketManager.getTicket() == null) {
             return;
         }
+
+        boolean ticketLinesUpdated = false;
 
         for (LineaTicket ticketLine : (List<LineaTicket>) ticketManager.getTicket().getLineas()) {
             ItemSold cachedItem = linesCache.get(ticketLine.getIdLinea());
@@ -170,12 +180,15 @@ public class AmetllerItemsManager extends ItemsManager {
                 ncrController.sendMessage(refreshedItem);
                 sendTotals();
                 linesCache.put(ticketLine.getIdLinea(), refreshedItem);
+                ticketLinesUpdated = true;
             }
         }
+
+        resendLastScannedLine(ticketLinesUpdated);
     }
-    
-	@Override
-	public boolean isCoupon(String code) {
+
+        @Override
+        public boolean isCoupon(String code) {
 		boolean couponAlreadyApplied = globalDiscounts.containsKey(GLOBAL_DISCOUNT_COUPON_PREFIX + code);
 
 		boolean handled = super.isCoupon(code);
@@ -190,8 +203,35 @@ public class AmetllerItemsManager extends ItemsManager {
 			itemException.setFieldValue(ItemException.Message, I18N.getTexto("Tu cupon ha sido leído correctamente"));
 			itemException.setFieldValue(ItemException.TopCaption, I18N.getTexto("Cupon leído"));
 			ncrController.sendMessage(itemException);
-		}
+        }
 
-		return handled;
-	}
+        return handled;
+        }
+
+    @SuppressWarnings("unchecked")
+    private void resendLastScannedLine(boolean ticketLinesUpdated) {
+        if (!ticketLinesUpdated || lastScannedLineId == null
+                || ticketManager == null || ticketManager.getTicket() == null) {
+            return;
+        }
+
+        LineaTicket lastLine = null;
+
+        for (LineaTicket ticketLine : (List<LineaTicket>) ticketManager.getTicket().getLineas()) {
+            if (lastScannedLineId.equals(ticketLine.getIdLinea())) {
+                lastLine = ticketLine;
+                break;
+            }
+        }
+
+        if (lastLine == null) {
+            return;
+        }
+
+        ItemSold lastItemSold = lineaTicketToItemSold(lastLine);
+
+        sendItemSold(lastItemSold);
+
+        linesCache.put(lastLine.getIdLinea(), lastItemSold);
+    }
 }
