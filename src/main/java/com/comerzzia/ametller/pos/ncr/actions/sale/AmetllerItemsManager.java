@@ -33,8 +33,6 @@ public class AmetllerItemsManager extends ItemsManager {
     private AmetllerPayManager ametllerPayManager;
 
     private Integer lastScannedLineId;
-    private boolean suppressTotals;
-    private boolean pendingTotals;
 
     @Override
     protected ItemSold lineaTicketToItemSold(LineaTicket linea) {
@@ -58,7 +56,6 @@ public class AmetllerItemsManager extends ItemsManager {
             }
         }
 
-        //Enviamos un unico ItemSold y un unico Totals para que no salga el problema del embolsado
         if (linea != null && itemSold != null) {
             BigDecimal importePromociones = linea.getImporteTotalPromociones();
 
@@ -92,67 +89,15 @@ public class AmetllerItemsManager extends ItemsManager {
         return itemSold;
     }
 
-
     @Override
     protected void sendItemSold(final ItemSold itemSold) {
-        sendItemSoldMessage(itemSold, true, false);
-    }
-
-    @Override
-    public void sendTotals() {
-        if (suppressTotals) {
-            pendingTotals = true;
-            return;
-        }
-
-        super.sendTotals();
-        pendingTotals = false;
-    }
-
-    private void sendItemSoldMessage(final ItemSold itemSold, final boolean includeTotals) {
-        sendItemSoldMessage(itemSold, includeTotals, false);
-    }
-
-    private void sendItemSoldMessage(final ItemSold itemSold, final boolean includeTotals, final boolean skipBaggingPrompt) {
         if (itemSold == null) {
             return;
         }
 
-        if (skipBaggingPrompt) {
-            disableBaggingPrompts(itemSold);
-        }
-
         ncrController.sendMessage(itemSold);
-
-        if (includeTotals) {
-            sendTotals();
-        } else {
-            pendingTotals = true;
-        }
-    }
-
-    private void disableBaggingPrompts(final ItemSold itemSold) {
-        itemSold.setFieldValue(ItemSold.RequiresSecurityBagging, "2");
-        itemSold.setFieldValue(ItemSold.RequiresSubsCheck, "2");
-
-        ItemSold discountApplied = itemSold.getDiscountApplied();
-        if (discountApplied != null) {
-            discountApplied.setFieldValue(ItemSold.RequiresSecurityBagging, "2");
-            discountApplied.setFieldValue(ItemSold.RequiresSubsCheck, "2");
-        }
-    }
-
-    private void flushPendingTotalsIfNeeded() {
-        if (!pendingTotals) {
-            return;
-        }
-
-        boolean previousSuppress = suppressTotals;
-        suppressTotals = false;
         sendTotals();
-        suppressTotals = previousSuppress;
     }
-
 
     @Override
     public void newItem(final LineaTicket newLine) {
@@ -160,20 +105,16 @@ public class AmetllerItemsManager extends ItemsManager {
             return;
         }
 
-        if (ticketManager != null && ticketManager.getTicket() != null) {
-            ticketManager.getSesion().getSesionPromociones()
-                    .aplicarPromociones((TicketVentaAbono) ticketManager.getTicket());
-            ticketManager.getTicket().getTotales().recalcular();
-            refreshExistingLinesBeforeNewItem(newLine);
-        }
+        applyPromotions();
 
         ItemSold response = lineaTicketToItemSold(newLine);
 
         sendItemSold(response);
 
         linesCache.put(newLine.getIdLinea(), response);
-
         lastScannedLineId = newLine.getIdLinea();
+
+        refreshExistingLines(newLine.getIdLinea());
     }
 
     @Override
@@ -181,8 +122,6 @@ public class AmetllerItemsManager extends ItemsManager {
         super.newTicket();
 
         lastScannedLineId = null;
-        suppressTotals = false;
-        pendingTotals = false;
 
         if (ametllerPayManager != null) {
             ametllerPayManager.onTransactionStarted();
@@ -196,53 +135,43 @@ public class AmetllerItemsManager extends ItemsManager {
         }
 
         lastScannedLineId = null;
-        suppressTotals = false;
-        pendingTotals = false;
 
         super.deleteAllItems(message);
     }
 
-
-    //Actualizamos linea si el articulo tiene promoción
     @Override
     @SuppressWarnings("unchecked")
     public void updateItems() {
-        boolean previousSuppress = suppressTotals;
-        suppressTotals = true;
-        try {
-            super.updateItems();
-        } finally {
-            suppressTotals = previousSuppress;
-        }
+        super.updateItems();
 
         if (ticketManager == null || ticketManager.getTicket() == null) {
-            flushPendingTotalsIfNeeded();
             return;
         }
 
-        boolean ticketLinesUpdated = false;
-
         for (LineaTicket ticketLine : (List<LineaTicket>) ticketManager.getTicket().getLineas()) {
-            ItemSold cachedItem = linesCache.get(ticketLine.getIdLinea());
-
-            if (cachedItem == null) {
+            if (ticketLine == null || ticketLine.getIdLinea() == null) {
                 continue;
             }
 
+            ItemSold cachedItem = linesCache.get(ticketLine.getIdLinea());
             ItemSold refreshedItem = lineaTicketToItemSold(ticketLine);
 
-            if (hasLineChanged(cachedItem, refreshedItem)) {
-                sendItemSoldMessage(refreshedItem, false, true);
-                linesCache.put(ticketLine.getIdLinea(), refreshedItem);
-                ticketLinesUpdated = true;
+            if (!hasLineChanged(cachedItem, refreshedItem)) {
+                continue;
             }
+
+            boolean isLastScanned = ticketLine.getIdLinea().equals(lastScannedLineId);
+
+            if (isLastScanned) {
+                ncrController.sendMessage(refreshedItem);
+                sendTotals();
+            } else {
+                disableBaggingPrompts(refreshedItem);
+                ncrController.sendMessage(refreshedItem);
+            }
+
+            linesCache.put(ticketLine.getIdLinea(), refreshedItem);
         }
-
-        boolean shouldResendLastLine = pendingTotals || ticketLinesUpdated;
-
-        resendLastScannedLine(shouldResendLastLine);
-
-        flushPendingTotalsIfNeeded();
     }
 
     @Override
@@ -266,31 +195,47 @@ public class AmetllerItemsManager extends ItemsManager {
         return handled;
     }
 
-    @SuppressWarnings("unchecked")
-    private void resendLastScannedLine(boolean shouldResend) {
-        if (!shouldResend || lastScannedLineId == null
-                || ticketManager == null || ticketManager.getTicket() == null) {
+    private void applyPromotions() {
+        if (ticketManager == null || ticketManager.getTicket() == null) {
             return;
         }
 
-        LineaTicket lastLine = null;
+        ticketManager.getSesion().getSesionPromociones()
+                .aplicarPromociones((TicketVentaAbono) ticketManager.getTicket());
+        ticketManager.getTicket().getTotales().recalcular();
+    }
+
+    @SuppressWarnings("unchecked")
+    private void refreshExistingLines(Integer excludeLineId) {
+        if (ticketManager == null || ticketManager.getTicket() == null) {
+            return;
+        }
 
         for (LineaTicket ticketLine : (List<LineaTicket>) ticketManager.getTicket().getLineas()) {
-            if (lastScannedLineId.equals(ticketLine.getIdLinea())) {
-                lastLine = ticketLine;
-                break;
+            if (ticketLine == null || ticketLine.getIdLinea() == null) {
+                continue;
             }
+
+            if (ticketLine.getIdLinea().equals(excludeLineId)) {
+                continue;
+            }
+
+            ItemSold cachedItem = linesCache.get(ticketLine.getIdLinea());
+            if (cachedItem == null) {
+                continue;
+            }
+
+            ItemSold refreshedItem = lineaTicketToItemSold(ticketLine);
+
+            if (!hasLineChanged(cachedItem, refreshedItem)) {
+                continue;
+            }
+
+            disableBaggingPrompts(refreshedItem);
+            ncrController.sendMessage(refreshedItem);
+
+            linesCache.put(ticketLine.getIdLinea(), refreshedItem);
         }
-
-        if (lastLine == null) {
-            return;
-        }
-
-        ItemSold lastItemSold = lineaTicketToItemSold(lastLine);
-
-        sendItemSoldMessage(lastItemSold, false, true);
-
-        linesCache.put(lastLine.getIdLinea(), lastItemSold);
     }
 
     private boolean hasLineChanged(ItemSold cachedItem, ItemSold refreshedItem) {
@@ -330,35 +275,14 @@ public class AmetllerItemsManager extends ItemsManager {
         return false;
     }
 
-    @SuppressWarnings("unchecked")
-    private void refreshExistingLinesBeforeNewItem(LineaTicket newLine) {
-        if (newLine == null || ticketManager == null || ticketManager.getTicket() == null) {
-            return;
-        }
+    private void disableBaggingPrompts(final ItemSold itemSold) {
+        itemSold.setFieldValue(ItemSold.RequiresSecurityBagging, "2");
+        itemSold.setFieldValue(ItemSold.RequiresSubsCheck, "2");
 
-        Integer newLineId = newLine.getIdLinea();
-
-        for (LineaTicket ticketLine : (List<LineaTicket>) ticketManager.getTicket().getLineas()) {
-            if (ticketLine == null || ticketLine.getIdLinea() == null) {
-                continue;
-            }
-
-            if (ticketLine.getIdLinea().equals(newLineId)) {
-                continue;
-            }
-
-            ItemSold cachedItem = linesCache.get(ticketLine.getIdLinea());
-
-            if (cachedItem == null) {
-                continue;
-            }
-
-            ItemSold refreshedItem = lineaTicketToItemSold(ticketLine);
-
-            if (hasLineChanged(cachedItem, refreshedItem)) {
-                sendItemSoldMessage(refreshedItem, false, true);
-                linesCache.put(ticketLine.getIdLinea(), refreshedItem);
-            }
+        ItemSold discountApplied = itemSold.getDiscountApplied();
+        if (discountApplied != null) {
+            discountApplied.setFieldValue(ItemSold.RequiresSecurityBagging, "2");
+            discountApplied.setFieldValue(ItemSold.RequiresSubsCheck, "2");
         }
     }
 }
