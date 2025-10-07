@@ -49,10 +49,8 @@ import com.comerzzia.pos.ncr.messages.DataNeeded;
 import com.comerzzia.pos.ncr.messages.DataNeededReply;
 import com.comerzzia.pos.ncr.messages.EndTransaction;
 import com.comerzzia.pos.ncr.messages.Receipt;
-import com.comerzzia.pos.ncr.messages.StartTransaction;
 import com.comerzzia.pos.ncr.messages.Tender;
 import com.comerzzia.pos.ncr.messages.TenderException;
-import com.comerzzia.pos.ncr.messages.VoidTransaction;
 import com.comerzzia.pos.persistence.giftcard.GiftCardBean;
 import com.comerzzia.pos.persistence.mediosPagos.MedioPagoBean;
 import com.comerzzia.pos.services.core.sesion.Sesion;
@@ -110,18 +108,10 @@ public class AmetllerPayManager extends PayManager {
         public void init() {
                 super.init();
                 ncrController.registerActionManager(DataNeededReply.class, this);
-                ncrController.registerActionManager(StartTransaction.class, this);
-                ncrController.registerActionManager(VoidTransaction.class, this);
         }
 
-	@Override
+        @Override
         public void processMessage(BasicNCRMessage message) {
-                if (message instanceof VoidTransaction) {
-                        handleTransactionVoid();
-                }
-                else if (message instanceof StartTransaction) {
-                        clearPendingGiftCardPayments();
-                }
                 if (message instanceof DataNeededReply) {
                         DataNeededReply reply = (DataNeededReply) message;
                         if (handleDescuento25DataNeededReply(reply)) {
@@ -1096,7 +1086,7 @@ public class AmetllerPayManager extends PayManager {
                 }
         }
 
-        private void handleTransactionVoid() {
+        public void onTransactionVoided() {
                 if (pendingGiftCardPayments.isEmpty()) {
                         return;
                 }
@@ -1108,6 +1098,10 @@ public class AmetllerPayManager extends PayManager {
                         cancelGiftCardMovement(uid, context);
                 }
 
+                clearPendingGiftCardPayments();
+        }
+
+        public void onTransactionStarted() {
                 clearPendingGiftCardPayments();
         }
 
