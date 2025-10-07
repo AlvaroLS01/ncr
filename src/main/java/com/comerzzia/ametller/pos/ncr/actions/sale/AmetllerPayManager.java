@@ -105,12 +105,14 @@ public class AmetllerPayManager extends PayManager {
         private final Map<String, GiftCardPaymentContext> pendingGiftCardPayments = new HashMap<>();
         private final Map<Integer, String> paymentIdToGiftCardUid = new HashMap<>();
 
-	@PostConstruct
-	@Override
-	public void init() {
-		super.init();
-		ncrController.registerActionManager(DataNeededReply.class, this);
-	}
+        @PostConstruct
+        @Override
+        public void init() {
+                super.init();
+                ncrController.registerActionManager(DataNeededReply.class, this);
+                ncrController.registerActionManager(StartTransaction.class, this);
+                ncrController.registerActionManager(VoidTransaction.class, this);
+        }
 
 	@Override
         public void processMessage(BasicNCRMessage message) {
@@ -1215,8 +1217,11 @@ public class AmetllerPayManager extends PayManager {
                 paymentIdToGiftCardUid.clear();
         }
 
-        private Integer normalizePaymentId(int paymentId) {
-                return paymentId > 0 ? Integer.valueOf(paymentId) : null;
+        private Integer normalizePaymentId(Integer paymentId) {
+                if (paymentId == null) {
+                        return null;
+                }
+                return paymentId.intValue() > 0 ? paymentId : null;
         }
 
         private String normalizeUid(String uid) {
