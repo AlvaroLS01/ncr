@@ -1064,8 +1064,11 @@ public class AmetllerPayManager extends PayManager {
                 String uid = normalizeUid(giftCard != null ? giftCard.getUidTransaccion() : null);
 
                 if (eventOk.isCanceled()) {
-                        if (uid == null && eventOk.getPaymentId() != null) {
-                                uid = paymentIdToGiftCardUid.get(eventOk.getPaymentId());
+                        if (uid == null) {
+                                Integer paymentId = normalizePaymentId(eventOk.getPaymentId());
+                                if (paymentId != null) {
+                                        uid = paymentIdToGiftCardUid.get(paymentId);
+                                }
                         }
                         if (uid != null) {
                                 removeGiftCardTracking(uid);
@@ -1082,10 +1085,10 @@ public class AmetllerPayManager extends PayManager {
                         return;
                 }
 
-                GiftCardPaymentContext context = new GiftCardPaymentContext(giftCard, amount, eventOk.getPaymentId());
+                Integer paymentId = normalizePaymentId(eventOk.getPaymentId());
+                GiftCardPaymentContext context = new GiftCardPaymentContext(giftCard, amount, paymentId);
                 pendingGiftCardPayments.put(uid, context);
 
-                Integer paymentId = eventOk.getPaymentId();
                 if (paymentId != null) {
                         paymentIdToGiftCardUid.put(paymentId, uid);
                 }
@@ -1210,6 +1213,10 @@ public class AmetllerPayManager extends PayManager {
         private void clearPendingGiftCardPayments() {
                 pendingGiftCardPayments.clear();
                 paymentIdToGiftCardUid.clear();
+        }
+
+        private Integer normalizePaymentId(int paymentId) {
+                return paymentId > 0 ? Integer.valueOf(paymentId) : null;
         }
 
         private String normalizeUid(String uid) {
