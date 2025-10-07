@@ -112,6 +112,7 @@ public class AmetllerItemsManager extends ItemsManager {
             ticketManager.getSesion().getSesionPromociones()
                     .aplicarPromociones((TicketVentaAbono) ticketManager.getTicket());
             ticketManager.getTicket().getTotales().recalcular();
+            refreshExistingLinesBeforeNewItem(newLine);
         }
 
         ItemSold response = lineaTicketToItemSold(newLine);
@@ -167,16 +168,7 @@ public class AmetllerItemsManager extends ItemsManager {
 
             ItemSold refreshedItem = lineaTicketToItemSold(ticketLine);
 
-            String cachedPrice = cachedItem.getFieldValue(ItemSold.Price);
-            String refreshedPrice = refreshedItem.getFieldValue(ItemSold.Price);
-            String cachedExtendedPrice = cachedItem.getFieldValue(ItemSold.ExtendedPrice);
-            String refreshedExtendedPrice = refreshedItem.getFieldValue(ItemSold.ExtendedPrice);
-            String cachedDescription = cachedItem.getFieldValue(ItemSold.Description);
-            String refreshedDescription = refreshedItem.getFieldValue(ItemSold.Description);
-
-            if (!StringUtils.equals(cachedPrice, refreshedPrice)
-                    || !StringUtils.equals(cachedExtendedPrice, refreshedExtendedPrice)
-                    || !StringUtils.equals(cachedDescription, refreshedDescription)) {
+            if (hasLineChanged(cachedItem, refreshedItem)) {
                 ncrController.sendMessage(refreshedItem);
                 sendTotals();
                 linesCache.put(ticketLine.getIdLinea(), refreshedItem);
@@ -206,7 +198,7 @@ public class AmetllerItemsManager extends ItemsManager {
         }
 
         return handled;
-        }
+    }
 
     @SuppressWarnings("unchecked")
     private void resendLastScannedLine(boolean ticketLinesUpdated) {
@@ -233,5 +225,75 @@ public class AmetllerItemsManager extends ItemsManager {
         sendItemSold(lastItemSold);
 
         linesCache.put(lastLine.getIdLinea(), lastItemSold);
+    }
+
+    private boolean hasLineChanged(ItemSold cachedItem, ItemSold refreshedItem) {
+        if (cachedItem == null || refreshedItem == null) {
+            return false;
+        }
+
+        String cachedPrice = cachedItem.getFieldValue(ItemSold.Price);
+        String refreshedPrice = refreshedItem.getFieldValue(ItemSold.Price);
+        if (!StringUtils.equals(cachedPrice, refreshedPrice)) {
+            return true;
+        }
+
+        String cachedExtendedPrice = cachedItem.getFieldValue(ItemSold.ExtendedPrice);
+        String refreshedExtendedPrice = refreshedItem.getFieldValue(ItemSold.ExtendedPrice);
+        if (!StringUtils.equals(cachedExtendedPrice, refreshedExtendedPrice)) {
+            return true;
+        }
+
+        String cachedDescription = cachedItem.getFieldValue(ItemSold.Description);
+        String refreshedDescription = refreshedItem.getFieldValue(ItemSold.Description);
+        if (!StringUtils.equals(cachedDescription, refreshedDescription)) {
+            return true;
+        }
+
+        ItemSold cachedDiscount = cachedItem.getDiscountApplied();
+        ItemSold refreshedDiscount = refreshedItem.getDiscountApplied();
+        if (cachedDiscount != null && refreshedDiscount != null) {
+            String cachedDiscountAmount = cachedDiscount.getFieldValue(ItemSold.DiscountAmount);
+            String refreshedDiscountAmount = refreshedDiscount.getFieldValue(ItemSold.DiscountAmount);
+
+            if (!StringUtils.equals(cachedDiscountAmount, refreshedDiscountAmount)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    @SuppressWarnings("unchecked")
+    private void refreshExistingLinesBeforeNewItem(LineaTicket newLine) {
+        if (newLine == null || ticketManager == null || ticketManager.getTicket() == null) {
+            return;
+        }
+
+        Integer newLineId = newLine.getIdLinea();
+
+        for (LineaTicket ticketLine : (List<LineaTicket>) ticketManager.getTicket().getLineas()) {
+            if (ticketLine == null || ticketLine.getIdLinea() == null) {
+                continue;
+            }
+
+            if (ticketLine.getIdLinea().equals(newLineId)) {
+                continue;
+            }
+
+            ItemSold cachedItem = linesCache.get(ticketLine.getIdLinea());
+
+            if (cachedItem == null) {
+                continue;
+            }
+
+            ItemSold refreshedItem = lineaTicketToItemSold(ticketLine);
+
+            if (hasLineChanged(cachedItem, refreshedItem)) {
+                ncrController.sendMessage(refreshedItem);
+                sendTotals();
+                linesCache.put(ticketLine.getIdLinea(), refreshedItem);
+            }
+        }
     }
 }
