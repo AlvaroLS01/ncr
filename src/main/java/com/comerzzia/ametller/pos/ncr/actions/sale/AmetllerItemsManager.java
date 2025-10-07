@@ -95,7 +95,7 @@ public class AmetllerItemsManager extends ItemsManager {
 
     @Override
     protected void sendItemSold(final ItemSold itemSold) {
-        sendItemSoldMessage(itemSold, true);
+        sendItemSoldMessage(itemSold, true, false);
     }
 
     @Override
@@ -110,8 +110,16 @@ public class AmetllerItemsManager extends ItemsManager {
     }
 
     private void sendItemSoldMessage(final ItemSold itemSold, final boolean includeTotals) {
+        sendItemSoldMessage(itemSold, includeTotals, false);
+    }
+
+    private void sendItemSoldMessage(final ItemSold itemSold, final boolean includeTotals, final boolean skipBaggingPrompt) {
         if (itemSold == null) {
             return;
+        }
+
+        if (skipBaggingPrompt) {
+            disableBaggingPrompts(itemSold);
         }
 
         ncrController.sendMessage(itemSold);
@@ -120,6 +128,17 @@ public class AmetllerItemsManager extends ItemsManager {
             sendTotals();
         } else {
             pendingTotals = true;
+        }
+    }
+
+    private void disableBaggingPrompts(final ItemSold itemSold) {
+        itemSold.setFieldValue(ItemSold.RequiresSecurityBagging, "2");
+        itemSold.setFieldValue(ItemSold.RequiresSubsCheck, "2");
+
+        ItemSold discountApplied = itemSold.getDiscountApplied();
+        if (discountApplied != null) {
+            discountApplied.setFieldValue(ItemSold.RequiresSecurityBagging, "2");
+            discountApplied.setFieldValue(ItemSold.RequiresSubsCheck, "2");
         }
     }
 
@@ -213,7 +232,7 @@ public class AmetllerItemsManager extends ItemsManager {
             ItemSold refreshedItem = lineaTicketToItemSold(ticketLine);
 
             if (hasLineChanged(cachedItem, refreshedItem)) {
-                sendItemSoldMessage(refreshedItem, false);
+                sendItemSoldMessage(refreshedItem, false, true);
                 linesCache.put(ticketLine.getIdLinea(), refreshedItem);
                 ticketLinesUpdated = true;
             }
@@ -269,7 +288,7 @@ public class AmetllerItemsManager extends ItemsManager {
 
         ItemSold lastItemSold = lineaTicketToItemSold(lastLine);
 
-        sendItemSoldMessage(lastItemSold, false);
+        sendItemSoldMessage(lastItemSold, false, true);
 
         linesCache.put(lastLine.getIdLinea(), lastItemSold);
     }
@@ -337,7 +356,7 @@ public class AmetllerItemsManager extends ItemsManager {
             ItemSold refreshedItem = lineaTicketToItemSold(ticketLine);
 
             if (hasLineChanged(cachedItem, refreshedItem)) {
-                sendItemSoldMessage(refreshedItem, false);
+                sendItemSoldMessage(refreshedItem, false, true);
                 linesCache.put(ticketLine.getIdLinea(), refreshedItem);
             }
         }
