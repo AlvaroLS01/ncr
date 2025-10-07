@@ -16,6 +16,7 @@ import java.text.SimpleDateFormat;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -33,6 +34,11 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 import com.comerzzia.ametller.pos.ncr.ticket.AmetllerScoTicketManager;
+import com.comerzzia.api.rest.client.exceptions.RestException;
+import com.comerzzia.api.rest.client.exceptions.RestHttpException;
+import com.comerzzia.api.rest.client.movimientos.ListaMovimientoRequestRest;
+import com.comerzzia.api.rest.client.movimientos.MovimientoRequestRest;
+import com.comerzzia.api.rest.client.movimientos.MovimientosRest;
 import com.comerzzia.core.servicios.variables.Variables;
 import com.comerzzia.pos.core.dispositivos.Dispositivos;
 import com.comerzzia.pos.core.dispositivos.dispositivo.impresora.IPrinter;
@@ -43,8 +49,10 @@ import com.comerzzia.pos.ncr.messages.DataNeeded;
 import com.comerzzia.pos.ncr.messages.DataNeededReply;
 import com.comerzzia.pos.ncr.messages.EndTransaction;
 import com.comerzzia.pos.ncr.messages.Receipt;
+import com.comerzzia.pos.ncr.messages.StartTransaction;
 import com.comerzzia.pos.ncr.messages.Tender;
 import com.comerzzia.pos.ncr.messages.TenderException;
+import com.comerzzia.pos.ncr.messages.VoidTransaction;
 import com.comerzzia.pos.persistence.giftcard.GiftCardBean;
 import com.comerzzia.pos.persistence.mediosPagos.MedioPagoBean;
 import com.comerzzia.pos.services.core.sesion.Sesion;
@@ -52,6 +60,7 @@ import com.comerzzia.pos.services.core.variables.VariablesServices;
 import com.comerzzia.pos.services.payments.PaymentsManager;
 import com.comerzzia.pos.services.payments.methods.PaymentMethodManager;
 import com.comerzzia.pos.services.payments.methods.types.GiftCardManager;
+import com.comerzzia.pos.services.payments.events.PaymentOkEvent;
 import com.comerzzia.pos.persistence.promociones.tipos.PromocionTipoBean;
 import com.comerzzia.pos.services.ticket.ITicket;
 import com.comerzzia.pos.services.ticket.cabecera.ITotalesTicket;
@@ -91,7 +100,10 @@ public class AmetllerPayManager extends PayManager {
 	@Autowired
 	private VariablesServices variablesServices;
 
-	private PendingPayment pendingPayment;
+        private PendingPayment pendingPayment;
+
+        private final Map<String, GiftCardPaymentContext> pendingGiftCardPayments = new HashMap<>();
+        private final Map<Integer, String> paymentIdToGiftCardUid = new HashMap<>();
 
 	@PostConstruct
 	@Override
@@ -101,12 +113,18 @@ public class AmetllerPayManager extends PayManager {
 	}
 
 	@Override
-	public void processMessage(BasicNCRMessage message) {
-		if (message instanceof DataNeededReply) {
-			DataNeededReply reply = (DataNeededReply) message;
-			if (handleDescuento25DataNeededReply(reply)) {
-				return;
-			}
+        public void processMessage(BasicNCRMessage message) {
+                if (message instanceof VoidTransaction) {
+                        handleTransactionVoid();
+                }
+                else if (message instanceof StartTransaction) {
+                        clearPendingGiftCardPayments();
+                }
+                if (message instanceof DataNeededReply) {
+                        DataNeededReply reply = (DataNeededReply) message;
+                        if (handleDescuento25DataNeededReply(reply)) {
+                                return;
+                        }
 			if (!handleDataNeededReply(reply)) {
 				String t = StringUtils.trimToEmpty(reply.getFieldValue(DataNeededReply.Type));
 				String i = StringUtils.trimToEmpty(reply.getFieldValue(DataNeededReply.Id));
@@ -116,8 +134,8 @@ public class AmetllerPayManager extends PayManager {
 			}
 			return;
 		}
-		super.processMessage(message);
-	}
+                super.processMessage(message);
+        }
 
 	@Override
 	protected void activateTenderMode() {
@@ -378,10 +396,10 @@ public class AmetllerPayManager extends PayManager {
 		}
 	}
 
-	private void executeGiftCardPayment(PendingPayment payment) {
-		sendShowWait(I18N.getTexto("Validando tarjeta..."));
+        private void executeGiftCardPayment(PendingPayment payment) {
+                sendShowWait(I18N.getTexto("Validando tarjeta..."));
 
-		try {
+                try {
 			GiftCardBean giftCard = consultGiftCard(payment.cardNumber);
 			ensureGiftCardDefaults(giftCard);
 			BigDecimal available = calculateAvailableBalance(giftCard);
@@ -399,11 +417,11 @@ public class AmetllerPayManager extends PayManager {
 
 			payment.message.setFieldIntValue(Tender.Amount, amountToCharge.setScale(2, RoundingMode.HALF_UP));
 
-			PaymentsManager pm = ticketManager.getPaymentsManager();
-			pm.pay(payment.context.paymentCode, amountToCharge);
+                        PaymentsManager pm = ticketManager.getPaymentsManager();
+                        pm.pay(payment.context.paymentCode, amountToCharge);
 
-			sendHideWait();
-			sendCloseDialog();
+                        sendHideWait();
+                        sendCloseDialog();
 
 		}
 		catch (GiftCardException e) {
@@ -421,18 +439,19 @@ public class AmetllerPayManager extends PayManager {
 	}
 
 	@Override
-	protected void finishSale() {
-		ticketManager.saveTicket();
+        protected void finishSale() {
+                ticketManager.saveTicket();
 
-		sendReceiptMessage();
+                sendReceiptMessage();
 
-		EndTransaction message = new EndTransaction();
-		message.setFieldValue(EndTransaction.Id, itemsManager.getTransactionId());
+                EndTransaction message = new EndTransaction();
+                message.setFieldValue(EndTransaction.Id, itemsManager.getTransactionId());
 
-		ncrController.sendMessage(message);
+                ncrController.sendMessage(message);
 
-		itemsManager.resetTicket();
-	}
+                clearPendingGiftCardPayments();
+                itemsManager.resetTicket();
+        }
 
 	private void sendReceiptMessage() {
 		Receipt receipt = new Receipt();
@@ -1010,15 +1029,208 @@ public class AmetllerPayManager extends PayManager {
 		return null;
 	}
 
-	private void sendGiftCardError(String message, String tenderType) {
-		TenderException te = new TenderException();
-		te.setFieldValue(TenderException.ExceptionId, "0");
-		te.setFieldValue(TenderException.ExceptionType, "0");
-		if (StringUtils.isNotBlank(tenderType))
+        private void sendGiftCardError(String message, String tenderType) {
+                TenderException te = new TenderException();
+                te.setFieldValue(TenderException.ExceptionId, "0");
+                te.setFieldValue(TenderException.ExceptionType, "0");
+                if (StringUtils.isNotBlank(tenderType))
 			te.setFieldValue(TenderException.TenderType, tenderType);
 		te.setFieldValue(TenderException.Message, message);
-		ncrController.sendMessage(te);
-	}
+                ncrController.sendMessage(te);
+        }
+
+        @Override
+        protected void processPaymentOk(PaymentOkEvent eventOk) {
+                registerOrClearGiftCardPayment(eventOk);
+                super.processPaymentOk(eventOk);
+        }
+
+        private void registerOrClearGiftCardPayment(PaymentOkEvent eventOk) {
+                if (eventOk == null) {
+                        return;
+                }
+
+                Map<String, Object> extendedData = eventOk.getExtendedData();
+                if (extendedData == null || extendedData.isEmpty()) {
+                        return;
+                }
+
+                Object value = extendedData.get(GiftCardManager.PARAM_TARJETA);
+                if (!(value instanceof GiftCardBean)) {
+                        return;
+                }
+
+                GiftCardBean giftCard = (GiftCardBean) value;
+                String uid = normalizeUid(giftCard != null ? giftCard.getUidTransaccion() : null);
+
+                if (eventOk.isCanceled()) {
+                        if (uid == null && eventOk.getPaymentId() != null) {
+                                uid = paymentIdToGiftCardUid.get(eventOk.getPaymentId());
+                        }
+                        if (uid != null) {
+                                removeGiftCardTracking(uid);
+                        }
+                        return;
+                }
+
+                if (uid == null) {
+                        return;
+                }
+
+                BigDecimal amount = eventOk.getAmount() != null ? eventOk.getAmount() : BigDecimal.ZERO;
+                if (amount.compareTo(BigDecimal.ZERO) <= 0) {
+                        return;
+                }
+
+                GiftCardPaymentContext context = new GiftCardPaymentContext(giftCard, amount, eventOk.getPaymentId());
+                pendingGiftCardPayments.put(uid, context);
+
+                Integer paymentId = eventOk.getPaymentId();
+                if (paymentId != null) {
+                        paymentIdToGiftCardUid.put(paymentId, uid);
+                }
+        }
+
+        private void handleTransactionVoid() {
+                if (pendingGiftCardPayments.isEmpty()) {
+                        return;
+                }
+
+                Map<String, GiftCardPaymentContext> snapshot = new HashMap<>(pendingGiftCardPayments);
+                for (Map.Entry<String, GiftCardPaymentContext> entry : snapshot.entrySet()) {
+                        String uid = entry.getKey();
+                        GiftCardPaymentContext context = entry.getValue();
+                        cancelGiftCardMovement(uid, context);
+                }
+
+                clearPendingGiftCardPayments();
+        }
+
+        private void cancelGiftCardMovement(String uid, GiftCardPaymentContext context) {
+                if (context == null || context.giftCard == null) {
+                        return;
+                }
+
+                String normalizedUid = normalizeUid(uid);
+                if (normalizedUid == null) {
+                        normalizedUid = normalizeUid(context.giftCard.getUidTransaccion());
+                }
+
+                BigDecimal amount = context.amount != null ? context.amount : BigDecimal.ZERO;
+                if (normalizedUid == null || amount.compareTo(BigDecimal.ZERO) <= 0) {
+                        removeGiftCardTracking(normalizedUid);
+                        return;
+                }
+
+                try {
+                        ListaMovimientoRequestRest request = buildGiftCardMovementRequest(amount, context.giftCard, normalizedUid);
+                        MovimientosRest.anularMovimientosProvisionalesTarjetaRegalo(request);
+                }
+                catch (RestHttpException | RestException e) {
+                        log.error(MessageFormat.format("cancelGiftCardMovement() - Error cancelling provisional movement for card {0}: {1}",
+                                        safeCardNumber(context.giftCard), e.getMessage()), e);
+                }
+                catch (Exception e) {
+                        log.error(MessageFormat.format("cancelGiftCardMovement() - Unexpected error cancelling provisional movement for card {0}: {1}",
+                                        safeCardNumber(context.giftCard), e.getMessage()), e);
+                }
+                finally {
+                        removeGiftCardTracking(normalizedUid);
+                }
+        }
+
+        private ListaMovimientoRequestRest buildGiftCardMovementRequest(BigDecimal amount, GiftCardBean giftCard, String uidTransaccion)
+                        throws RestException, RestHttpException {
+                MovimientoRequestRest movimiento = new MovimientoRequestRest();
+
+                if (sesion != null && sesion.getAplicacion() != null) {
+                        movimiento.setUidActividad(sesion.getAplicacion().getUidActividad());
+                }
+
+                movimiento.setNumeroTarjeta(giftCard.getNumTarjetaRegalo());
+                movimiento.setUidTransaccion(uidTransaccion);
+                movimiento.setFecha(new Date());
+
+                ITicket ticket = ticketManager != null ? ticketManager.getTicket() : null;
+                String concepto = buildGiftCardConcept(ticket);
+                if (StringUtils.isNotBlank(concepto)) {
+                        movimiento.setConcepto(concepto);
+                }
+                if (ticket != null && ticket.getIdTicket() != null) {
+                        movimiento.setDocumento(String.valueOf(ticket.getIdTicket()));
+                }
+
+                try {
+                        if (variablesServices != null) {
+                                String apiKey = variablesServices.getVariableAsString(Variables.WEBSERVICES_APIKEY);
+                                if (StringUtils.isNotBlank(apiKey)) {
+                                        movimiento.setApiKey(apiKey);
+                                }
+                        }
+                }
+                catch (Exception e) {
+                        log.warn("buildGiftCardMovementRequest() - Unable to resolve API key", e);
+                }
+
+                if (giftCard.getSaldo() != null) {
+                        movimiento.setSaldo(giftCard.getSaldo().doubleValue());
+                }
+                if (giftCard.getSaldoProvisional() != null) {
+                        movimiento.setSaldoProvisional(giftCard.getSaldoProvisional().doubleValue());
+                }
+
+                BigDecimal normalizedAmount = amount != null ? amount : BigDecimal.ZERO;
+                movimiento.setSalida(normalizedAmount.doubleValue());
+                movimiento.setEntrada(0.0);
+
+                ListaMovimientoRequestRest request = new ListaMovimientoRequestRest();
+                request.setMovimientos(Collections.singletonList(movimiento));
+                return request;
+        }
+
+        private String buildGiftCardConcept(ITicket ticket) {
+                String descripcion = ticket != null && ticket.getCabecera() != null
+                                ? StringUtils.trimToEmpty(ticket.getCabecera().getDesTipoDocumento())
+                                : StringUtils.EMPTY;
+                String codigo = ticket != null && ticket.getCabecera() != null
+                                ? StringUtils.trimToEmpty(ticket.getCabecera().getCodTicket())
+                                : StringUtils.EMPTY;
+                String concepto = (descripcion + " " + codigo).trim();
+                return concepto;
+        }
+
+        private void removeGiftCardTracking(String uid) {
+                if (StringUtils.isBlank(uid)) {
+                        return;
+                }
+                pendingGiftCardPayments.remove(uid);
+                paymentIdToGiftCardUid.entrySet().removeIf(entry -> StringUtils.equals(entry.getValue(), uid));
+        }
+
+        private void clearPendingGiftCardPayments() {
+                pendingGiftCardPayments.clear();
+                paymentIdToGiftCardUid.clear();
+        }
+
+        private String normalizeUid(String uid) {
+                return StringUtils.trimToNull(uid);
+        }
+
+        private String safeCardNumber(GiftCardBean giftCard) {
+                return giftCard != null ? StringUtils.defaultString(giftCard.getNumTarjetaRegalo(), "?") : "?";
+        }
+
+        private static final class GiftCardPaymentContext {
+                private final GiftCardBean giftCard;
+                private final BigDecimal amount;
+                private final Integer paymentId;
+
+                private GiftCardPaymentContext(GiftCardBean giftCard, BigDecimal amount, Integer paymentId) {
+                        this.giftCard = giftCard;
+                        this.amount = amount;
+                        this.paymentId = paymentId;
+                }
+        }
 
 	private static class PendingPayment {
 
