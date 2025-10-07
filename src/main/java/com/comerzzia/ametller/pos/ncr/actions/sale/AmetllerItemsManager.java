@@ -25,6 +25,7 @@ import com.comerzzia.pos.util.i18n.I18N;
 public class AmetllerItemsManager extends ItemsManager {
 
     private static final String DESCUENTO_25_DESCRIPTION = "Descuento del 25% aplicado";
+    private boolean suppressTotalsOnUpdate;
 
     @Override
     protected ItemSold lineaTicketToItemSold(LineaTicket linea) {
@@ -144,10 +145,30 @@ public class AmetllerItemsManager extends ItemsManager {
                     || !StringUtils.equals(cachedExtendedPrice, refreshedExtendedPrice)
                     || !StringUtils.equals(cachedDescription, refreshedDescription)) {
                 ncrController.sendMessage(refreshedItem);
-                sendTotals();
+
+                if (!suppressTotalsOnUpdate) {
+                    sendTotals();
+                }
+
                 linesCache.put(ticketLine.getIdLinea(), refreshedItem);
             }
         }
+    }
+
+    @Override
+    public void newItemAndUpdateAllItems(final LineaTicket newLine) {
+        if (newLine == null) {
+            return;
+        }
+
+        suppressTotalsOnUpdate = true;
+        try {
+            updateItems();
+        } finally {
+            suppressTotalsOnUpdate = false;
+        }
+
+        newItem(newLine);
     }
     
 	@Override
