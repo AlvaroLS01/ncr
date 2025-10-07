@@ -1,0 +1,762 @@
+11:45:13.967 [34mINFO [0;39m (main) [34mcom.comerzzia.pos.core.gui.POSApplication (POSApplication.java:170)[0;39m - comerzzia POS with JavaFX version: 8.0.202-b07
+11:45:17.396 [34mINFO [0;39m (JavaFX-Launcher) [34mcom.comerzzia.core.servicios.ContextHolder (ContextHolder.java:38)[0;39m - ********************** comerzzia Spring context info ****************************
+11:45:17.396 [34mINFO [0;39m (JavaFX-Launcher) [34mcom.comerzzia.core.servicios.ContextHolder (ContextHolder.java:39)[0;39m - 	 Id: org.springframework.context.support.ClassPathXmlApplicationContext@4bc03bbc
+11:45:17.396 [34mINFO [0;39m (JavaFX-Launcher) [34mcom.comerzzia.core.servicios.ContextHolder (ContextHolder.java:40)[0;39m - 	 Application: 
+11:45:17.396 [34mINFO [0;39m (JavaFX-Launcher) [34mcom.comerzzia.core.servicios.ContextHolder (ContextHolder.java:41)[0;39m - 	 Name: org.springframework.context.support.ClassPathXmlApplicationContext@4bc03bbc
+11:45:17.396 [34mINFO [0;39m (JavaFX-Launcher) [34mcom.comerzzia.core.servicios.ContextHolder (ContextHolder.java:42)[0;39m - *********************************************************************************
+11:45:17.398 [34mINFO [0;39m (JavaFX-Launcher) [34mcom.comerzzia.pos.util.config.AppConfig (AppConfig.java:176)[0;39m - Construyendo AppConfig
+11:45:17.478 [34mINFO [0;39m (JavaFX-Launcher) [34mcom.comerzzia.core.util.config.ComerzziaApp (ComerzziaApp.java:84)[0;39m - . . . Initializing comerzzia 1.0.3 -b23141 . . .
+11:45:17.478 [34mINFO [0;39m (JavaFX-Launcher) [34mcom.comerzzia.core.util.config.ComerzziaApp (ComerzziaApp.java:357)[0;39m - obtenerUrlFicheroConfiguracion() - Obteniendo fichero de configuración desde el classpath
+11:45:17.479 [34mINFO [0;39m (JavaFX-Launcher) [34mcom.comerzzia.core.util.config.ComerzziaApp (ComerzziaApp.java:360)[0;39m - Usando URL [/C:/Users/Tier1/Desktop/CLIENTES/Ametller/pos/comerzzia-ametller-pos-resources/target/classes/comerzzia-pos.xml] para configuración de la aplicación
+11:45:17.479 [34mINFO [0;39m (JavaFX-Launcher) [34mcom.comerzzia.pos.util.config.AppConfig (AppConfig.java:190)[0;39m - Usando URL [file:/C:/Users/Tier1/Desktop/CLIENTES/Ametller/pos/comerzzia-ametller-pos-resources/target/classes/comerzzia-pos.xml] para configuración de la aplicación
+11:45:17.490 [34mINFO [0;39m (JavaFX-Launcher) [34mcom.comerzzia.pos.util.config.AppConfig (AppConfig.java:474)[0;39m - Añadida la siguiente ruta como "java.library.path": C:\Users\Tier1\Desktop\CLIENTES\Ametller\pos\comerzzia-ametller-pos-resources\target\classes
+11:45:17.491 [34mINFO [0;39m (JavaFX-Launcher) [34mcom.comerzzia.pos.util.config.AppConfig (AppConfig.java:477)[0;39m - Añadida la siguiente ruta como "java.library.path": C:\Users\Tier1\Desktop\CLIENTES\Ametller\pos\comerzzia-ametller-pos-resources\target\lib\ext
+11:45:17.491 [39mDEBUG[0;39m (JavaFX-Launcher) [34mcom.comerzzia.pos.util.config.AppConfig (AppConfig.java:530)[0;39m - main() - Listando propiedes del sistema:
+11:45:17.492 [39mDEBUG[0;39m (JavaFX-Launcher) [34mcom.comerzzia.pos.util.config.AppConfig (AppConfig.java:531)[0;39m - 
+com.sun.management.jmxremote.authenticate=false
+javafx.version=8.0.202
+java.runtime.name=Java(TM) SE Runtime Environment
+sun.boot.library.path=C:\java\jdk1.8.0_202\jre\bin
+java.vm.version=25.202-b08
+java.vm.vendor=Oracle Corporation
+java.vendor.url=http://java.oracle.com/
+java.rmi.server.randomIDs=true
+path.separator=;
+java.vm.name=Java HotSpot(TM) 64-Bit Server VM
+file.encoding.pkg=sun.io
+user.country=ES
+user.script=
+sun.java.launcher=SUN_STANDARD
+sun.os.patch.level=
+com.sun.management.jmxremote.port=62951
+java.vm.specification.name=Java Virtual Machine Specification
+user.dir=C:\Users\Tier1\Desktop\CLIENTES\Ametller\pos\comerzzia-ametller-pos-application
+java.runtime.version=1.8.0_202-b08
+java.awt.graphicsenv=sun.awt.Win32GraphicsEnvironment
+javafx.runtime.version=8.0.202-b07
+java.endorsed.dirs=C:\java\jdk1.8.0_202\jre\lib\endorsed
+os.arch=amd64
+java.io.tmpdir=C:\Users\Tier1\AppData\Local\Temp\
+line.separator=
+
+java.vm.specification.vendor=Oracle Corporation
+user.variant=
+os.name=Windows 10
+sun.jnu.encoding=Cp1252
+java.library.path=C:\java\jdk1.8.0_202\bin;C:\WINDOWS\Sun\Java\bin;C:\WINDOWS\system32;C:\WINDOWS;C:/Eclipse/eclipse-2021-12//plugins/org.eclipse.justj.openjdk.hotspot.jre.full.win32.x86_64_15.0.1.v20201027-0507/jre/bin/server;C:/Eclipse/eclipse-2021-12//plugins/org.eclipse.justj.openjdk.hotspot.jre.full.win32.x86_64_15.0.1.v20201027-0507/jre/bin;C:\java\jdk-17.0.12\bin;C:\java\jdk1.8.0_202\bin;C:\Program Files (x86)\VMware\VMware Workstation\bin\;C:\Apache\maven\apache-maven-3.9.9\bin;C:\Program Files\nodejs\;C:\Users\Tier1\AppData\Roaming\npm;C:\Program Files\dotnet\;C:\Program Files (x86)\Pulse Secure\VC142.CRT\X64\;C:\Program Files (x86)\Pulse Secure\VC142.CRT\X86\;C:\Program Files (x86)\Common Files\Pulse Secure\TNC Client Plugin\;C:\Tier1\ClienteAtractor\Oracle;C:\Program Files\MySQL\MySQL Server 8.0\bin;C:\Users\Tier1\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\Tier1\AppData\Local\Google\Cloud SDK\google-cloud-sdk\bin;C:\java\jdk1.8.0_202\bin;C:\Program Files (x86)\VMware\VMware Workstation\bin\;C:\Apache\maven\apache-maven-3.9.9\bin;C:\Program Files\nodejs\;C:\Users\Tier1\AppData\Roaming\npm;C:\Program Files\dotnet\;C:\Program Files (x86)\Pulse Secure\VC142.CRT\X64\;C:\Program Files (x86)\Pulse Secure\VC142.CRT\X86\;C:\Program Files (x86)\Common Files\Pulse Secure\TNC Client Plugin\;C:\Tier1\ClienteAtractor\Oracle;C:\Program Files\MySQL\MySQL Server 8.0\bin;C:\Users\Tier1\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\Tier1\AppData\Local\Google\Cloud SDK\google-cloud-sdk\bin;C:\java\jdk1.8.0_202\bin;C:\Eclipse\eclipse-2021-12;;.;null;C:\Users\Tier1\Desktop\CLIENTES\Ametller\pos\comerzzia-ametller-pos-resources\target\classes;C:\Users\Tier1\Desktop\CLIENTES\Ametller\pos\comerzzia-ametller-pos-resources\target\lib\ext;
+spring.jmx.enabled=true
+java.specification.name=Java Platform API Specification
+java.class.version=52.0
+sun.management.compiler=HotSpot 64-Bit Tiered Compilers
+os.version=10.0
+user.home=C:\Users\Tier1
+user.timezone=Europe/Paris
+java.awt.printerjob=sun.awt.windows.WPrinterJob
+file.encoding=UTF-8
+java.specification.version=1.8
+java.class.path=C:\Users\Tier1\Desktop\CLIENTES\Ametller\pos\comerzzia-ametller-pos-application\target\classes;C:\Users\Tier1\.m2\repository\org\springframework\boot\spring-boot-starter\2.1.4.RELEASE\spring-boot-starter-2.1.4.RELEASE.jar;C:\Users\Tier1\.m2\repository\org\springframework\boot\spring-boot\2.1.4.RELEASE\spring-boot-2.1.4.RELEASE.jar;C:\Users\Tier1\.m2\repository\org\springframework\boot\spring-boot-autoconfigure\2.1.4.RELEASE\spring-boot-autoconfigure-2.1.4.RELEASE.jar;C:\Users\Tier1\.m2\repository\org\springframework\boot\spring-boot-starter-logging\2.1.4.RELEASE\spring-boot-starter-logging-2.1.4.RELEASE.jar;C:\Users\Tier1\.m2\repository\javax\annotation\javax.annotation-api\1.3.2\javax.annotation-api-1.3.2.jar;C:\Users\Tier1\.m2\repository\org\springframework\spring-core\5.1.6.RELEASE\spring-core-5.1.6.RELEASE.jar;C:\Users\Tier1\.m2\repository\org\springframework\spring-jcl\5.1.6.RELEASE\spring-jcl-5.1.6.RELEASE.jar;C:\Users\Tier1\.m2\repository\org\yaml\snakeyaml\1.23\snakeyaml-1.23.jar;C:\Users\Tier1\.m2\repository\com\comerzzia\pos\comerzzia-pos-backstore-gui\4.8.1.250128\comerzzia-pos-backstore-gui-4.8.1.250128.jar;C:\Users\Tier1\.m2\repository\com\comerzzia\pos\comerzzia-pos-core\4.8.1.250128\comerzzia-pos-core-4.8.1.250128.jar;C:\Users\Tier1\.m2\repository\org\comtel2000\fx-onscreen-keyboard\8.2.5\fx-onscreen-keyboard-8.2.5.jar;C:\Users\Tier1\.m2\repository\it\sauronsoftware\junique\1.0.4\junique-1.0.4.jar;C:\Users\Tier1\.m2\repository\org\apache\commons\commons-lang3\3.1\commons-lang3-3.1.jar;C:\Users\Tier1\.m2\repository\org\hibernate\hibernate-validator-cdi\5.1.0.Final\hibernate-validator-cdi-5.1.0.Final.jar;C:\Users\Tier1\.m2\repository\org\hibernate\hibernate-validator\5.1.0.Final\hibernate-validator-5.1.0.Final.jar;C:\Users\Tier1\.m2\repository\javax\validation\validation-api\1.1.0.Final\validation-api-1.1.0.Final.jar;C:\Users\Tier1\.m2\repository\org\jboss\logging\jboss-logging\3.1.3.GA\jboss-logging-3.1.3.GA.jar;C:\Users\Tier1\.m2\repository\com\fasterxml\classmate\1.0.0\classmate-1.0.0.jar;C:\Users\Tier1\.m2\repository\org\glassfish\web\javax.el\2.2.4\javax.el-2.2.4.jar;C:\Users\Tier1\.m2\repository\javax\el\javax.el-api\2.2.4\javax.el-api-2.2.4.jar;C:\Users\Tier1\.m2\repository\org\apache\velocity\velocity\1.7\velocity-1.7.jar;C:\Users\Tier1\.m2\repository\commons-collections\commons-collections\3.1\commons-collections-3.1.jar;C:\Users\Tier1\.m2\repository\commons-lang\commons-lang\2.6\commons-lang-2.6.jar;C:\Users\Tier1\.m2\repository\com\oracle\jdbc\ojdbc7\12.1.0.2\ojdbc7-12.1.0.2.jar;C:\Users\Tier1\.m2\repository\mysql\mysql-connector-java\5.1.45\mysql-connector-java-5.1.45.jar;C:\Users\Tier1\.m2\repository\net\sourceforge\jtds\jtds\1.3.1\jtds-1.3.1.jar;C:\Users\Tier1\.m2\repository\com\comerzzia\comerzzia-core-servicios\4.8.1.230529\comerzzia-core-servicios-4.8.1.230529.jar;C:\Users\Tier1\.m2\repository\commons-beanutils\commons-beanutils\1.9.2\commons-beanutils-1.9.2.jar;C:\Users\Tier1\.m2\repository\io\jsonwebtoken\jjwt-api\0.10.5\jjwt-api-0.10.5.jar;C:\Users\Tier1\.m2\repository\io\jsonwebtoken\jjwt-impl\0.10.5\jjwt-impl-0.10.5.jar;C:\Users\Tier1\.m2\repository\io\jsonwebtoken\jjwt-jackson\0.10.5\jjwt-jackson-0.10.5.jar;C:\Users\Tier1\.m2\repository\com\comerzzia\comerzzia-core-persistencia\4.8.1.230529\comerzzia-core-persistencia-4.8.1.230529.jar;C:\Users\Tier1\.m2\repository\com\comerzzia\comerzzia-core-model\4.8.1.230529\comerzzia-core-model-4.8.1.230529.jar;C:\Users\Tier1\.m2\repository\com\comerzzia\comerzzia-core-util\4.8.1.230529\comerzzia-core-util-4.8.1.230529.jar;C:\Users\Tier1\.m2\repository\org\xnap\commons\gettext-commons\0.9.6\gettext-commons-0.9.6.jar;C:\Users\Tier1\.m2\repository\commons-io\commons-io\2.4\commons-io-2.4.jar;C:\Users\Tier1\.m2\repository\com\comerzzia\pos\comerzzia-pos-services\4.8.1.250128\comerzzia-pos-services-4.8.1.250128.jar;C:\Users\Tier1\.m2\repository\net\sourceforge\jexcelapi\jxl\2.6.12\jxl-2.6.12.jar;C:\Users\Tier1\.m2\repository\com\fasterxml\jackson\module\jackson-module-jaxb-annotations\2.9.5\jackson-module-jaxb-annotations-2.9.5.jar;C:\Users\Tier1\.m2\repository\com\comerzzia\comerzzia-firma-saftPt\1.0.0\comerzzia-firma-saftPt-1.0.0.jar;C:\Users\Tier1\.m2\repository\bouncycastle\bcprov-jdk16\140\bcprov-jdk16-140.jar;C:\Users\Tier1\.m2\repository\com\comerzzia\pos\comerzzia-pos-persistence\4.8.1.250128\comerzzia-pos-persistence-4.8.1.250128.jar;C:\Users\Tier1\.m2\repository\com\comerzzia\pos\comerzzia-pos-util\4.8.1.250128\comerzzia-pos-util-4.8.1.250128.jar;C:\Users\Tier1\.m2\repository\org\efaps\number2words\0.2\number2words-0.2.jar;C:\Users\Tier1\.m2\repository\org\gnu\gettext\libintl\0.18.2\libintl-0.18.2.jar;C:\Users\Tier1\.m2\repository\com\comerzzia\api\v1\comerzzia-api-client\1.2.220512\comerzzia-api-client-1.2.220512.jar;C:\Users\Tier1\.m2\repository\org\glassfish\jersey\core\jersey-client\2.5.1\jersey-client-2.5.1.jar;C:\Users\Tier1\.m2\repository\org\glassfish\jersey\core\jersey-common\2.5.1\jersey-common-2.5.1.jar;C:\Users\Tier1\.m2\repository\org\glassfish\hk2\osgi-resource-locator\1.0.1\osgi-resource-locator-1.0.1.jar;C:\Users\Tier1\.m2\repository\javax\ws\rs\javax.ws.rs-api\2.0\javax.ws.rs-api-2.0.jar;C:\Users\Tier1\.m2\repository\com\google\guava\guava\14.0.1\guava-14.0.1.jar;C:\Users\Tier1\.m2\repository\org\glassfish\hk2\hk2-api\2.2.0-b21\hk2-api-2.2.0-b21.jar;C:\Users\Tier1\.m2\repository\org\glassfish\hk2\hk2-utils\2.2.0-b21\hk2-utils-2.2.0-b21.jar;C:\Users\Tier1\.m2\repository\org\glassfish\hk2\external\javax.inject\2.2.0-b21\javax.inject-2.2.0-b21.jar;C:\Users\Tier1\.m2\repository\org\glassfish\hk2\hk2-locator\2.2.0-b21\hk2-locator-2.2.0-b21.jar;C:\Users\Tier1\.m2\repository\org\glassfish\hk2\external\asm-all-repackaged\2.2.0-b21\asm-all-repackaged-2.2.0-b21.jar;C:\Users\Tier1\.m2\repository\org\glassfish\hk2\external\cglib\2.2.0-b21\cglib-2.2.0-b21.jar;C:\Users\Tier1\.m2\repository\com\fasterxml\jackson\jaxrs\jackson-jaxrs-json-provider\2.5.1\jackson-jaxrs-json-provider-2.5.1.jar;C:\Users\Tier1\.m2\repository\com\fasterxml\jackson\jaxrs\jackson-jaxrs-base\2.5.1\jackson-jaxrs-base-2.5.1.jar;C:\Users\Tier1\.m2\repository\axis\axis\1.4\axis-1.4.jar;C:\Users\Tier1\.m2\repository\org\apache\axis\axis-jaxrpc\1.4\axis-jaxrpc-1.4.jar;C:\Users\Tier1\.m2\repository\org\apache\axis\axis-saaj\1.4\axis-saaj-1.4.jar;C:\Users\Tier1\.m2\repository\commons-discovery\commons-discovery\0.2\commons-discovery-0.2.jar;C:\Users\Tier1\.m2\repository\axis\axis-wsdl4j\1.5.1\axis-wsdl4j-1.5.1.jar;C:\Users\Tier1\.m2\repository\com\comerzzia\api\v2\loyalty\comerzzia-loyalty-client-java\2.0-SNAPSHOT\comerzzia-loyalty-client-java-2.0-SNAPSHOT.jar;C:\Users\Tier1\.m2\repository\io\swagger\swagger-annotations\1.5.21\swagger-annotations-1.5.21.jar;C:\Users\Tier1\.m2\repository\io\github\openfeign\feign-core\9.4.0\feign-core-9.4.0.jar;C:\Users\Tier1\.m2\repository\org\jvnet\animal-sniffer-annotation\1.0\animal-sniffer-annotation-1.0.jar;C:\Users\Tier1\.m2\repository\io\github\openfeign\feign-jackson\9.4.0\feign-jackson-9.4.0.jar;C:\Users\Tier1\.m2\repository\io\github\openfeign\feign-slf4j\9.4.0\feign-slf4j-9.4.0.jar;C:\Users\Tier1\.m2\repository\io\github\openfeign\form\feign-form\2.1.0\feign-form-2.1.0.jar;C:\Users\Tier1\.m2\repository\org\projectlombok\lombok\1.16.12\lombok-1.16.12.jar;C:\Users\Tier1\.m2\repository\org\apache\oltu\oauth2\org.apache.oltu.oauth2.client\1.0.1\org.apache.oltu.oauth2.client-1.0.1.jar;C:\Users\Tier1\.m2\repository\org\apache\oltu\oauth2\org.apache.oltu.oauth2.common\1.0.1\org.apache.oltu.oauth2.common-1.0.1.jar;C:\Users\Tier1\.m2\repository\org\json\json\20140107\json-20140107.jar;C:\Users\Tier1\.m2\repository\com\comerzzia\api\v2\core\comerzzia-core-client-java\1.0.0-SNAPSHOT\comerzzia-core-client-java-1.0.0-SNAPSHOT.jar;C:\Users\Tier1\.m2\repository\com\github\joschi\jackson\jackson-datatype-threetenbp\2.6.4\jackson-datatype-threetenbp-2.6.4.jar;C:\Users\Tier1\.m2\repository\org\threeten\threetenbp\1.3.1\threetenbp-1.3.1.jar;C:\Users\Tier1\.m2\repository\com\comerzzia\instoreengine\comerzzia-inStoreEngine-webservices-cliente\4.8.1.210326\comerzzia-inStoreEngine-webservices-cliente-4.8.1.210326.jar;C:\Users\Tier1\.m2\repository\com\comerzzia\pos\comerzzia-pos-skin\4.8.1.250128\comerzzia-pos-skin-4.8.1.250128.jar;C:\Users\Tier1\.m2\repository\com\comerzzia\pos\comerzzia-pos-devices\4.8.1.250128\comerzzia-pos-devices-4.8.1.250128.jar;C:\Users\Tier1\.m2\repository\org\rxtx\rxtx\2.1.7\rxtx-2.1.7.jar;C:\Users\Tier1\.m2\repository\ch\ntb\usb\ch-ntb-usb\0.5.9\ch-ntb-usb-0.5.9.jar;C:\Users\Tier1\.m2\repository\org\javapos\javapos\1.14.0\javapos-1.14.0.jar;C:\Users\Tier1\.m2\repository\net\sf\jasperreports\jasperreports\6.7.1\jasperreports-6.7.1.jar;C:\Users\Tier1\.m2\repository\commons-digester\commons-digester\2.1\commons-digester-2.1.jar;C:\Users\Tier1\.m2\repository\commons-logging\commons-logging\1.1.1\commons-logging-1.1.1.jar;C:\Users\Tier1\.m2\repository\com\lowagie\itext\2.1.7.js6\itext-2.1.7.js6.jar;C:\Users\Tier1\.m2\repository\org\jfree\jcommon\1.0.23\jcommon-1.0.23.jar;C:\Users\Tier1\.m2\repository\org\jfree\jfreechart\1.0.19\jfreechart-1.0.19.jar;C:\Users\Tier1\.m2\repository\org\eclipse\jdt\core\compiler\ecj\4.4.2\ecj-4.4.2.jar;C:\Users\Tier1\.m2\repository\org\codehaus\castor\castor-xml\1.3.3\castor-xml-1.3.3.jar;C:\Users\Tier1\.m2\repository\org\codehaus\castor\castor-core\1.3.3\castor-core-1.3.3.jar;C:\Users\Tier1\.m2\repository\javax\inject\javax.inject\1\javax.inject-1.jar;C:\Users\Tier1\.m2\repository\stax\stax\1.2.0\stax-1.2.0.jar;C:\Users\Tier1\.m2\repository\stax\stax-api\1.0.1\stax-api-1.0.1.jar;C:\Users\Tier1\.m2\repository\javax\xml\stream\stax-api\1.0-2\stax-api-1.0-2.jar;C:\Users\Tier1\.m2\repository\com\fasterxml\jackson\core\jackson-core\2.9.5\jackson-core-2.9.5.jar;C:\Users\Tier1\.m2\repository\com\fasterxml\jackson\core\jackson-databind\2.9.5\jackson-databind-2.9.5.jar;C:\Users\Tier1\.m2\repository\com\fasterxml\jackson\core\jackson-annotations\2.9.5\jackson-annotations-2.9.5.jar;C:\Users\Tier1\.m2\repository\com\ibm\icu\icu4j\57.1\icu4j-57.1.jar;C:\Users\Tier1\.m2\repository\net\sf\barcode4j\barcode4j\2.1\barcode4j-2.1.jar;C:\Users\Tier1\.m2\repository\avalon-framework\avalon-framework-impl\4.2.0\avalon-framework-impl-4.2.0.jar;C:\Users\Tier1\.m2\repository\commons-cli\commons-cli\1.0\commons-cli-1.0.jar;C:\Users\Tier1\.m2\repository\org\apache\ant\ant\1.7.1\ant-1.7.1.jar;C:\Users\Tier1\.m2\repository\org\apache\ant\ant-launcher\1.7.1\ant-launcher-1.7.1.jar;C:\Users\Tier1\.m2\repository\org\apache\xmlgraphics\batik-bridge\1.9\batik-bridge-1.9.jar;C:\Users\Tier1\.m2\repository\org\apache\xmlgraphics\batik-anim\1.9\batik-anim-1.9.jar;C:\Users\Tier1\.m2\repository\org\apache\xmlgraphics\batik-awt-util\1.9\batik-awt-util-1.9.jar;C:\Users\Tier1\.m2\repository\org\apache\xmlgraphics\batik-css\1.9\batik-css-1.9.jar;C:\Users\Tier1\.m2\repository\org\apache\xmlgraphics\xmlgraphics-commons\2.2\xmlgraphics-commons-2.2.jar;C:\Users\Tier1\.m2\repository\org\apache\xmlgraphics\batik-dom\1.9\batik-dom-1.9.jar;C:\Users\Tier1\.m2\repository\org\apache\xmlgraphics\batik-ext\1.9\batik-ext-1.9.jar;C:\Users\Tier1\.m2\repository\org\apache\xmlgraphics\batik-gvt\1.9\batik-gvt-1.9.jar;C:\Users\Tier1\.m2\repository\org\apache\xmlgraphics\batik-parser\1.9\batik-parser-1.9.jar;C:\Users\Tier1\.m2\repository\org\apache\xmlgraphics\batik-script\1.9\batik-script-1.9.jar;C:\Users\Tier1\.m2\repository\org\apache\xmlgraphics\batik-svg-dom\1.9\batik-svg-dom-1.9.jar;C:\Users\Tier1\.m2\repository\org\apache\xmlgraphics\batik-util\1.9\batik-util-1.9.jar;C:\Users\Tier1\.m2\repository\org\apache\xmlgraphics\batik-constants\1.9\batik-constants-1.9.jar;C:\Users\Tier1\.m2\repository\org\apache\xmlgraphics\batik-i18n\1.9\batik-i18n-1.9.jar;C:\Users\Tier1\.m2\repository\org\apache\xmlgraphics\batik-xml\1.9\batik-xml-1.9.jar;C:\Users\Tier1\.m2\repository\xalan\xalan\2.7.2\xalan-2.7.2.jar;C:\Users\Tier1\.m2\repository\xalan\serializer\2.7.2\serializer-2.7.2.jar;C:\Users\Tier1\.m2\repository\xml-apis\xml-apis\1.3.04\xml-apis-1.3.04.jar;C:\Users\Tier1\.m2\repository\xml-apis\xml-apis-ext\1.3.04\xml-apis-ext-1.3.04.jar;C:\Users\Tier1\.m2\repository\org\apache\xmlgraphics\batik-svggen\1.9\batik-svggen-1.9.jar;C:\Users\Tier1\.m2\repository\org\apache\poi\poi\3.17\poi-3.17.jar;C:\Users\Tier1\.m2\repository\commons-codec\commons-codec\1.10\commons-codec-1.10.jar;C:\Users\Tier1\.m2\repository\org\apache\commons\commons-collections4\4.1\commons-collections4-4.1.jar;C:\Users\Tier1\.m2\repository\org\apache\poi\poi-ooxml\3.17\poi-ooxml-3.17.jar;C:\Users\Tier1\.m2\repository\org\apache\poi\poi-ooxml-schemas\3.17\poi-ooxml-schemas-3.17.jar;C:\Users\Tier1\.m2\repository\org\apache\xmlbeans\xmlbeans\2.6.0\xmlbeans-2.6.0.jar;C:\Users\Tier1\.m2\repository\com\github\virtuald\curvesapi\1.04\curvesapi-1.04.jar;C:\Users\Tier1\.m2\repository\com\google\zxing\core\3.3.0\core-3.3.0.jar;C:\Users\Tier1\.m2\repository\com\google\zxing\javase\3.3.0\javase-3.3.0.jar;C:\Users\Tier1\.m2\repository\com\beust\jcommander\1.48\jcommander-1.48.jar;C:\Users\Tier1\.m2\repository\com\github\jai-imageio\jai-imageio-core\1.3.1\jai-imageio-core-1.3.1.jar;C:\Users\Tier1\.m2\repository\com\comerzzia\pos\comerzzia-pos-gui\4.8.1.250128\comerzzia-pos-gui-4.8.1.250128.jar;C:\Users\Tier1\.m2\repository\com\comerzzia\pos\portugal\comerzzia-pos-portugal\1.0.3\comerzzia-pos-portugal-1.0.3.jar;C:\Users\Tier1\Desktop\CLIENTES\Ametller\pos\comerzzia-ametller-pos-gui\target\classes;C:\Users\Tier1\.m2\repository\org\slf4j\log4j-over-slf4j\1.7.26\log4j-over-slf4j-1.7.26.jar;C:\Users\Tier1\.m2\repository\org\slf4j\slf4j-api\1.7.26\slf4j-api-1.7.26.jar;C:\Users\Tier1\.m2\repository\ch\qos\logback\logback-classic\1.2.3\logback-classic-1.2.3.jar;C:\Users\Tier1\.m2\repository\ch\qos\logback\logback-core\1.2.3\logback-core-1.2.3.jar;C:\Users\Tier1\.m2\repository\org\apache\logging\log4j\log4j-to-slf4j\2.11.2\log4j-to-slf4j-2.11.2.jar;C:\Users\Tier1\.m2\repository\org\apache\logging\log4j\log4j-api\2.11.2\log4j-api-2.11.2.jar;C:\Users\Tier1\.m2\repository\org\slf4j\jul-to-slf4j\1.7.26\jul-to-slf4j-1.7.26.jar;C:\Users\Tier1\.m2\repository\com\oracle\jfxrt\8u221\jfxrt-8u221.jar;C:\Users\Tier1\.m2\repository\org\springframework\spring-context\5.1.6.RELEASE\spring-context-5.1.6.RELEASE.jar;C:\Users\Tier1\.m2\repository\org\springframework\spring-aop\5.1.6.RELEASE\spring-aop-5.1.6.RELEASE.jar;C:\Users\Tier1\.m2\repository\org\springframework\spring-beans\5.1.6.RELEASE\spring-beans-5.1.6.RELEASE.jar;C:\Users\Tier1\.m2\repository\org\springframework\spring-expression\5.1.6.RELEASE\spring-expression-5.1.6.RELEASE.jar;C:\Users\Tier1\.m2\repository\org\springframework\spring-jdbc\5.1.6.RELEASE\spring-jdbc-5.1.6.RELEASE.jar;C:\Users\Tier1\.m2\repository\org\springframework\spring-tx\5.1.6.RELEASE\spring-tx-5.1.6.RELEASE.jar;C:\Users\Tier1\.m2\repository\org\mybatis\mybatis\3.4.6\mybatis-3.4.6.jar;C:\Users\Tier1\.m2\repository\org\mybatis\mybatis-spring\1.3.2\mybatis-spring-1.3.2.jar;C:\Users\Tier1\Desktop\CLIENTES\Ametller\pos\comerzzia-ametller-pos-resources\target\classes
+user.name=ALS
+com.sun.management.jmxremote=
+java.vm.specification.version=1.8
+sun.java.command=com.comerzzia.ametller.pos.application.ComerzziaPOSApplication
+java.home=C:\java\jdk1.8.0_202\jre
+sun.arch.data.model=64
+user.language=es
+java.specification.vendor=Oracle Corporation
+awt.toolkit=sun.awt.windows.WToolkit
+com.sun.management.jmxremote.ssl=false
+java.vm.info=mixed mode
+java.version=1.8.0_202
+java.ext.dirs=C:\java\jdk1.8.0_202\jre\lib\ext;C:\WINDOWS\Sun\Java\lib\ext
+sun.boot.class.path=C:\java\jdk1.8.0_202\jre\lib\resources.jar;C:\java\jdk1.8.0_202\jre\lib\rt.jar;C:\java\jdk1.8.0_202\jre\lib\sunrsasign.jar;C:\java\jdk1.8.0_202\jre\lib\jsse.jar;C:\java\jdk1.8.0_202\jre\lib\jce.jar;C:\java\jdk1.8.0_202\jre\lib\charsets.jar;C:\java\jdk1.8.0_202\jre\lib\jfr.jar;C:\java\jdk1.8.0_202\jre\classes
+java.vendor=Oracle Corporation
+spring.boot.project.name=comerzzia-ametller-pos-application
+spring.application.admin.enabled=true
+com.sun.xml.internal.bind.v2.runtime.JAXBContextImpl.fastBoot=true
+file.separator=\
+java.vendor.url.bug=http://bugreport.sun.com/bugreport/
+sun.io.unicode.encoding=UnicodeLittle
+sun.cpu.endian=little
+java.rmi.server.hostname=localhost
+sun.desktop=windows
+sun.cpu.isalist=amd64
+
+11:45:17.494 [39mDEBUG[0;39m (JavaFX-Launcher) [34mcom.comerzzia.pos.util.i18n.I18N (I18N.java:46)[0;39m - I18N() - cargando archivo de idiomas
+11:45:17.506 [34mINFO [0;39m (JavaFX-Launcher) [34mcom.comerzzia.pos.util.config.AppConfig (AppConfig.java:165)[0;39m - ********************** OBTENIENDO SQLSESSIONFACTORY **********************
+11:45:17.521 [34mINFO [0;39m (JavaFX-Launcher) [34mcom.comerzzia.core.util.db.DefaultConnectionProvider (DefaultConnectionProvider.java:94)[0;39m - Creating myBatis connection pool to [jdbc:mysql://172.16.102.35:33062/ametller_des]
+11:45:19.953 [34mINFO [0;39m (JavaFX-Launcher) [34mcom.comerzzia.pos.util.config.AppConfig (AppConfig.java:171)[0;39m - ********************** OBTENIENDO DataSourceTransactionManager **********************
+11:45:20.135 [39mDEBUG[0;39m (JavaFX-Launcher) [34morg.jboss.logging (LoggerProviders.java:33)[0;39m - Logging Provider: org.jboss.logging.Slf4jLoggerProvider
+11:45:20.138 [34mINFO [0;39m (JavaFX-Launcher) [34morg.hibernate.validator.internal.util.Version (Version.java:27)[0;39m - HV000001: Hibernate Validator 5.1.0.Final
+11:45:20.601 [39mDEBUG[0;39m (JavaFX-Launcher) [34mcom.comerzzia.pos.core.gui.POSApplication (POSApplication.java:209)[0;39m - main() - Spring context inicializado en 5778 milisegundos
+11:45:20.609 [39mDEBUG[0;39m (JavaFX-Launcher) [34mcom.comerzzia.pos.core.gui.POSApplication (POSApplication.java:224)[0;39m - init() - Iniciando formateadores y Sesion
+11:45:20.609 [39mDEBUG[0;39m (JavaFX-Launcher) [34mcom.comerzzia.pos.core.gui.POSApplication (POSApplication.java:711)[0;39m - loadFonts() - Cargando Fuentes
+11:45:20.609 [39mDEBUG[0;39m (JavaFX-Launcher) [34mcom.comerzzia.pos.core.gui.POSApplication (POSApplication.java:713)[0;39m - loadFonts() - Cargando fuentes estándar
+11:45:20.610 [39mDEBUG[0;39m (JavaFX-Launcher) [34mcom.comerzzia.pos.core.gui.POSApplication (POSApplication.java:842)[0;39m - getSkinResource() - Devolviendo URL: jar:file:/C:/Users/Tier1/.m2/repository/com/comerzzia/pos/comerzzia-pos-skin/4.8.1.250128/comerzzia-pos-skin-4.8.1.250128.jar!/skins/standard/com/comerzzia/pos/gui/fonts/Dosis-Bold.ttf
+11:45:20.620 [39mDEBUG[0;39m (JavaFX-Launcher) [34mcom.comerzzia.pos.core.gui.POSApplication (POSApplication.java:842)[0;39m - getSkinResource() - Devolviendo URL: jar:file:/C:/Users/Tier1/.m2/repository/com/comerzzia/pos/comerzzia-pos-skin/4.8.1.250128/comerzzia-pos-skin-4.8.1.250128.jar!/skins/standard/com/comerzzia/pos/gui/fonts/dosis-medium.ttf
+11:45:20.625 [39mDEBUG[0;39m (JavaFX-Launcher) [34mcom.comerzzia.pos.core.gui.POSApplication (POSApplication.java:842)[0;39m - getSkinResource() - Devolviendo URL: jar:file:/C:/Users/Tier1/.m2/repository/com/comerzzia/pos/comerzzia-pos-skin/4.8.1.250128/comerzzia-pos-skin-4.8.1.250128.jar!/skins/standard/com/comerzzia/pos/gui/fonts/Lato-Medium.ttf
+11:45:20.635 [39mDEBUG[0;39m (JavaFX-Launcher) [34mcom.comerzzia.pos.core.gui.POSApplication (POSApplication.java:842)[0;39m - getSkinResource() - Devolviendo URL: jar:file:/C:/Users/Tier1/.m2/repository/com/comerzzia/pos/comerzzia-pos-skin/4.8.1.250128/comerzzia-pos-skin-4.8.1.250128.jar!/skins/standard/com/comerzzia/pos/gui/fonts/FontKeyboardFX.ttf
+11:45:20.638 [39mDEBUG[0;39m (JavaFX-Launcher) [34mcom.comerzzia.pos.core.gui.POSApplication (POSApplication.java:842)[0;39m - getSkinResource() - Devolviendo URL: null
+11:45:20.638 [39mDEBUG[0;39m (JavaFX-Launcher) [34mcom.comerzzia.pos.core.gui.POSApplication (POSApplication.java:724)[0;39m - loadFonts() - Buscando fuentes personalizadas en com/comerzzia/pos/gui/ext-fonts/
+11:45:20.638 [39mDEBUG[0;39m (JavaFX-Launcher) [34mcom.comerzzia.pos.core.gui.POSApplication (POSApplication.java:749)[0;39m - loadFonts() - La carpeta com/comerzzia/pos/gui/ext-fonts/ no existe
+11:45:20.855 [34mINFO [0;39m (JavaFX-Launcher) [34mcom.comerzzia.pos.services.core.sesion.Sesion (Sesion.java:51)[0;39m - initAplicacion() - Inicializando sesión de aplicacion...
+11:45:20.855 [34mINFO [0;39m (JavaFX-Launcher) [34mcom.comerzzia.pos.services.core.sesion.SesionAplicacion (SesionAplicacion.java:135)[0;39m - init() - Cargando fichero de configuración de caja...
+11:45:20.856 [34mINFO [0;39m (JavaFX-Launcher) [34mcom.comerzzia.pos.util.config.TPVConfig (TPVConfig.java:55)[0;39m - Usando URL [file:/C:/Users/Tier1/Desktop/CLIENTES/Ametller/pos/comerzzia-ametller-pos-resources/target/classes/pos_config.xml] para configuración de la caja TPV.
+11:45:20.856 [34mINFO [0;39m (JavaFX-Launcher) [34mcom.comerzzia.pos.services.core.sesion.SesionAplicacion (SesionAplicacion.java:139)[0;39m - init() - UID_ACTIVIDAD: ad95dab4-51b4-48a5-bfc7-75db4e9f5ae1 UID_CAJA: bf4523cc-fb8e-430b-a04b-d673c7992db5
+11:45:20.869 [39mDEBUG[0;39m (JavaFX-Launcher) [34mcom.comerzzia.pos.services.core.actividades.ActividadesService (ActividadesService.java:52)[0;39m - consultarActividad() - realizando consulta de actividad para uidActividad :ad95dab4-51b4-48a5-bfc7-75db4e9f5ae1
+11:45:20.932 [39mDEBUG[0;39m (JavaFX-Launcher) [34mcom.comerzzia.pos.services.core.tiendas.cajas.TiendaCajaService (TiendaCajaService.java:53)[0;39m - consultarTPV() - consultado caja de tienda uidCaja bf4523cc-fb8e-430b-a04b-d673c7992db5
+11:45:21.010 [39mDEBUG[0;39m (JavaFX-Launcher) [34mcom.comerzzia.pos.services.core.tiendas.TiendasService (TiendasService.java:80)[0;39m - consultarTienda() - consultado tienda con codAlmacen 13
+11:45:21.068 [39mDEBUG[0;39m (JavaFX-Launcher) [34mcom.comerzzia.pos.services.core.tiendas.TiendasService (TiendasService.java:88)[0;39m - consultarTienda() - consultando almacen cond codAlmacen 13
+11:45:21.176 [39mDEBUG[0;39m (JavaFX-Launcher) [34mcom.comerzzia.pos.services.clientes.ClientesService (ClientesService.java:85)[0;39m - consultarCliente() - consultando cliente con codClienteT13
+11:45:21.211 [39mDEBUG[0;39m (JavaFX-Launcher) [34mcom.comerzzia.pos.services.core.empresas.EmpresasService (EmpresasService.java:55)[0;39m - consultarEmpresa() - Consultando empresa con codEmpresa 0000
+11:45:21.295 [39mDEBUG[0;39m (JavaFX-Launcher) [34mcom.comerzzia.pos.services.core.conceptosalmacen.ConceptoService (ConceptoService.java:51)[0;39m - consultarConceptos() - Consultando conceptos de almacén 
+11:45:21.663 [39mDEBUG[0;39m (JavaFX-Launcher) [34mcom.comerzzia.pos.services.mediospagos.MediosPagosService (MediosPagosService.java:101)[0;39m - cargarMediosPago() - Cargando medios de pago para el uidActividad ad95dab4-51b4-48a5-bfc7-75db4e9f5ae1
+11:45:21.744 [34mINFO [0;39m (JavaFX-Launcher) [34mcom.comerzzia.core.servicios.caches.FlushIntervalCache (FlushIntervalCache.java:95)[0;39m - initClearInterval() - Intervalo de limpieza configurado: 0
+11:45:22.474 [39mDEBUG[0;39m (JavaFX-Launcher) [34mcom.comerzzia.pos.services.core.tiendas.cajas.TiendaCajaService (TiendaCajaService.java:53)[0;39m - consultarTPV() - consultado caja de tienda uidCaja bf4523cc-fb8e-430b-a04b-d673c7992db5
+11:45:22.592 [39mDEBUG[0;39m (JavaFX-Launcher) [34mcom.comerzzia.pos.services.cajas.conceptos.CajaConceptosServices (CajaConceptosServices.java:62)[0;39m - cargarConceptosCaja() - Cargando conceptos de caja para el uidActividad ad95dab4-51b4-48a5-bfc7-75db4e9f5ae1
+11:45:22.607 [39mDEBUG[0;39m (JavaFX-Launcher) [34mcom.comerzzia.pos.services.core.variables.VariablesServices (VariablesServices.java:85)[0;39m - cargarVariables() - Cargando variables para uidActividad: ad95dab4-51b4-48a5-bfc7-75db4e9f5ae1
+11:45:22.732 [34mINFO [0;39m (JavaFX-Launcher) [34mcom.comerzzia.core.servicios.api.ComerzziaApiManagerImpl (ComerzziaApiManagerImpl.java:52)[0;39m - Se ha registrado el API CouponsApi
+11:45:22.732 [34mINFO [0;39m (JavaFX-Launcher) [34mcom.comerzzia.core.servicios.api.ComerzziaApiManagerImpl (ComerzziaApiManagerImpl.java:52)[0;39m - Se ha registrado el API CardsApi
+11:45:22.733 [34mINFO [0;39m (JavaFX-Launcher) [34mcom.comerzzia.core.servicios.api.ComerzziaApiManagerImpl (ComerzziaApiManagerImpl.java:52)[0;39m - Se ha registrado el API LoyaltyAccountsApi
+11:45:22.733 [34mINFO [0;39m (JavaFX-Launcher) [34mcom.comerzzia.pos.services.core.sesion.SesionImpuestos (SesionImpuestos.java:61)[0;39m - init() - Consultando impuestos vigentes...
+11:45:22.807 [34mINFO [0;39m (JavaFX-Launcher) [34mcom.comerzzia.pos.services.core.sesion.SesionImpuestos (SesionImpuestos.java:81)[0;39m - init() - Porcentajes de impuestos vigentes cargados correctamente.
+11:45:22.810 [39mDEBUG[0;39m (JavaFX-Launcher) [34mcom.comerzzia.pos.services.cajas.CajasService (CajasService.java:585)[0;39m - consultarCajaAbierta() - Consultado caja abierta en sesion
+11:45:22.828 [34mINFO [0;39m (JavaFX-Launcher) [34mcom.comerzzia.pos.services.core.sesion.Sesion (Sesion.java:55)[0;39m - initAplicacion() - Sesión de aplicación inicializada correctamente.
+11:45:22.843 [39mDEBUG[0;39m (JavaFX-Launcher) [34mcom.comerzzia.pos.util.xml.MarshallUtil (MarshallUtil.java:213)[0;39m - init() - Iniciando nuevo contexto de JAXB para com.comerzzia.core.model.notificaciones.Notificacion
+11:45:22.920 [39mDEBUG[0;39m (JavaFX-Launcher) [34mcom.comerzzia.pos.util.xml.MarshallUtil (MarshallUtil.java:245)[0;39m - getMarshallContext() - Iniciado nuevo contexto de JAXB en 76ms
+11:45:22.967 [39mDEBUG[0;39m (JavaFX-Launcher) [34mcom.comerzzia.pos.util.xml.MarshallUtil (MarshallUtil.java:213)[0;39m - init() - Iniciando nuevo contexto de JAXB para com.comerzzia.pos.services.notificaciones.Notificaciones
+11:45:22.984 [39mDEBUG[0;39m (JavaFX-Launcher) [34mcom.comerzzia.pos.util.xml.MarshallUtil (MarshallUtil.java:245)[0;39m - getMarshallContext() - Iniciado nuevo contexto de JAXB en 16ms
+11:45:23.000 [39mDEBUG[0;39m (JavaFX-Launcher) [34mcom.comerzzia.pos.services.core.config.configContadores.ServicioConfigContadores (ServicioConfigContadores.java:98)[0;39m - consultar() - Consultando datos del contador: REP_NUMFAC
+11:45:23.024 [39mDEBUG[0;39m (JavaFX-Launcher) [34mcom.comerzzia.pos.services.core.config.configContadores.rangos.ServicioConfigContadoresRangos (ServicioConfigContadoresRangos.java:43)[0;39m - consultar() - Consultando rangos 
+11:45:23.100 [39mDEBUG[0;39m (JavaFX-Launcher) [34mcom.comerzzia.pos.services.core.config.configContadores.ServicioConfigContadores (ServicioConfigContadores.java:98)[0;39m - consultar() - Consultando datos del contador: REP_NUMFAC
+11:45:23.154 [39mDEBUG[0;39m (JavaFX-Launcher) [34mcom.comerzzia.pos.services.core.config.configContadores.rangos.ServicioConfigContadoresRangos (ServicioConfigContadoresRangos.java:43)[0;39m - consultar() - Consultando rangos 
+11:45:23.225 [39mDEBUG[0;39m (JavaFX-Launcher) [34mcom.comerzzia.pos.services.core.config.configContadores.ServicioConfigContadores (ServicioConfigContadores.java:98)[0;39m - consultar() - Consultando datos del contador: ALBPRO
+11:45:23.276 [39mDEBUG[0;39m (JavaFX-Launcher) [34mcom.comerzzia.pos.services.core.config.configContadores.rangos.ServicioConfigContadoresRangos (ServicioConfigContadoresRangos.java:43)[0;39m - consultar() - Consultando rangos 
+11:45:23.348 [39mDEBUG[0;39m (JavaFX-Launcher) [34mcom.comerzzia.pos.services.core.config.configContadores.ServicioConfigContadores (ServicioConfigContadores.java:98)[0;39m - consultar() - Consultando datos del contador: REP_NUMFAC
+11:45:23.404 [39mDEBUG[0;39m (JavaFX-Launcher) [34mcom.comerzzia.pos.services.core.config.configContadores.rangos.ServicioConfigContadoresRangos (ServicioConfigContadoresRangos.java:43)[0;39m - consultar() - Consultando rangos 
+11:45:23.473 [39mDEBUG[0;39m (JavaFX-Launcher) [34mcom.comerzzia.pos.services.core.config.configContadores.ServicioConfigContadores (ServicioConfigContadores.java:98)[0;39m - consultar() - Consultando datos del contador: REP_NUMFAC
+11:45:23.527 [39mDEBUG[0;39m (JavaFX-Launcher) [34mcom.comerzzia.pos.services.core.config.configContadores.rangos.ServicioConfigContadoresRangos (ServicioConfigContadoresRangos.java:43)[0;39m - consultar() - Consultando rangos 
+11:45:23.598 [39mDEBUG[0;39m (JavaFX-Launcher) [34mcom.comerzzia.pos.services.core.config.configContadores.ServicioConfigContadores (ServicioConfigContadores.java:98)[0;39m - consultar() - Consultando datos del contador: REP_NUMFAC
+11:45:23.653 [39mDEBUG[0;39m (JavaFX-Launcher) [34mcom.comerzzia.pos.services.core.config.configContadores.rangos.ServicioConfigContadoresRangos (ServicioConfigContadoresRangos.java:43)[0;39m - consultar() - Consultando rangos 
+11:45:23.725 [39mDEBUG[0;39m (JavaFX-Launcher) [34mcom.comerzzia.pos.services.core.config.configContadores.ServicioConfigContadores (ServicioConfigContadores.java:98)[0;39m - consultar() - Consultando datos del contador: REP_NUMFAC
+11:45:23.784 [39mDEBUG[0;39m (JavaFX-Launcher) [34mcom.comerzzia.pos.services.core.config.configContadores.rangos.ServicioConfigContadoresRangos (ServicioConfigContadoresRangos.java:43)[0;39m - consultar() - Consultando rangos 
+11:45:23.849 [39mDEBUG[0;39m (JavaFX-Launcher) [34mcom.comerzzia.pos.services.core.config.configContadores.ServicioConfigContadores (ServicioConfigContadores.java:98)[0;39m - consultar() - Consultando datos del contador: REP_NUMFAC
+11:45:23.902 [39mDEBUG[0;39m (JavaFX-Launcher) [34mcom.comerzzia.pos.services.core.config.configContadores.rangos.ServicioConfigContadoresRangos (ServicioConfigContadoresRangos.java:43)[0;39m - consultar() - Consultando rangos 
+11:45:23.972 [39mDEBUG[0;39m (JavaFX-Launcher) [34mcom.comerzzia.pos.services.core.config.configContadores.ServicioConfigContadores (ServicioConfigContadores.java:98)[0;39m - consultar() - Consultando datos del contador: ID_TICKET
+11:45:24.026 [39mDEBUG[0;39m (JavaFX-Launcher) [34mcom.comerzzia.pos.services.core.config.configContadores.rangos.ServicioConfigContadoresRangos (ServicioConfigContadoresRangos.java:43)[0;39m - consultar() - Consultando rangos 
+11:45:24.096 [39mDEBUG[0;39m (JavaFX-Launcher) [34mcom.comerzzia.pos.services.core.config.configContadores.ServicioConfigContadores (ServicioConfigContadores.java:98)[0;39m - consultar() - Consultando datos del contador: REP_NUMFAC
+11:45:24.151 [39mDEBUG[0;39m (JavaFX-Launcher) [34mcom.comerzzia.pos.services.core.config.configContadores.rangos.ServicioConfigContadoresRangos (ServicioConfigContadoresRangos.java:43)[0;39m - consultar() - Consultando rangos 
+11:45:24.222 [39mDEBUG[0;39m (JavaFX-Launcher) [34mcom.comerzzia.pos.services.core.config.configContadores.ServicioConfigContadores (ServicioConfigContadores.java:98)[0;39m - consultar() - Consultando datos del contador: PRECLI
+11:45:24.279 [39mDEBUG[0;39m (JavaFX-Launcher) [34mcom.comerzzia.pos.services.core.config.configContadores.rangos.ServicioConfigContadoresRangos (ServicioConfigContadoresRangos.java:43)[0;39m - consultar() - Consultando rangos 
+11:45:24.345 [39mDEBUG[0;39m (JavaFX-Launcher) [34mcom.comerzzia.pos.services.core.config.configContadores.ServicioConfigContadores (ServicioConfigContadores.java:98)[0;39m - consultar() - Consultando datos del contador: ID_TICKET
+11:45:24.400 [39mDEBUG[0;39m (JavaFX-Launcher) [34mcom.comerzzia.pos.services.core.config.configContadores.rangos.ServicioConfigContadoresRangos (ServicioConfigContadoresRangos.java:43)[0;39m - consultar() - Consultando rangos 
+11:45:24.469 [39mDEBUG[0;39m (JavaFX-Launcher) [34mcom.comerzzia.pos.services.core.config.configContadores.ServicioConfigContadores (ServicioConfigContadores.java:98)[0;39m - consultar() - Consultando datos del contador: PEDCLI
+11:45:24.523 [39mDEBUG[0;39m (JavaFX-Launcher) [34mcom.comerzzia.pos.services.core.config.configContadores.rangos.ServicioConfigContadoresRangos (ServicioConfigContadoresRangos.java:43)[0;39m - consultar() - Consultando rangos 
+11:45:24.594 [39mDEBUG[0;39m (JavaFX-Launcher) [34mcom.comerzzia.pos.services.core.config.configContadores.ServicioConfigContadores (ServicioConfigContadores.java:98)[0;39m - consultar() - Consultando datos del contador: PEDCLI
+11:45:24.648 [39mDEBUG[0;39m (JavaFX-Launcher) [34mcom.comerzzia.pos.services.core.config.configContadores.rangos.ServicioConfigContadoresRangos (ServicioConfigContadoresRangos.java:43)[0;39m - consultar() - Consultando rangos 
+11:45:24.675 [39mDEBUG[0;39m (JavaFX-Launcher) [34mcom.comerzzia.pos.services.core.config.configContadores.ServicioConfigContadores (ServicioConfigContadores.java:98)[0;39m - consultar() - Consultando datos del contador: PEDPRO
+11:45:24.699 [39mDEBUG[0;39m (JavaFX-Launcher) [34mcom.comerzzia.pos.services.core.config.configContadores.rangos.ServicioConfigContadoresRangos (ServicioConfigContadoresRangos.java:43)[0;39m - consultar() - Consultando rangos 
+11:45:24.824 [39mDEBUG[0;39m (JavaFX-Launcher) [34mcom.comerzzia.pos.services.core.config.configContadores.ServicioConfigContadores (ServicioConfigContadores.java:98)[0;39m - consultar() - Consultando datos del contador: POS_APARTADO
+11:45:24.880 [39mDEBUG[0;39m (JavaFX-Launcher) [34mcom.comerzzia.pos.services.core.config.configContadores.rangos.ServicioConfigContadoresRangos (ServicioConfigContadoresRangos.java:43)[0;39m - consultar() - Consultando rangos 
+11:45:24.950 [39mDEBUG[0;39m (JavaFX-Launcher) [34mcom.comerzzia.pos.services.core.config.configContadores.ServicioConfigContadores (ServicioConfigContadores.java:98)[0;39m - consultar() - Consultando datos del contador: ALBCLI
+11:45:25.005 [39mDEBUG[0;39m (JavaFX-Launcher) [34mcom.comerzzia.pos.services.core.config.configContadores.rangos.ServicioConfigContadoresRangos (ServicioConfigContadoresRangos.java:43)[0;39m - consultar() - Consultando rangos 
+11:45:25.086 [34mINFO [0;39m (JavaFX-Launcher) [34mcom.comerzzia.pos.core.dispositivos.ConfigDispositivosDisponibles (ConfigDispositivosDisponibles.java:287)[0;39m - Usando URL [file:/C:/Users/Tier1/Desktop/CLIENTES/Ametller/pos/comerzzia-ametller-pos-resources/target/classes/devices.xml] para configuración de dispositivos.
+11:45:25.088 [39mDEBUG[0;39m (JavaFX-Launcher) [34mcom.comerzzia.pos.core.dispositivos.Dispositivos (Dispositivos.java:178)[0;39m - cargaConfiguracionDispositivo() - Cargando configuración de dispositivo a partir del nodo: visor
+11:45:25.088 [39mDEBUG[0;39m (JavaFX-Launcher) [34mcom.comerzzia.pos.core.dispositivos.Dispositivos (Dispositivos.java:178)[0;39m - cargaConfiguracionDispositivo() - Cargando configuración de dispositivo a partir del nodo: tarjeta
+11:45:25.088 [39mDEBUG[0;39m (JavaFX-Launcher) [34mcom.comerzzia.pos.core.dispositivos.Dispositivos (Dispositivos.java:178)[0;39m - cargaConfiguracionDispositivo() - Cargando configuración de dispositivo a partir del nodo: balanza
+11:45:25.088 [39mDEBUG[0;39m (JavaFX-Launcher) [34mcom.comerzzia.pos.core.dispositivos.Dispositivos (Dispositivos.java:178)[0;39m - cargaConfiguracionDispositivo() - Cargando configuración de dispositivo a partir del nodo: fidelizacion
+11:45:25.091 [39mDEBUG[0;39m (JavaFX-Launcher) [34mcom.comerzzia.pos.core.dispositivos.Dispositivos (Dispositivos.java:178)[0;39m - cargaConfiguracionDispositivo() - Cargando configuración de dispositivo a partir del nodo: recarga_movil
+11:45:25.091 [39mDEBUG[0;39m (JavaFX-Launcher) [34mcom.comerzzia.pos.core.dispositivos.Dispositivos (Dispositivos.java:178)[0;39m - cargaConfiguracionDispositivo() - Cargando configuración de dispositivo a partir del nodo: escaner
+11:45:25.092 [39mDEBUG[0;39m (JavaFX-Launcher) [34mcom.comerzzia.pos.core.dispositivos.Dispositivos (Dispositivos.java:178)[0;39m - cargaConfiguracionDispositivo() - Cargando configuración de dispositivo a partir del nodo: impresora1
+11:45:25.092 [39mDEBUG[0;39m (JavaFX-Launcher) [34mcom.comerzzia.pos.core.dispositivos.Dispositivos (Dispositivos.java:178)[0;39m - cargaConfiguracionDispositivo() - Cargando configuración de dispositivo a partir del nodo: impresora2
+11:45:25.092 [39mDEBUG[0;39m (JavaFX-Launcher) [34mcom.comerzzia.pos.core.dispositivos.Dispositivos (Dispositivos.java:178)[0;39m - cargaConfiguracionDispositivo() - Cargando configuración de dispositivo a partir del nodo: cajon
+11:45:25.097 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.POSApplication (POSApplication.java:377)[0;39m - start() - Iniciando Aplicación
+11:45:25.108 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.POSApplication (POSApplication.java:570)[0;39m - checkUidTpvInUse() - URI pos_config.xml: file:/C:/Users/Tier1/Desktop/CLIENTES/Ametller/pos/comerzzia-ametller-pos-resources/target/classes/pos_config.xml
+11:45:25.109 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.POSApplication (POSApplication.java:573)[0;39m - checkUidTpvInUse() - URI uid_pos.properties: file:/C:/Users/Tier1/Desktop/CLIENTES/Ametller/pos/comerzzia-ametller-pos-resources/target/classes/uid_pos.properties
+11:45:25.117 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.POSApplication (POSApplication.java:407)[0;39m - start() - estableciendo tamaño de la página
+11:45:25.123 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.view.View (View.java:89)[0;39m - getFXMLResource() - Usando ruta para FXML: /skins/ametller/com/comerzzia/pos/core/gui/main/main.fxml
+11:45:25.124 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.view.View (View.java:93)[0;39m - getFXMLResource() - Usando ruta DEFAULT para FXML: /skins/standard/com/comerzzia/pos/core/gui/main/main.fxml
+11:45:25.129 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.POSApplication (POSApplication.java:842)[0;39m - getSkinResource() - Devolviendo URL: jar:file:/C:/Users/Tier1/.m2/repository/com/comerzzia/pos/comerzzia-pos-skin/4.8.1.250128/comerzzia-pos-skin-4.8.1.250128.jar!/skins/standard/com/comerzzia/pos/core/gui/componentes/keyboard/es
+11:45:25.348 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.view.View (View.java:128)[0;39m - load() - Cargando View con className com.comerzzia.pos.core.gui.main.MainView
+11:45:25.461 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.main.MainViewController (MainViewController.java:112)[0;39m - initialize() - Inicializando MainWindow 
+11:45:25.461 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.main.MainViewController (MainViewController.java:114)[0;39m - initialize() - Cargando botones de menú
+11:45:25.461 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.main.MainViewController (MainViewController.java:220)[0;39m - leerMenu()
+11:45:25.465 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.services.core.menu.MenuService (MenuService.java:60)[0;39m - consultarMenu() - Consultando los menus para aplicacion: JPOS
+11:45:25.502 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.main.MainViewController (MainViewController.java:243)[0;39m - leerMenu() - Creando punto de menú para acción 201 - Ventas
+11:45:25.505 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.main.MainViewController (MainViewController.java:243)[0;39m - leerMenu() - Creando punto de menú para acción 211 - Venta a crédito
+11:45:25.507 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.main.MainViewController (MainViewController.java:243)[0;39m - leerMenu() - Creando punto de menú para acción 214 - Identificación de Cliente
+11:45:25.508 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.main.MainViewController (MainViewController.java:243)[0;39m - leerMenu() - Creando punto de menú para acción 208 - Gestión de Apartados
+11:45:25.509 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.main.MainViewController (MainViewController.java:243)[0;39m - leerMenu() - Creando punto de menú para acción 207 - Gestión de Documentos
+11:45:25.510 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.main.MainViewController (MainViewController.java:243)[0;39m - leerMenu() - Creando punto de menú para acción 210 - Devoluciones
+11:45:25.511 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.main.MainViewController (MainViewController.java:243)[0;39m - leerMenu() - Creando punto de menú para acción 202 - Gestión de Caja
+11:45:25.512 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.main.MainViewController (MainViewController.java:243)[0;39m - leerMenu() - Creando punto de menú para acción 218 - Gestíon de servicios
+11:45:25.512 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.main.MainViewController (MainViewController.java:243)[0;39m - leerMenu() - Creando punto de menú para acción 220 - Preparación de pedidos
+11:45:25.513 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.main.MainViewController (MainViewController.java:243)[0;39m - leerMenu() - Creando punto de menú para acción 213 - Impresión de cupones
+11:45:25.516 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.main.MainViewController (MainViewController.java:243)[0;39m - leerMenu() - Creando punto de menú para acción 205 - Mantenimiento de Clientes
+11:45:25.517 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.main.MainViewController (MainViewController.java:243)[0;39m - leerMenu() - Creando punto de menú para acción 223 - Consulta de stocks
+11:45:25.519 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.main.MainViewController (MainViewController.java:243)[0;39m - leerMenu() - Creando punto de menú para acción 209 - Backoffice
+11:45:25.520 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.main.MainViewController (MainViewController.java:243)[0;39m - leerMenu() - Creando punto de menú para acción 203 - Configuración TPV
+11:45:25.522 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.main.MainViewController (MainViewController.java:243)[0;39m - leerMenu() - Creando punto de menú para acción 206 - Códigos de Barras especiales
+11:45:25.523 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.main.MainViewController (MainViewController.java:243)[0;39m - leerMenu() - Creando punto de menú para acción 224 - Configuración de Medios de Pago
+11:45:25.524 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.main.MainViewController (MainViewController.java:118)[0;39m - initialize() - Expandimos el primer panel si existe
+11:45:25.544 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.view.View (View.java:89)[0;39m - getFXMLResource() - Usando ruta para FXML: /skins/ametller/com/comerzzia/pos/core/gui/login/seleccionUsuarios/seleccionusuarios.fxml
+11:45:25.545 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.view.View (View.java:93)[0;39m - getFXMLResource() - Usando ruta DEFAULT para FXML: /skins/standard/com/comerzzia/pos/core/gui/login/seleccionUsuarios/seleccionusuarios.fxml
+11:45:25.549 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.POSApplication (POSApplication.java:626)[0;39m - showFullScreenView() - Cargando pantalla como pantalla única de aplicación: com.comerzzia.pos.core.gui.login.seleccionUsuarios.SeleccionUsuariosView
+11:45:25.549 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.view.View (View.java:128)[0;39m - load() - Cargando View con className com.comerzzia.pos.core.gui.login.seleccionUsuarios.SeleccionUsuariosView
+11:45:25.594 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.services.core.usuarios.UsuariosService (UsuariosService.java:212)[0;39m - consultarUsuarios() - Consultando usuarios.
+11:45:26.018 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.services.core.usuarios.UsuariosService (UsuariosService.java:215)[0;39m - consultarUsuarios() - Filtrando los usuarios que son de esta tienda.
+11:45:28.384 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.POSApplication (POSApplication.java:642)[0;39m - showFullScreenView() - Inicializamos la View
+11:45:42.906 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.componentes.botonaccion.BotonBotoneraComponent (BotonBotoneraComponent.java:95)[0;39m - accionClick() - Acción : ACCION USUARIO
+11:45:42.906 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.componentes.botonaccion.BotonBotoneraComponent (BotonBotoneraComponent.java:169)[0;39m - realizarAccion() - Acción : ACCION USUARIO
+11:45:42.907 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.POSApplication (POSApplication.java:626)[0;39m - showFullScreenView() - Cargando pantalla como pantalla única de aplicación: com.comerzzia.pos.core.gui.login.LoginView
+11:45:42.907 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.view.View (View.java:128)[0;39m - load() - Cargando View con className com.comerzzia.pos.core.gui.login.LoginView
+11:45:42.909 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.view.View (View.java:89)[0;39m - getFXMLResource() - Usando ruta para FXML: /skins/ametller/com/comerzzia/pos/core/gui/login/login.fxml
+11:45:42.910 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.view.View (View.java:93)[0;39m - getFXMLResource() - Usando ruta DEFAULT para FXML: /skins/standard/com/comerzzia/pos/core/gui/login/login.fxml
+11:45:42.985 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.login.LoginController (LoginController.java:138)[0;39m - initialize()
+11:45:43.014 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.POSApplication (POSApplication.java:642)[0;39m - showFullScreenView() - Inicializamos la View
+11:45:43.017 [34mINFO [0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.actionfiles.ActionFilesManager (ActionFilesManager.java:30)[0;39m - scheduleCheck() - Querying files actions every 60 seconds
+11:45:43.020 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.login.LoginController (LoginController.java:223)[0;39m - initialize() - Modo desarrollo establecemos usuario/password por defecto
+11:45:44.694 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.login.LoginController (LoginController.java:274)[0;39m - actionBtAceptar()
+11:45:44.696 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.validation.ValidationUI (ValidationUI.java:49)[0;39m - Validation() - Creando validator factory y validator
+11:45:44.761 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.services.core.sesion.Sesion (Sesion.java:66)[0;39m - initUsuarioSesion() - Inicializando sesión de usuario...
+11:45:44.761 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.services.core.usuarios.UsuariosService (UsuariosService.java:69)[0;39m - login() - Realizando login con usuario:  administrador
+11:45:44.761 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.services.core.usuarios.UsuariosService (UsuariosService.java:112)[0;39m - consultarUsuario() - Consultando usuario: administrador
+11:45:44.799 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.services.core.perfiles.ServicioPerfiles (ServicioPerfiles.java:52)[0;39m - consultar() - Consultando perfiles
+11:45:44.976 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.actionfiles.ActionFilesManager (ActionFilesManager.java:44)[0;39m - scheduleCheck() - Canceling current timer
+11:45:44.976 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.POSApplication (POSApplication.java:626)[0;39m - showFullScreenView() - Cargando pantalla como pantalla única de aplicación: com.comerzzia.pos.core.gui.main.MainView
+11:45:44.976 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.view.View (View.java:128)[0;39m - load() - Cargando View con className com.comerzzia.pos.core.gui.main.MainView
+11:45:44.986 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.POSApplication (POSApplication.java:642)[0;39m - showFullScreenView() - Inicializamos la View
+11:45:44.988 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.main.MainViewController (MainViewController.java:159)[0;39m - initializeComponents() - Carga de pantalla principal : cargando cabecera
+11:45:44.988 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.main.MainViewController (MainViewController.java:369)[0;39m - cargarCabecera() - Cargando cabecera
+11:45:44.989 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.view.View (View.java:89)[0;39m - getFXMLResource() - Usando ruta para FXML: /skins/ametller/com/comerzzia/pos/core/gui/main/cabecera/cabecera.fxml
+11:45:44.990 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.view.View (View.java:93)[0;39m - getFXMLResource() - Usando ruta DEFAULT para FXML: /skins/standard/com/comerzzia/pos/core/gui/main/cabecera/cabecera.fxml
+11:45:44.991 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.view.View (View.java:128)[0;39m - load() - Cargando View con className com.comerzzia.pos.core.gui.main.cabecera.CabeceraView
+11:45:45.001 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.main.cabecera.CabeceraController (CabeceraController.java:156)[0;39m - inicializarComponentes() - Carga de acciones de botonera caebcera
+11:45:45.002 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.util.xml.MarshallUtil (MarshallUtil.java:213)[0;39m - init() - Iniciando nuevo contexto de JAXB para com.comerzzia.pos.core.gui.componentes.botonera.PanelBotoneraBean
+11:45:45.010 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.util.xml.MarshallUtil (MarshallUtil.java:245)[0;39m - getMarshallContext() - Iniciado nuevo contexto de JAXB en 6ms
+11:45:45.019 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.view.View (View.java:89)[0;39m - getFXMLResource() - Usando ruta para FXML: /skins/ametller/com/comerzzia/pos/core/gui/main/notificaciones/notificationspopup.fxml
+11:45:45.019 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.view.View (View.java:93)[0;39m - getFXMLResource() - Usando ruta DEFAULT para FXML: /skins/standard/com/comerzzia/pos/core/gui/main/notificaciones/notificationspopup.fxml
+11:45:45.039 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.POSApplication (POSApplication.java:842)[0;39m - getSkinResource() - Devolviendo URL: jar:file:/C:/Users/Tier1/.m2/repository/com/comerzzia/pos/comerzzia-pos-skin/4.8.1.250128/comerzzia-pos-skin-4.8.1.250128.jar!/skins/standard/com/comerzzia/pos/core/gui/main/notificaciones/notificationrow.css
+11:45:45.094 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.main.MainViewController (MainViewController.java:162)[0;39m - initializeComponents() - Carga de pantalla principal : cargando pie
+11:45:45.094 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.main.MainViewController (MainViewController.java:392)[0;39m - cargarPie() - Cargando pie
+11:45:45.096 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.view.View (View.java:89)[0;39m - getFXMLResource() - Usando ruta para FXML: /skins/ametller/com/comerzzia/pos/core/gui/main/pie/pie.fxml
+11:45:45.096 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.view.View (View.java:93)[0;39m - getFXMLResource() - Usando ruta DEFAULT para FXML: /skins/standard/com/comerzzia/pos/core/gui/main/pie/pie.fxml
+11:45:45.097 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.view.View (View.java:128)[0;39m - load() - Cargando View con className com.comerzzia.pos.core.gui.main.pie.PieView
+11:45:45.120 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.main.pie.PieController (PieController.java:92)[0;39m - initializeComponents() - Actualizando información de pie
+11:45:45.125 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.main.pie.PieController (PieController.java:104)[0;39m - initialize() - Creando el timeline de refresco para el reloj
+11:45:45.131 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.main.MainViewController (MainViewController.java:165)[0;39m - initializeComponents() - Registrando Eventos de Teclado
+11:45:45.131 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.main.MainViewController (MainViewController.java:175)[0;39m - registrarEventosTeclado() - registrando evento de teclado 
+11:45:45.132 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.main.MainViewController (MainViewController.java:134)[0;39m - initializeForm() - Carga de pantalla principal : cargando pantalla inicial
+11:45:45.134 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.services.core.acciones.AccionesService (AccionesService.java:56)[0;39m - consultarAccion() - consultando accion para idAccion 200
+11:45:45.148 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.services.core.permisos.ServicioPermisos (ServicioPermisos.java:106)[0;39m - obtenerPermisosAccion() - Obteniendo los permisos para la acción: AccionBean [idAccion=200, accion=ACCION_INICIO, titulo=Pantalla de inicio]
+11:45:45.202 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.view.View (View.java:128)[0;39m - load() - Cargando View con className com.comerzzia.pos.gui.inicio.InicioView
+11:45:45.203 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.view.View (View.java:89)[0;39m - getFXMLResource() - Usando ruta para FXML: /skins/ametller/com/comerzzia/pos/gui/inicio/inicio.fxml
+11:45:45.204 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.view.View (View.java:93)[0;39m - getFXMLResource() - Usando ruta DEFAULT para FXML: /skins/standard/com/comerzzia/pos/gui/inicio/inicio.fxml
+11:45:45.206 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.services.core.permisos.ServicioPermisos (ServicioPermisos.java:67)[0;39m - obtenerPermisosEfectivos() - Obteniendo los permisos efectivos del usuario [0] para la accion [200 - Pantalla de inicio]
+11:45:45.231 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.services.core.perfiles.ServicioPerfiles (ServicioPerfiles.java:52)[0;39m - consultar() - Consultando perfiles
+11:45:45.266 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.main.MainViewController (MainViewController.java:190)[0;39m - replaceView() - Cargando pantalla en frame interno 
+11:45:45.267 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.main.MainViewController (MainViewController.java:199)[0;39m - replaceView() - Eliminando panel previo y cargando pantalla
+11:45:45.267 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.services.ticket.copiaSeguridad.CopiaSeguridadTicketService (CopiaSeguridadTicketService.java:68)[0;39m - consultarCopiaSeguridadTicket() - Consultando copia de seguridad de ticket en base de datos...
+11:45:45.366 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.main.MainViewController (MainViewController.java:502)[0;39m - accionMuestraMenu() - Mostramos el menú 
+11:45:46.524 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.main.MainViewController (MainViewController.java:343)[0;39m - accionMenuSeleccionado()
+11:45:46.524 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.view.View (View.java:128)[0;39m - load() - Cargando View con className com.comerzzia.pos.gui.ventas.tickets.articulos.FacturacionArticulosView
+11:45:46.527 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.view.View (View.java:89)[0;39m - getFXMLResource() - Usando ruta para FXML: /skins/ametller/com/comerzzia/pos/gui/ventas/tickets/articulos/facturacionarticulos.fxml
+11:45:46.528 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.services.core.permisos.ServicioPermisos (ServicioPermisos.java:106)[0;39m - obtenerPermisosAccion() - Obteniendo los permisos para la acción: AccionBean [idAccion=201, accion=null, titulo=Ventas]
+11:45:46.641 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.view.View (View.java:128)[0;39m - load() - Cargando View con className com.comerzzia.pos.gui.ventas.tickets.articulos.FacturacionArticulosView
+11:45:46.642 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.services.core.permisos.ServicioPermisos (ServicioPermisos.java:67)[0;39m - obtenerPermisosEfectivos() - Obteniendo los permisos efectivos del usuario [0] para la accion [201 - Ventas]
+11:45:46.739 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.services.core.perfiles.ServicioPerfiles (ServicioPerfiles.java:52)[0;39m - consultar() - Consultando perfiles
+11:45:46.891 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.view.View (View.java:89)[0;39m - getFXMLResource() - Usando ruta para FXML: /skins/ametller/com/comerzzia/pos/core/gui/componentes/tecladonumerico/tecladonumerico.fxml
+11:45:46.892 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.view.View (View.java:93)[0;39m - getFXMLResource() - Usando ruta DEFAULT para FXML: /skins/standard/com/comerzzia/pos/core/gui/componentes/tecladonumerico/tecladonumerico.fxml
+11:45:47.015 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.services.ticket.copiaSeguridad.CopiaSeguridadTicketService (CopiaSeguridadTicketService.java:68)[0;39m - consultarCopiaSeguridadTicket() - Consultando copia de seguridad de ticket en base de datos...
+11:45:47.198 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.services.cajas.CajasService (CajasService.java:708)[0;39m - validarImporteAvisoRetirada()
+11:45:47.217 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.services.core.sesion.SesionPromociones (SesionPromociones.java:180)[0;39m - init() - Actualizamos promociones activas...
+11:45:47.217 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.services.core.sesion.SesionPromociones (SesionPromociones.java:233)[0;39m - readCouponsTypeFile() - Reading file entities/ly_coupons_types_tbl.json
+11:45:47.658 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.services.promociones.PromocionesService (PromocionesService.java:55)[0;39m - consultarPromocionesActivas() - Consultando promociones activas...
+11:45:47.819 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.services.promociones.PromocionesBuilder (PromocionesBuilder.java:34)[0;39m - create() - Instanciando promoción: 10238 - -7% Empleats
+11:45:47.824 [1;31mERROR[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.services.core.sesion.SesionPromociones (SesionPromociones.java:210)[0;39m - actualizarPromocionesActivas() - java.lang.NullPointerException - null
+java.lang.NullPointerException: null
+	at com.comerzzia.pos.services.promociones.tipos.especificos.PromocionDescuentoCabeceraBean.isImporte(PromocionDescuentoCabeceraBean.java:205)
+	at com.comerzzia.pos.services.core.sesion.SesionPromociones.addPromocionNoActivaCupon(SesionPromociones.java:312)
+	at com.comerzzia.pos.services.core.sesion.SesionPromociones.addPromocionActiva(SesionPromociones.java:286)
+	at com.comerzzia.pos.services.core.sesion.SesionPromociones.actualizarPromocionesActivas(SesionPromociones.java:205)
+	at com.comerzzia.pos.gui.ventas.tickets.TicketManager.crearTicket(TicketManager.java:378)
+	at com.comerzzia.pos.gui.ventas.tickets.TicketManager.inicializarTicket(TicketManager.java:288)
+	at com.comerzzia.pos.gui.ventas.tickets.TicketManager.nuevoTicket(TicketManager.java:280)
+	at com.comerzzia.pos.gui.ventas.tickets.articulos.FacturacionArticulosController.crearNuevoTicket(FacturacionArticulosController.java:976)
+	at com.comerzzia.pos.gui.ventas.tickets.articulos.FacturacionArticulosController.initializeForm(FacturacionArticulosController.java:827)
+	at com.comerzzia.pos.core.gui.view.View.initialize(View.java:175)
+	at com.comerzzia.pos.core.gui.view.ActionView.initialize(ActionView.java:48)
+	at com.comerzzia.pos.core.gui.view.ActionView.initialize(ActionView.java:40)
+	at com.comerzzia.pos.core.gui.main.MainView.showActionView(MainView.java:105)
+	at com.comerzzia.pos.core.gui.main.MainViewController.accionMenuSeleccionado(MainViewController.java:359)
+	at com.comerzzia.pos.core.gui.main.MainViewController$4.handle(MainViewController.java:292)
+	at com.comerzzia.pos.core.gui.main.MainViewController$4.handle(MainViewController.java:288)
+	at com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:86)
+	at com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:238)
+	at com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:49)
+	at javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.scene.Node.fireEvent(Node.java:8411)
+	at javafx.scene.control.Button.fire(Button.java:185)
+	at com.sun.javafx.scene.control.behavior.ButtonBehavior.mouseReleased(ButtonBehavior.java:182)
+	at com.sun.javafx.scene.control.skin.BehaviorSkinBase$1.handle(BehaviorSkinBase.java:96)
+	at com.sun.javafx.scene.control.skin.BehaviorSkinBase$1.handle(BehaviorSkinBase.java:89)
+	at com.sun.javafx.event.CompositeEventHandler$NormalEventHandlerRecord.handleBubblingEvent(CompositeEventHandler.java:218)
+	at com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:80)
+	at com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:238)
+	at com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:54)
+	at javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.scene.Scene$MouseHandler.process(Scene.java:3757)
+	at javafx.scene.Scene$MouseHandler.access$1500(Scene.java:3485)
+	at javafx.scene.Scene.impl_processMouseEvent(Scene.java:1762)
+	at javafx.scene.Scene$ScenePeerListener.mouseEvent(Scene.java:2494)
+	at com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:394)
+	at com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:295)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at com.sun.javafx.tk.quantum.GlassViewEventHandler.lambda$handleMouseEvent$358(GlassViewEventHandler.java:432)
+	at com.sun.javafx.tk.quantum.QuantumToolkit.runWithoutRenderLock(QuantumToolkit.java:389)
+	at com.sun.javafx.tk.quantum.GlassViewEventHandler.handleMouseEvent(GlassViewEventHandler.java:431)
+	at com.sun.glass.ui.View.handleMouseEvent(View.java:555)
+	at com.sun.glass.ui.View.notifyMouse(View.java:937)
+	at com.sun.glass.ui.win.WinApplication._runLoop(Native Method)
+	at com.sun.glass.ui.win.WinApplication.lambda$null$152(WinApplication.java:177)
+	at java.lang.Thread.run(Thread.java:748)
+11:45:47.831 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.services.promociones.PromocionesBuilder (PromocionesBuilder.java:34)[0;39m - create() - Instanciando promoción: 36090 - PROMO DTOPESO VARIABLE
+11:45:47.834 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.services.promociones.PromocionesService (PromocionesService.java:105)[0;39m - consultarDetallesPromocion() - Consultando detalles promoción: 36090
+11:45:48.283 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.services.promociones.PromocionesBuilder (PromocionesBuilder.java:34)[0;39m - create() - Instanciando promoción: 36091 - 8% EMPLEATS NUEVO
+11:45:48.284 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.services.promociones.PromocionesBuilder (PromocionesBuilder.java:34)[0;39m - create() - Instanciando promoción: 36093 - CUPONES
+11:45:48.286 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.services.promociones.PromocionesService (PromocionesService.java:105)[0;39m - consultarDetallesPromocion() - Consultando detalles promoción: 36093
+11:45:48.552 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.services.core.sesion.SesionPromociones (SesionPromociones.java:225)[0;39m - init() - Promociones activas actualizadas a última versión.
+11:45:48.552 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.services.ticket.copiaSeguridad.CopiaSeguridadTicketService (CopiaSeguridadTicketService.java:128)[0;39m - guardarBackupTicketActivo()
+11:45:48.553 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.services.ticket.copiaSeguridad.CopiaSeguridadTicketService (CopiaSeguridadTicketService.java:134)[0;39m - guardarBackupTicketActivo() - Eliminando copia de seguridad de ticket...
+11:45:48.895 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.services.ticket.copiaSeguridad.CopiaSeguridadTicketService (CopiaSeguridadTicketService.java:182)[0;39m - guardarBackupTicketActivo() - Confirmando transacción...
+11:45:48.896 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.services.core.sesion.SesionPromociones (SesionPromociones.java:180)[0;39m - init() - Actualizamos promociones activas...
+11:45:48.896 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.services.promociones.PromocionesService (PromocionesService.java:55)[0;39m - consultarPromocionesActivas() - Consultando promociones activas...
+11:45:49.181 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.services.core.sesion.SesionPromociones (SesionPromociones.java:225)[0;39m - init() - Promociones activas actualizadas a última versión.
+11:45:49.182 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.services.ticket.copiaSeguridad.CopiaSeguridadTicketService (CopiaSeguridadTicketService.java:128)[0;39m - guardarBackupTicketActivo()
+11:45:49.182 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.services.ticket.copiaSeguridad.CopiaSeguridadTicketService (CopiaSeguridadTicketService.java:134)[0;39m - guardarBackupTicketActivo() - Eliminando copia de seguridad de ticket...
+11:45:49.548 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.services.ticket.copiaSeguridad.CopiaSeguridadTicketService (CopiaSeguridadTicketService.java:182)[0;39m - guardarBackupTicketActivo() - Confirmando transacción...
+11:45:49.552 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.services.ticket.aparcados.TicketsAparcadosService (TicketsAparcadosService.java:105)[0;39m - countTicketsAparcados() - Consultando ticket aparcado en base de datos...
+11:45:49.725 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.main.MainViewController (MainViewController.java:190)[0;39m - replaceView() - Cargando pantalla en frame interno 
+11:45:49.725 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.main.MainViewController (MainViewController.java:533)[0;39m - accionOcultarMenu() - Ocultamos menú 
+11:45:49.726 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.main.MainViewController (MainViewController.java:199)[0;39m - replaceView() - Eliminando panel previo y cargando pantalla
+oct 07, 2025 11:45:49 AM com.sun.javafx.css.StyleManager loadStylesheetUnPrivileged
+INFORMACIÓN: Could not find stylesheet: file:/C:/Users/Tier1/Desktop/CLIENTES/Ametller/pos/comerzzia-ametller-pos-resources/target/classes/skins/ametller/com/comerzzia/pos/gui/styles/styles.css
+11:45:51.158 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.componentes.botonaccion.BotonBotoneraComponent (BotonBotoneraComponent.java:95)[0;39m - accionClick() - Acción : ABRIR_BUSQUEDA_ARTICULOS
+11:45:51.159 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.componentes.botonaccion.BotonBotoneraComponent (BotonBotoneraComponent.java:169)[0;39m - realizarAccion() - Acción : ABRIR_BUSQUEDA_ARTICULOS
+11:45:51.161 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.view.View (View.java:128)[0;39m - load() - Cargando View con className javafx.stage.Stage-com.comerzzia.pos.gui.ventas.tickets.articulos.busquedas.BuscarArticulosView
+11:45:51.164 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.view.View (View.java:89)[0;39m - getFXMLResource() - Usando ruta para FXML: /skins/ametller/com/comerzzia/pos/gui/ventas/tickets/articulos/busquedas/buscararticulos.fxml
+11:45:51.165 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.view.View (View.java:93)[0;39m - getFXMLResource() - Usando ruta DEFAULT para FXML: /skins/standard/com/comerzzia/pos/gui/ventas/tickets/articulos/busquedas/buscararticulos.fxml
+11:45:51.215 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.gui.ventas.tickets.articulos.busquedas.BuscarArticulosController (BuscarArticulosController.java:202)[0;39m - initialize() - Inicializando ventana...
+11:45:51.220 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.gui.ventas.tickets.articulos.busquedas.BuscarArticulosController (BuscarArticulosController.java:258)[0;39m - inicializarComponentes() - Configuración de la tabla
+11:45:51.223 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.gui.ventas.tickets.articulos.busquedas.BuscarArticulosController (BuscarArticulosController.java:284)[0;39m - inicializarComponentes()
+11:45:51.225 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.gui.ventas.tickets.articulos.busquedas.BuscarArticulosController (BuscarArticulosController.java:334)[0;39m - initializeForm() - Inicializando formulario...
+11:45:51.226 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.view.ModalView (ModalView.java:114)[0;39m - show() - Abriendo ventana modal : com.comerzzia.pos.gui.ventas.tickets.articulos.busquedas.BuscarArticulosView
+11:45:51.229 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.view.ModalView (ModalView.java:124)[0;39m - show() - Estableciando ancho: 1400.0 y alto: 819.0
+11:45:51.230 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.view.ModalView (ModalView.java:141)[0;39m - show() - this.stage.showAndWait()
+11:45:52.085 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.componentes.simboloCargando.VentanaCargando (VentanaCargando.java:108)[0;39m - mostrar()
+11:46:02.087 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.services.core.sesion.SesionPromociones (SesionPromociones.java:180)[0;39m - init() - Actualizamos promociones activas...
+11:46:02.087 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.services.promociones.PromocionesService (PromocionesService.java:55)[0;39m - consultarPromocionesActivas() - Consultando promociones activas...
+11:46:02.169 [31mWARN [0;39m (AWT-EventQueue-0) [34mcom.comerzzia.pos.core.gui.componentes.simboloCargando.VentanaCargando (VentanaCargando.java:65)[0;39m - Ventana progreso activa (1)
+11:46:02.371 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.services.core.sesion.SesionPromociones (SesionPromociones.java:225)[0;39m - init() - Promociones activas actualizadas a última versión.
+11:46:02.378 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.services.ticket.lineas.LineasTicketServices (LineasTicketServices.java:80)[0;39m - createLineaArticulo() - Creando nueva línea de artículo...
+11:46:02.379 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.services.articulos.ArticulosService (ArticulosService.java:82)[0;39m - consultarArticulo() - Consultando articulo con código : 101
+11:46:02.957 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.services.articulos.tarifas.ArticulosTarifaService (ArticulosTarifaService.java:132)[0;39m - consultarArticuloTarifa() - Consultando tarifa de articulo con código : 101 para cliente: T13 - 013 Capellades
+11:46:02.957 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.services.articulos.tarifas.ArticulosTarifaService (ArticulosTarifaService.java:135)[0;39m - consultarArticuloTarifa() - Buscando tarifa con código igual al código del cliente: T13
+11:46:03.302 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.services.articulos.tarifas.ArticulosTarifaService (ArticulosTarifaService.java:144)[0;39m - consultarArticuloTarifa() - Buscando tarifa con código igual al código de tarifa del cliente: 13
+11:46:04.039 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.services.core.sesion.SesionPromociones (SesionPromociones.java:180)[0;39m - init() - Actualizamos promociones activas...
+11:46:04.039 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.services.promociones.PromocionesService (PromocionesService.java:55)[0;39m - consultarPromocionesActivas() - Consultando promociones activas...
+11:46:04.356 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.services.core.sesion.SesionPromociones (SesionPromociones.java:225)[0;39m - init() - Promociones activas actualizadas a última versión.
+11:46:04.357 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.services.ticket.lineas.LineasTicketServices (LineasTicketServices.java:80)[0;39m - createLineaArticulo() - Creando nueva línea de artículo...
+11:46:04.357 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.services.articulos.ArticulosService (ArticulosService.java:82)[0;39m - consultarArticulo() - Consultando articulo con código : 101
+11:46:04.585 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.services.articulos.tarifas.ArticulosTarifaService (ArticulosTarifaService.java:132)[0;39m - consultarArticuloTarifa() - Consultando tarifa de articulo con código : 101 para cliente: T13 - 013 Capellades
+11:46:04.585 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.services.articulos.tarifas.ArticulosTarifaService (ArticulosTarifaService.java:135)[0;39m - consultarArticuloTarifa() - Buscando tarifa con código igual al código del cliente: T13
+11:46:04.661 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.services.articulos.tarifas.ArticulosTarifaService (ArticulosTarifaService.java:144)[0;39m - consultarArticuloTarifa() - Buscando tarifa con código igual al código de tarifa del cliente: 13
+11:46:04.826 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.componentes.simboloCargando.VentanaCargando (VentanaCargando.java:120)[0;39m - cerrar()
+11:46:04.832 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.componentes.simboloCargando.VentanaCargando (VentanaCargando.java:123)[0;39m - cerrar() close
+11:46:18.011 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.componentes.simboloCargando.VentanaCargando (VentanaCargando.java:108)[0;39m - mostrar()
+11:46:18.024 [39mDEBUG[0;39m (class com.comerzzia.pos.gui.ventas.tickets.articulos.busquedas.BuscarArticulosController$BuscarArticulosTask) [34mcom.comerzzia.pos.services.articulos.ArticulosService (ArticulosService.java:240)[0;39m - consultarCodigoBarras() - Consultando código de barras con codigo : 101
+11:46:18.037 [39mDEBUG[0;39m (class com.comerzzia.pos.gui.ventas.tickets.articulos.busquedas.BuscarArticulosController$BuscarArticulosTask) [34mcom.comerzzia.pos.services.articulos.ArticulosService (ArticulosService.java:82)[0;39m - consultarArticulo() - Consultando articulo con código : 42520
+11:46:18.116 [39mDEBUG[0;39m (class com.comerzzia.pos.gui.ventas.tickets.articulos.busquedas.BuscarArticulosController$BuscarArticulosTask) [34mcom.comerzzia.pos.services.articulos.tarifas.ArticulosTarifaService (ArticulosTarifaService.java:132)[0;39m - consultarArticuloTarifa() - Consultando tarifa de articulo con código : 42520 para cliente: T13 - 013 Capellades
+11:46:18.117 [39mDEBUG[0;39m (class com.comerzzia.pos.gui.ventas.tickets.articulos.busquedas.BuscarArticulosController$BuscarArticulosTask) [34mcom.comerzzia.pos.services.articulos.tarifas.ArticulosTarifaService (ArticulosTarifaService.java:135)[0;39m - consultarArticuloTarifa() - Buscando tarifa con código igual al código del cliente: T13
+11:46:18.186 [39mDEBUG[0;39m (class com.comerzzia.pos.gui.ventas.tickets.articulos.busquedas.BuscarArticulosController$BuscarArticulosTask) [34mcom.comerzzia.pos.services.articulos.tarifas.ArticulosTarifaService (ArticulosTarifaService.java:144)[0;39m - consultarArticuloTarifa() - Buscando tarifa con código igual al código de tarifa del cliente: 13
+11:46:18.350 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.services.core.sesion.SesionPromociones (SesionPromociones.java:180)[0;39m - init() - Actualizamos promociones activas...
+11:46:18.350 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.services.promociones.PromocionesService (PromocionesService.java:55)[0;39m - consultarPromocionesActivas() - Consultando promociones activas...
+11:46:18.375 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.services.core.sesion.SesionPromociones (SesionPromociones.java:225)[0;39m - init() - Promociones activas actualizadas a última versión.
+11:46:18.375 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.services.ticket.lineas.LineasTicketServices (LineasTicketServices.java:80)[0;39m - createLineaArticulo() - Creando nueva línea de artículo...
+11:46:18.376 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.services.articulos.ArticulosService (ArticulosService.java:82)[0;39m - consultarArticulo() - Consultando articulo con código : 42520
+11:46:18.494 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.services.articulos.tarifas.ArticulosTarifaService (ArticulosTarifaService.java:132)[0;39m - consultarArticuloTarifa() - Consultando tarifa de articulo con código : 42520 para cliente: T13 - 013 Capellades
+11:46:18.495 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.services.articulos.tarifas.ArticulosTarifaService (ArticulosTarifaService.java:135)[0;39m - consultarArticuloTarifa() - Buscando tarifa con código igual al código del cliente: T13
+11:46:18.569 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.services.articulos.tarifas.ArticulosTarifaService (ArticulosTarifaService.java:144)[0;39m - consultarArticuloTarifa() - Buscando tarifa con código igual al código de tarifa del cliente: 13
+11:46:18.743 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.services.core.sesion.SesionPromociones (SesionPromociones.java:180)[0;39m - init() - Actualizamos promociones activas...
+11:46:18.743 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.services.promociones.PromocionesService (PromocionesService.java:55)[0;39m - consultarPromocionesActivas() - Consultando promociones activas...
+11:46:18.767 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.services.core.sesion.SesionPromociones (SesionPromociones.java:225)[0;39m - init() - Promociones activas actualizadas a última versión.
+11:46:18.768 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.services.ticket.lineas.LineasTicketServices (LineasTicketServices.java:80)[0;39m - createLineaArticulo() - Creando nueva línea de artículo...
+11:46:18.769 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.services.articulos.ArticulosService (ArticulosService.java:82)[0;39m - consultarArticulo() - Consultando articulo con código : 42520
+11:46:18.881 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.services.articulos.tarifas.ArticulosTarifaService (ArticulosTarifaService.java:132)[0;39m - consultarArticuloTarifa() - Consultando tarifa de articulo con código : 42520 para cliente: T13 - 013 Capellades
+11:46:18.882 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.services.articulos.tarifas.ArticulosTarifaService (ArticulosTarifaService.java:135)[0;39m - consultarArticuloTarifa() - Buscando tarifa con código igual al código del cliente: T13
+11:46:18.954 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.services.articulos.tarifas.ArticulosTarifaService (ArticulosTarifaService.java:144)[0;39m - consultarArticuloTarifa() - Buscando tarifa con código igual al código de tarifa del cliente: 13
+11:46:19.123 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.componentes.simboloCargando.VentanaCargando (VentanaCargando.java:120)[0;39m - cerrar()
+11:46:19.129 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.componentes.simboloCargando.VentanaCargando (VentanaCargando.java:123)[0;39m - cerrar() close
+11:46:21.694 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.gui.ventas.tickets.articulos.busquedas.BuscarArticulosController (BuscarArticulosController.java:842)[0;39m - aceptarArticuloDobleClick() - Acción aceptar
+11:46:22.130 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.gui.ventas.tickets.articulos.busquedas.BuscarArticulosController (BuscarArticulosController.java:842)[0;39m - aceptarArticuloDobleClick() - Acción aceptar
+11:46:22.322 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.gui.ventas.tickets.articulos.busquedas.BuscarArticulosController (BuscarArticulosController.java:842)[0;39m - aceptarArticuloDobleClick() - Acción aceptar
+11:46:22.323 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.services.cajas.CajasService (CajasService.java:694)[0;39m - validarImporteBloqueoRetirada()
+11:46:22.332 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.services.core.sesion.SesionPromociones (SesionPromociones.java:180)[0;39m - init() - Actualizamos promociones activas...
+11:46:22.332 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.services.promociones.PromocionesService (PromocionesService.java:55)[0;39m - consultarPromocionesActivas() - Consultando promociones activas...
+11:46:22.356 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.services.core.sesion.SesionPromociones (SesionPromociones.java:225)[0;39m - init() - Promociones activas actualizadas a última versión.
+11:46:22.356 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.services.ticket.copiaSeguridad.CopiaSeguridadTicketService (CopiaSeguridadTicketService.java:128)[0;39m - guardarBackupTicketActivo()
+11:46:22.357 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.services.ticket.copiaSeguridad.CopiaSeguridadTicketService (CopiaSeguridadTicketService.java:134)[0;39m - guardarBackupTicketActivo() - Eliminando copia de seguridad de ticket...
+11:46:22.435 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.services.ticket.copiaSeguridad.CopiaSeguridadTicketService (CopiaSeguridadTicketService.java:182)[0;39m - guardarBackupTicketActivo() - Confirmando transacción...
+11:46:22.436 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.services.ticket.lineas.LineasTicketServices (LineasTicketServices.java:80)[0;39m - createLineaArticulo() - Creando nueva línea de artículo...
+11:46:22.437 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.services.articulos.ArticulosService (ArticulosService.java:82)[0;39m - consultarArticulo() - Consultando articulo con código : 42520
+11:46:22.510 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.services.articulos.tarifas.ArticulosTarifaService (ArticulosTarifaService.java:132)[0;39m - consultarArticuloTarifa() - Consultando tarifa de articulo con código : 42520 para cliente: T13 - 013 Capellades
+11:46:22.512 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.services.articulos.tarifas.ArticulosTarifaService (ArticulosTarifaService.java:135)[0;39m - consultarArticuloTarifa() - Buscando tarifa con código igual al código del cliente: T13
+11:46:22.590 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.services.articulos.tarifas.ArticulosTarifaService (ArticulosTarifaService.java:144)[0;39m - consultarArticuloTarifa() - Buscando tarifa con código igual al código de tarifa del cliente: 13
+11:46:22.769 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.services.ticket.copiaSeguridad.CopiaSeguridadTicketService (CopiaSeguridadTicketService.java:128)[0;39m - guardarBackupTicketActivo()
+11:46:22.771 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.services.ticket.copiaSeguridad.CopiaSeguridadTicketService (CopiaSeguridadTicketService.java:134)[0;39m - guardarBackupTicketActivo() - Eliminando copia de seguridad de ticket...
+11:46:22.887 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.services.ticket.copiaSeguridad.CopiaSeguridadTicketService (CopiaSeguridadTicketService.java:173)[0;39m - guardarBackupTicketActivo() - Guardando copia de seguridad de ticket...
+11:46:22.891 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.util.xml.MarshallUtil (MarshallUtil.java:230)[0;39m - init() - Iniciando nuevo contexto de JAXB para com.comerzzia.pos.services.ticket.TicketVentaAbono
+11:46:22.975 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.util.xml.MarshallUtil (MarshallUtil.java:245)[0;39m - getMarshallContext() - Iniciado nuevo contexto de JAXB en 82ms
+11:46:23.045 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.services.ticket.copiaSeguridad.CopiaSeguridadTicketService (CopiaSeguridadTicketService.java:182)[0;39m - guardarBackupTicketActivo() - Confirmando transacción...
+11:46:25.049 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.componentes.botonaccion.BotonBotoneraComponent (BotonBotoneraComponent.java:95)[0;39m - accionClick() - Acción : abrirPagos
+11:46:25.049 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.componentes.botonaccion.BotonBotoneraComponent (BotonBotoneraComponent.java:169)[0;39m - realizarAccion() - Acción : abrirPagos
+11:46:25.050 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.view.View (View.java:128)[0;39m - load() - Cargando View con className javafx.stage.Stage-com.comerzzia.pos.gui.ventas.tickets.pagos.PagosView
+11:46:25.053 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.view.View (View.java:89)[0;39m - getFXMLResource() - Usando ruta para FXML: /skins/ametller/com/comerzzia/pos/gui/ventas/tickets/pagos/pagos.fxml
+11:46:25.054 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.view.View (View.java:93)[0;39m - getFXMLResource() - Usando ruta DEFAULT para FXML: /skins/standard/com/comerzzia/pos/gui/ventas/tickets/pagos/pagos.fxml
+11:46:25.137 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.view.View (View.java:89)[0;39m - getFXMLResource() - Usando ruta para FXML: /skins/ametller/com/comerzzia/pos/core/gui/componentes/tecladonumerico/tecladonumerico.fxml
+11:46:25.138 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.view.View (View.java:93)[0;39m - getFXMLResource() - Usando ruta DEFAULT para FXML: /skins/standard/com/comerzzia/pos/core/gui/componentes/tecladonumerico/tecladonumerico.fxml
+11:46:25.236 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.gui.ventas.tickets.pagos.PagosController (PagosController.java:265)[0;39m - initialize() - Inicializando pantalla...
+11:46:25.237 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.gui.ventas.tickets.pagos.PagosController (PagosController.java:270)[0;39m - initialize() - Comprobando configuración para panel numérico
+11:46:25.237 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.gui.ventas.tickets.pagos.PagosController (PagosController.java:276)[0;39m - initialize() - Configurando pantalla de pagos
+11:46:25.246 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.gui.ventas.tickets.pagos.PagosController (PagosController.java:289)[0;39m - inicializarComponentes()
+11:46:25.246 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.gui.ventas.tickets.pagos.PagosController (PagosController.java:292)[0;39m - inicializarComponentes() - Cargando medios de pago
+11:46:25.255 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.gui.ventas.tickets.pagos.PagosController (PagosController.java:304)[0;39m - inicializarComponentes() - Registrando eventos de acceso rápido por teclado...
+11:46:25.256 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.gui.ventas.tickets.pagos.PagosController (PagosController.java:307)[0;39m - inicializarComponentes() - Configurando botonera
+11:46:25.265 [31mWARN [0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.view.View (View.java:507)[0;39m - loadBotonera() - No se ha encontrado el fichero de botonera _mediospago_panel.xml para la clase com.comerzzia.pos.gui.ventas.tickets.pagos.PagosView ni sus clases padre
+11:46:25.266 [34mINFO [0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.gui.ventas.tickets.pagos.PagosController (PagosController.java:320)[0;39m - inicializarComponentes() - No cargando botonera personalizada de mediospago "xxx_mediospago_panel.xml": No se ha encontrado el fichero de botonera _mediospago_panel.xml para la clase com.comerzzia.pos.gui.ventas.tickets.pagos.PagosView ni sus clases padre
+11:46:25.266 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.gui.ventas.tickets.pagos.PagosController (PagosController.java:327)[0;39m - inicializarComponentes() - Cargando panel de importes
+11:46:25.292 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.gui.ventas.tickets.pagos.PagosController (PagosController.java:344)[0;39m - inicializarComponentes() - Creando acciones para botonera de pago contado
+11:46:25.299 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.gui.ventas.tickets.pagos.PagosController (PagosController.java:1096)[0;39m - crearBotoneraDatosAdicionales() - Cargando panel de datos adicionales
+11:46:25.304 [31mWARN [0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.view.View (View.java:507)[0;39m - loadBotonera() - No se ha encontrado el fichero de botonera _adic_FS_ES.xml para la clase com.comerzzia.pos.gui.ventas.tickets.pagos.PagosView ni sus clases padre
+11:46:25.304 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.gui.ventas.tickets.pagos.PagosController (PagosController.java:1101)[0;39m - crearBotoneraDatosAdicionales() - No existe botonera por tipo documento y país: No se ha encontrado el fichero de botonera _adic_FS_ES.xml para la clase com.comerzzia.pos.gui.ventas.tickets.pagos.PagosView ni sus clases padre
+11:46:25.323 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.dispositivo.tarjeta.globalpayment.TefGlobalPaymentManager (TefGlobalPaymentManager.java:61)[0;39m - setConfiguration() - PATH: {0}
+11:46:25.329 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.services.payments.methods.types.GiftCardManager (GiftCardManager.java:48)[0;39m - setConfiguration() - Cargando configuración para el medio de pago: 1000
+11:46:25.330 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.gui.ventas.tickets.pagos.PagosController (PagosController.java:403)[0;39m - registrarListenersPago() - Registrando listeners de la pantalla de pago.
+11:46:25.336 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.gui.ventas.tickets.pagos.PagosController (PagosController.java:957)[0;39m - refrescarDatosPantalla()
+11:46:25.338 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.gui.ventas.tickets.pagos.PagosController (PagosController.java:1003)[0;39m - refrescarDatosPantalla() - Activando y desactivando botones de aceptar y cancelar.
+11:46:25.339 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.services.core.config.configContadores.ServicioConfigContadores (ServicioConfigContadores.java:98)[0;39m - consultar() - Consultando datos del contador: REP_NUMFAC
+11:46:25.352 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.services.core.config.configContadores.rangos.ServicioConfigContadoresRangos (ServicioConfigContadoresRangos.java:43)[0;39m - consultar() - Consultando rangos 
+11:46:25.431 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.view.ModalView (ModalView.java:114)[0;39m - show() - Abriendo ventana modal : com.comerzzia.pos.gui.ventas.tickets.pagos.PagosView
+11:46:25.448 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.view.ModalView (ModalView.java:124)[0;39m - show() - Estableciando ancho: 1400.0 y alto: 819.0
+11:46:25.448 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.view.ModalView (ModalView.java:141)[0;39m - show() - this.stage.showAndWait()
+11:46:29.193 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.componentes.botonaccion.BotonBotoneraComponent (BotonBotoneraComponent.java:95)[0;39m - accionClick() - Acción : ACCION_SELECIONAR_MEDIO_PAGO
+11:46:29.193 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.componentes.botonaccion.BotonBotoneraComponent (BotonBotoneraComponent.java:169)[0;39m - realizarAccion() - Acción : ACCION_SELECIONAR_MEDIO_PAGO
+11:46:29.193 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.gui.ventas.tickets.pagos.PagosController (PagosController.java:1639)[0;39m - realizarAccion() - Realizando la acción : ACCION_SELECIONAR_MEDIO_PAGO de tipo : 
+11:46:29.193 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.gui.ventas.tickets.pagos.PagosController (PagosController.java:1642)[0;39m - realizarAccion() - Acción cambiar medio de pago en pantalla
+11:46:29.194 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.view.View (View.java:128)[0;39m - load() - Cargando View con className com.comerzzia.pos.core.gui.view.ModalView$1-com.comerzzia.pos.dispositivo.comun.tarjeta.CodigoTarjetaView
+11:46:29.196 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.view.View (View.java:89)[0;39m - getFXMLResource() - Usando ruta para FXML: /skins/ametller/com/comerzzia/pos/dispositivo/comun/tarjeta/codigotarjeta.fxml
+11:46:29.196 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.view.View (View.java:93)[0;39m - getFXMLResource() - Usando ruta DEFAULT para FXML: /skins/standard/com/comerzzia/pos/dispositivo/comun/tarjeta/codigotarjeta.fxml
+11:46:29.223 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.view.ModalView (ModalView.java:114)[0;39m - show() - Abriendo ventana modal : com.comerzzia.pos.dispositivo.comun.tarjeta.CodigoTarjetaView
+11:46:29.224 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.view.ModalView (ModalView.java:141)[0;39m - show() - this.stage.showAndWait()
+11:47:33.814 [34mINFO [0;39m (JavaFX Application Thread) [34mcom.comerzzia.api.rest.client.fidelizados.FidelizadosRest (FidelizadosRest.java:260)[0;39m - getTarjetaRegalo() - URL de servicio rest en la que se realiza la petición: http://ametller.172.16.100.75.nip.io/comerzzia/ws/fidelizados/tarjetaRegalo?numeroTarjeta=202100000009'&apiKey=tVm8JGR5erUl1iKxSiTwSwDPRmpggj&uidActividad=ad95dab4-51b4-48a5-bfc7-75db4e9f5ae1
+11:47:34.161 [1;31mERROR[0;39m (JavaFX Application Thread) [34mcom.comerzzia.api.rest.client.exceptions.RestHttpException (RestHttpException.java:54)[0;39m - establecerException() - Error del servicio web con 8 , y mensaje :Error al consultar tarjeta regalo en el sistema: No se ha encontrado la tarjeta con identificador: 202100000009'
+11:47:34.162 [1;31mERROR[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.gui.ventas.tickets.pagos.PagosController (PagosController.java:714)[0;39m - askGiftCardNumber() - Ha habido un error al pedir el número de tarjeta: Error al consultar tarjeta regalo en el sistema: No se ha encontrado la tarjeta con identificador: 202100000009'
+com.comerzzia.api.rest.client.exceptions.HttpServiceRestException: Error al consultar tarjeta regalo en el sistema: No se ha encontrado la tarjeta con identificador: 202100000009'
+	at com.comerzzia.api.rest.client.exceptions.RestHttpException.establecerException(RestHttpException.java:55)
+	at com.comerzzia.api.rest.client.fidelizados.FidelizadosRest.getTarjetaRegalo(FidelizadosRest.java:266)
+	at com.comerzzia.pos.gui.ventas.tickets.pagos.PagosController.askGiftCardNumber(PagosController.java:662)
+	at com.comerzzia.pos.gui.ventas.tickets.pagos.PagosController.selectPayment(PagosController.java:455)
+	at com.comerzzia.pos.gui.ventas.tickets.pagos.PagosController$6.paymentsSelect(PagosController.java:441)
+	at com.comerzzia.pos.services.payments.PaymentsManagerImpl.fireListenerPaymentSelect(PaymentsManagerImpl.java:212)
+	at com.comerzzia.pos.services.payments.PaymentsManagerImpl$4.paymentSelect(PaymentsManagerImpl.java:172)
+	at com.comerzzia.pos.services.payments.methods.types.BasicPaymentMethodManager.firePaymentSelectEvent(BasicPaymentMethodManager.java:150)
+	at com.comerzzia.pos.services.payments.methods.types.BasicPaymentMethodManager$PaymentEventHandler.paymentSelect(BasicPaymentMethodManager.java:136)
+	at com.comerzzia.pos.services.payments.methods.types.BasicPaymentMethodManager.select(BasicPaymentMethodManager.java:211)
+	at com.comerzzia.pos.services.payments.PaymentsManagerImpl.select(PaymentsManagerImpl.java:484)
+	at com.comerzzia.pos.gui.ventas.tickets.pagos.PagosController.realizarAccion(PagosController.java:1646)
+	at com.comerzzia.pos.core.gui.componentes.botonaccion.BotonBotoneraComponent.realizarAccion(BotonBotoneraComponent.java:191)
+	at com.comerzzia.pos.core.gui.componentes.botonaccion.BotonBotoneraComponent$1.handle(BotonBotoneraComponent.java:96)
+	at com.comerzzia.pos.core.gui.componentes.botonaccion.BotonBotoneraComponent$1.handle(BotonBotoneraComponent.java:92)
+	at com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:86)
+	at com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:238)
+	at com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:49)
+	at javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.scene.Node.fireEvent(Node.java:8411)
+	at javafx.scene.control.Button.fire(Button.java:185)
+	at com.sun.javafx.scene.control.behavior.ButtonBehavior.mouseReleased(ButtonBehavior.java:182)
+	at com.sun.javafx.scene.control.skin.BehaviorSkinBase$1.handle(BehaviorSkinBase.java:96)
+	at com.sun.javafx.scene.control.skin.BehaviorSkinBase$1.handle(BehaviorSkinBase.java:89)
+	at com.sun.javafx.event.CompositeEventHandler$NormalEventHandlerRecord.handleBubblingEvent(CompositeEventHandler.java:218)
+	at com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:80)
+	at com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:238)
+	at com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:49)
+	at javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.scene.Scene$MouseHandler.process(Scene.java:3757)
+	at javafx.scene.Scene$MouseHandler.access$1500(Scene.java:3485)
+	at javafx.scene.Scene.impl_processMouseEvent(Scene.java:1762)
+	at javafx.scene.Scene$ScenePeerListener.mouseEvent(Scene.java:2494)
+	at com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:394)
+	at com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:295)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at com.sun.javafx.tk.quantum.GlassViewEventHandler.lambda$handleMouseEvent$358(GlassViewEventHandler.java:432)
+	at com.sun.javafx.tk.quantum.QuantumToolkit.runWithoutRenderLock(QuantumToolkit.java:389)
+	at com.sun.javafx.tk.quantum.GlassViewEventHandler.handleMouseEvent(GlassViewEventHandler.java:431)
+	at com.sun.glass.ui.View.handleMouseEvent(View.java:555)
+	at com.sun.glass.ui.View.notifyMouse(View.java:937)
+	at com.sun.glass.ui.win.WinApplication._enterNestedEventLoopImpl(Native Method)
+	at com.sun.glass.ui.win.WinApplication._enterNestedEventLoop(WinApplication.java:204)
+	at com.sun.glass.ui.Application.enterNestedEventLoop(Application.java:511)
+	at com.sun.glass.ui.EventLoop.enter(EventLoop.java:107)
+	at com.sun.javafx.tk.quantum.QuantumToolkit.enterNestedEventLoop(QuantumToolkit.java:590)
+	at javafx.stage.Stage.showAndWait(Stage.java:474)
+	at com.comerzzia.pos.core.gui.view.ModalView.show(ModalView.java:142)
+	at com.comerzzia.pos.core.gui.view.ModalView.show(ModalView.java:104)
+	at com.comerzzia.pos.core.gui.main.MainView.showModalInternal(MainView.java:192)
+	at com.comerzzia.pos.core.gui.main.MainView.showModalEnsureFxThread(MainView.java:157)
+	at com.comerzzia.pos.core.gui.main.MainView.showModal(MainView.java:152)
+	at com.comerzzia.pos.core.gui.main.MainView.showModal(MainView.java:148)
+	at com.comerzzia.pos.core.gui.main.MainView.showModal(MainView.java:144)
+	at com.comerzzia.pos.gui.ventas.tickets.articulos.FacturacionArticulosController.abrirVentanaPagos(FacturacionArticulosController.java:2102)
+	at com.comerzzia.pos.gui.ventas.tickets.articulos.FacturacionArticulosController.abrirPagos(FacturacionArticulosController.java:2046)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at com.comerzzia.pos.core.gui.componentes.botonaccion.BotonBotoneraComponent.invokeMethod(BotonBotoneraComponent.java:271)
+	at com.comerzzia.pos.core.gui.componentes.botonaccion.BotonBotoneraComponent.realizarTipoMetodo(BotonBotoneraComponent.java:253)
+	at com.comerzzia.pos.core.gui.componentes.botonaccion.BotonBotoneraComponent.realizarAccion(BotonBotoneraComponent.java:182)
+	at com.comerzzia.pos.core.gui.componentes.botonaccion.BotonBotoneraComponent$1.handle(BotonBotoneraComponent.java:96)
+	at com.comerzzia.pos.core.gui.componentes.botonaccion.BotonBotoneraComponent$1.handle(BotonBotoneraComponent.java:92)
+	at com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:86)
+	at com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:238)
+	at com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:49)
+	at javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.scene.Node.fireEvent(Node.java:8411)
+	at javafx.scene.control.Button.fire(Button.java:185)
+	at com.sun.javafx.scene.control.behavior.ButtonBehavior.mouseReleased(ButtonBehavior.java:182)
+	at com.sun.javafx.scene.control.skin.BehaviorSkinBase$1.handle(BehaviorSkinBase.java:96)
+	at com.sun.javafx.scene.control.skin.BehaviorSkinBase$1.handle(BehaviorSkinBase.java:89)
+	at com.sun.javafx.event.CompositeEventHandler$NormalEventHandlerRecord.handleBubblingEvent(CompositeEventHandler.java:218)
+	at com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:80)
+	at com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:238)
+	at com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:54)
+	at javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.scene.Scene$MouseHandler.process(Scene.java:3757)
+	at javafx.scene.Scene$MouseHandler.access$1500(Scene.java:3485)
+	at javafx.scene.Scene.impl_processMouseEvent(Scene.java:1762)
+	at javafx.scene.Scene$ScenePeerListener.mouseEvent(Scene.java:2494)
+	at com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:394)
+	at com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:295)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at com.sun.javafx.tk.quantum.GlassViewEventHandler.lambda$handleMouseEvent$358(GlassViewEventHandler.java:432)
+	at com.sun.javafx.tk.quantum.QuantumToolkit.runWithoutRenderLock(QuantumToolkit.java:389)
+	at com.sun.javafx.tk.quantum.GlassViewEventHandler.handleMouseEvent(GlassViewEventHandler.java:431)
+	at com.sun.glass.ui.View.handleMouseEvent(View.java:555)
+	at com.sun.glass.ui.View.notifyMouse(View.java:937)
+	at com.sun.glass.ui.win.WinApplication._runLoop(Native Method)
+	at com.sun.glass.ui.win.WinApplication.lambda$null$152(WinApplication.java:177)
+	at java.lang.Thread.run(Thread.java:748)
+Caused by: javax.ws.rs.BadRequestException: HTTP 400 Bad Request
+	at org.glassfish.jersey.client.JerseyInvocation.convertToException(JerseyInvocation.java:908)
+	at org.glassfish.jersey.client.JerseyInvocation.translate(JerseyInvocation.java:822)
+	at org.glassfish.jersey.client.JerseyInvocation.access$600(JerseyInvocation.java:90)
+	at org.glassfish.jersey.client.JerseyInvocation$3.call(JerseyInvocation.java:693)
+	at org.glassfish.jersey.internal.Errors.process(Errors.java:315)
+	at org.glassfish.jersey.internal.Errors.process(Errors.java:297)
+	at org.glassfish.jersey.internal.Errors.process(Errors.java:228)
+	at org.glassfish.jersey.process.internal.RequestScope.runInScope(RequestScope.java:422)
+	at org.glassfish.jersey.client.JerseyInvocation.invoke(JerseyInvocation.java:689)
+	at org.glassfish.jersey.client.JerseyInvocation$Builder.method(JerseyInvocation.java:405)
+	at org.glassfish.jersey.client.JerseyInvocation$Builder.get(JerseyInvocation.java:301)
+	at com.comerzzia.api.rest.client.fidelizados.FidelizadosRest.getTarjetaRegalo(FidelizadosRest.java:262)
+	... 136 common frames omitted
+11:47:34.163 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.componentes.dialogos.VentanaDialogoComponent (VentanaDialogoComponent.java:625)[0;39m - crearVentanaError() - Mensaje: Lo sentimos, ha ocurrido un error en la petición.
+
+Error al consultar tarjeta regalo en el sistema: No se ha encontrado la tarjeta con identificador: 202100000009'
+11:47:34.163 [1;31mERROR[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.componentes.dialogos.VentanaDialogoComponent (VentanaDialogoComponent.java:627)[0;39m - crearVentanaError() - Excepción: Error al consultar tarjeta regalo en el sistema: No se ha encontrado la tarjeta con identificador: 202100000009'
+11:47:34.165 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.componentes.simboloCargando.VentanaCargando (VentanaCargando.java:120)[0;39m - cerrar()
+11:47:34.165 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.componentes.simboloCargando.VentanaCargando (VentanaCargando.java:123)[0;39m - cerrar() close
+11:47:34.180 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.componentes.dialogos.VentanaDialogoComponent (VentanaDialogoComponent.java:569)[0;39m - Iniciando showAndWait
+11:47:34.186 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.componentes.dialogos.VentanaDialogoComponent (VentanaDialogoComponent.java:231)[0;39m - -- ventanaDialogo -- onHidden: false on Shown: true
+11:47:34.188 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.componentes.dialogos.VentanaDialogoComponent (VentanaDialogoComponent.java:233)[0;39m - || ventanaDialogo || Otra ventana toma foco. Devolviendo foco a la ventana de diálogo
+11:47:37.439 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.componentes.dialogos.VentanaDialogoComponent (VentanaDialogoComponent.java:467)[0;39m - BotonVerTraza() - ver traza
+11:47:43.828 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.componentes.dialogos.VentanaDialogoComponent (VentanaDialogoComponent.java:358)[0;39m - El usuario pulsa aceptar
+11:47:43.829 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.componentes.dialogos.VentanaDialogoComponent (VentanaDialogoComponent.java:266)[0;39m - Cerrando ventana de diálogo
+11:47:43.831 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.componentes.dialogos.VentanaDialogoComponent (VentanaDialogoComponent.java:231)[0;39m - -- ventanaDialogo -- onHidden: true on Shown: false
+11:47:43.831 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.componentes.dialogos.VentanaDialogoComponent (VentanaDialogoComponent.java:237)[0;39m - ** ventanaDialogo ** Ventana de diálogo pierde foco
+11:47:43.836 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.componentes.dialogos.VentanaDialogoComponent (VentanaDialogoComponent.java:571)[0;39m - Salida de showAndWait
+11:47:46.561 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.componentes.botonaccion.BotonBotoneraComponent (BotonBotoneraComponent.java:95)[0;39m - accionClick() - Acción : ACCION_SELECIONAR_MEDIO_PAGO
+11:47:46.562 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.componentes.botonaccion.BotonBotoneraComponent (BotonBotoneraComponent.java:169)[0;39m - realizarAccion() - Acción : ACCION_SELECIONAR_MEDIO_PAGO
+11:47:46.562 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.gui.ventas.tickets.pagos.PagosController (PagosController.java:1639)[0;39m - realizarAccion() - Realizando la acción : ACCION_SELECIONAR_MEDIO_PAGO de tipo : 
+11:47:46.562 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.gui.ventas.tickets.pagos.PagosController (PagosController.java:1642)[0;39m - realizarAccion() - Acción cambiar medio de pago en pantalla
+11:47:46.562 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.view.View (View.java:128)[0;39m - load() - Cargando View con className com.comerzzia.pos.core.gui.view.ModalView$1-com.comerzzia.pos.dispositivo.comun.tarjeta.CodigoTarjetaView
+11:47:46.563 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.view.ModalView (ModalView.java:114)[0;39m - show() - Abriendo ventana modal : com.comerzzia.pos.dispositivo.comun.tarjeta.CodigoTarjetaView
+11:47:46.564 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.view.ModalView (ModalView.java:141)[0;39m - show() - this.stage.showAndWait()
+11:47:51.508 [34mINFO [0;39m (JavaFX Application Thread) [34mcom.comerzzia.api.rest.client.fidelizados.FidelizadosRest (FidelizadosRest.java:260)[0;39m - getTarjetaRegalo() - URL de servicio rest en la que se realiza la petición: http://ametller.172.16.100.75.nip.io/comerzzia/ws/fidelizados/tarjetaRegalo?numeroTarjeta=2021000000090&apiKey=tVm8JGR5erUl1iKxSiTwSwDPRmpggj&uidActividad=ad95dab4-51b4-48a5-bfc7-75db4e9f5ae1
+11:47:56.463 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.gui.ventas.tickets.pagos.PagosController (PagosController.java:1140)[0;39m - anotarPago() - Anotando pago: medio de pago:(1000) TARJETA REGALO // Importe: 2.00
+11:47:56.463 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.componentes.simboloCargando.VentanaCargando (VentanaCargando.java:108)[0;39m - mostrar()
+11:47:56.477 [39mDEBUG[0;39m (class com.comerzzia.pos.gui.ventas.tickets.pagos.PagosController$12) [34mcom.comerzzia.pos.services.payments.PaymentsManagerImpl (PaymentsManagerImpl.java:297)[0;39m - pay() - Se va a pagar 2.00 del medio de pago 1000
+11:47:56.477 [39mDEBUG[0;39m (class com.comerzzia.pos.gui.ventas.tickets.pagos.PagosController$12) [34mcom.comerzzia.pos.services.payments.PaymentsManagerImpl (PaymentsManagerImpl.java:390)[0;39m - assignIdTicket() - Se va a asignar el ID_TICKET ya que el ticket no tiene pagos.
+11:47:56.477 [39mDEBUG[0;39m (class com.comerzzia.pos.gui.ventas.tickets.pagos.PagosController$12) [34mcom.comerzzia.pos.services.ticket.TicketsService (TicketsService.java:136)[0;39m - setContadorIdTicket() - Obteniendo contador para identificador...
+11:47:56.478 [39mDEBUG[0;39m (class com.comerzzia.pos.gui.ventas.tickets.pagos.PagosController$12) [34mcom.comerzzia.pos.services.core.config.configContadores.ServicioConfigContadores (ServicioConfigContadores.java:98)[0;39m - consultar() - Consultando datos del contador: REP_NUMFAC
+11:47:56.490 [39mDEBUG[0;39m (class com.comerzzia.pos.gui.ventas.tickets.pagos.PagosController$12) [34mcom.comerzzia.pos.services.core.config.configContadores.rangos.ServicioConfigContadoresRangos (ServicioConfigContadoresRangos.java:43)[0;39m - consultar() - Consultando rangos 
+11:47:56.567 [39mDEBUG[0;39m (class com.comerzzia.pos.gui.ventas.tickets.pagos.PagosController$12) [34mcom.comerzzia.pos.services.core.contadores.ServicioContadores (ServicioContadores.java:370)[0;39m - consultarContador() - Obteniendo el valor para el contador REP_NUMFAC
+11:47:56.567 [39mDEBUG[0;39m (class com.comerzzia.pos.gui.ventas.tickets.pagos.PagosController$12) [34mc.comerzzia.pos.services.core.config.configContadores.parametros.ServicioConfigContadoresParametros (ServicioConfigContadoresParametros.java:103)[0;39m - consultar() - Consultando parámetro del contador REP_NUMFAC
+11:47:56.665 [39mDEBUG[0;39m (class com.comerzzia.pos.gui.ventas.tickets.pagos.PagosController$12) [34mcom.comerzzia.pos.services.ticket.copiaSeguridad.CopiaSeguridadTicketService (CopiaSeguridadTicketService.java:128)[0;39m - guardarBackupTicketActivo()
+11:47:56.665 [39mDEBUG[0;39m (class com.comerzzia.pos.gui.ventas.tickets.pagos.PagosController$12) [34mcom.comerzzia.pos.services.ticket.copiaSeguridad.CopiaSeguridadTicketService (CopiaSeguridadTicketService.java:134)[0;39m - guardarBackupTicketActivo() - Eliminando copia de seguridad de ticket...
+11:47:56.786 [39mDEBUG[0;39m (class com.comerzzia.pos.gui.ventas.tickets.pagos.PagosController$12) [34mcom.comerzzia.pos.services.ticket.copiaSeguridad.CopiaSeguridadTicketService (CopiaSeguridadTicketService.java:173)[0;39m - guardarBackupTicketActivo() - Guardando copia de seguridad de ticket...
+11:47:56.864 [39mDEBUG[0;39m (class com.comerzzia.pos.gui.ventas.tickets.pagos.PagosController$12) [34mcom.comerzzia.pos.services.ticket.copiaSeguridad.CopiaSeguridadTicketService (CopiaSeguridadTicketService.java:182)[0;39m - guardarBackupTicketActivo() - Confirmando transacción...
+11:47:56.867 [39mDEBUG[0;39m (class com.comerzzia.pos.gui.ventas.tickets.pagos.PagosController$12) [34mcom.comerzzia.pos.services.core.config.configContadores.rangos.FileCounterRangeManagerImpl (FileCounterRangeManagerImpl.java:103)[0;39m - readFromPropertiesFile() - Reading file fiscal/REP_NUMFAC__0000__FS__2025%2F131.properties
+11:47:56.868 [31mWARN [0;39m (class com.comerzzia.pos.gui.ventas.tickets.pagos.PagosController$12) [34mcom.comerzzia.pos.services.core.config.configContadores.rangos.FileCounterRangeManagerImpl (FileCounterRangeManagerImpl.java:122)[0;39m - readFromPropertiesFile() - No se ha encontrado el fichero REP_NUMFAC__0000__FS__2025/131.properties: null
+11:47:56.868 [39mDEBUG[0;39m (class com.comerzzia.pos.gui.ventas.tickets.pagos.PagosController$12) [34mcom.comerzzia.pos.services.payments.PaymentsManagerImpl (PaymentsManagerImpl.java:392)[0;39m - assignIdTicket() - Contador obtenido: 128
+11:47:56.868 [39mDEBUG[0;39m (class com.comerzzia.pos.gui.ventas.tickets.pagos.PagosController$12) [34mcom.comerzzia.pos.gui.ventas.tickets.pagos.PagosController (PagosController.java:642)[0;39m - PaymentInitEvent :: Se ha iniciado el pago.
+11:47:56.873 [34mINFO [0;39m (class com.comerzzia.pos.gui.ventas.tickets.pagos.PagosController$12) [34mcom.comerzzia.api.rest.client.movimientos.MovimientosRest (MovimientosRest.java:147)[0;39m - crearMovimientoFidelizadoDefinitivo() - Realizando petición de procesamiento de movimientos
+11:47:56.873 [34mINFO [0;39m (class com.comerzzia.pos.gui.ventas.tickets.pagos.PagosController$12) [34mcom.comerzzia.api.rest.client.movimientos.MovimientosRest (MovimientosRest.java:153)[0;39m - crearMovimientosTarjetaRegaloProvisionales() - URL de servicio rest en la que se realiza la petición: http://ametller.172.16.100.75.nip.io/comerzzia/ws/movimientos/movimientosTarjetaRegaloProvisionales
+11:47:57.883 [39mDEBUG[0;39m (class com.comerzzia.pos.gui.ventas.tickets.pagos.PagosController$12) [34mcom.comerzzia.pos.gui.ventas.tickets.pagos.PagosController (PagosController.java:503)[0;39m - addPayment() - Se añadirá el nuevo pago. [PaymentCode: 1000, amount: 2.00, paymentId: 0, removable: true]
+11:47:57.884 [39mDEBUG[0;39m (class com.comerzzia.pos.gui.ventas.tickets.pagos.PagosController$12) [34mcom.comerzzia.pos.gui.ventas.tickets.pagos.PagosController (PagosController.java:514)[0;39m - addPayment() - GiftCardManager payment.
+11:47:57.884 [39mDEBUG[0;39m (class com.comerzzia.pos.gui.ventas.tickets.pagos.PagosController$12) [34mcom.comerzzia.pos.services.ticket.copiaSeguridad.CopiaSeguridadTicketService (CopiaSeguridadTicketService.java:128)[0;39m - guardarBackupTicketActivo()
+11:47:57.886 [39mDEBUG[0;39m (class com.comerzzia.pos.gui.ventas.tickets.pagos.PagosController$12) [34mcom.comerzzia.pos.services.ticket.copiaSeguridad.CopiaSeguridadTicketService (CopiaSeguridadTicketService.java:134)[0;39m - guardarBackupTicketActivo() - Eliminando copia de seguridad de ticket...
+11:47:58.003 [39mDEBUG[0;39m (class com.comerzzia.pos.gui.ventas.tickets.pagos.PagosController$12) [34mcom.comerzzia.pos.services.ticket.copiaSeguridad.CopiaSeguridadTicketService (CopiaSeguridadTicketService.java:173)[0;39m - guardarBackupTicketActivo() - Guardando copia de seguridad de ticket...
+11:47:58.040 [39mDEBUG[0;39m (class com.comerzzia.pos.gui.ventas.tickets.pagos.PagosController$12) [34mcom.comerzzia.pos.services.ticket.copiaSeguridad.CopiaSeguridadTicketService (CopiaSeguridadTicketService.java:182)[0;39m - guardarBackupTicketActivo() - Confirmando transacción...
+11:47:58.040 [39mDEBUG[0;39m (class com.comerzzia.pos.gui.ventas.tickets.pagos.PagosController$12) [34mcom.comerzzia.pos.services.payments.PaymentsManagerImpl (PaymentsManagerImpl.java:604)[0;39m - recordCashFlow() - Se va a guardar un movimiento de caja: [medio de pago: 1000, importe: 2.00, signo: +]
+11:47:58.040 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.gui.ventas.tickets.pagos.PagosController (PagosController.java:957)[0;39m - refrescarDatosPantalla()
+11:47:58.042 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.gui.ventas.tickets.pagos.PagosController (PagosController.java:1003)[0;39m - refrescarDatosPantalla() - Activando y desactivando botones de aceptar y cancelar.
+11:47:58.059 [39mDEBUG[0;39m (class com.comerzzia.pos.gui.ventas.tickets.pagos.PagosController$12) [34mcom.comerzzia.pos.services.cajas.CajasService (CajasService.java:135)[0;39m - consultarProximaLineaDetalleCaja() - Obteniendo próximo número de línea de detalle de caja para uidDiarioCaja: 9b84752d-343f-4835-8c4a-05cee455cbf5
+11:47:58.062 [39mDEBUG[0;39m (class com.comerzzia.pos.gui.ventas.tickets.pagos.PagosController$12) [34mcom.comerzzia.pos.services.cajas.CajasService (CajasService.java:139)[0;39m - crearMovimiento() - obteniendo el numero de linea del movimiento
+11:47:58.080 [39mDEBUG[0;39m (class com.comerzzia.pos.gui.ventas.tickets.pagos.PagosController$12) [34mcom.comerzzia.pos.services.cajas.CajasService (CajasService.java:305)[0;39m - crearMovimiento() - Insertando movimiento de caja
+11:47:58.116 [39mDEBUG[0;39m (class com.comerzzia.pos.gui.ventas.tickets.pagos.PagosController$12) [34mcom.comerzzia.pos.services.payments.PaymentsManagerImpl (PaymentsManagerImpl.java:343)[0;39m - saveTicketBackup() - Guardando copia de seguridad del ticket.
+11:47:58.116 [39mDEBUG[0;39m (class com.comerzzia.pos.gui.ventas.tickets.pagos.PagosController$12) [34mcom.comerzzia.pos.services.ticket.copiaSeguridad.CopiaSeguridadTicketService (CopiaSeguridadTicketService.java:128)[0;39m - guardarBackupTicketActivo()
+11:47:58.116 [39mDEBUG[0;39m (class com.comerzzia.pos.gui.ventas.tickets.pagos.PagosController$12) [34mcom.comerzzia.pos.services.ticket.copiaSeguridad.CopiaSeguridadTicketService (CopiaSeguridadTicketService.java:134)[0;39m - guardarBackupTicketActivo() - Eliminando copia de seguridad de ticket...
+11:47:58.237 [39mDEBUG[0;39m (class com.comerzzia.pos.gui.ventas.tickets.pagos.PagosController$12) [34mcom.comerzzia.pos.services.ticket.copiaSeguridad.CopiaSeguridadTicketService (CopiaSeguridadTicketService.java:173)[0;39m - guardarBackupTicketActivo() - Guardando copia de seguridad de ticket...
+11:47:58.314 [39mDEBUG[0;39m (class com.comerzzia.pos.gui.ventas.tickets.pagos.PagosController$12) [34mcom.comerzzia.pos.services.ticket.copiaSeguridad.CopiaSeguridadTicketService (CopiaSeguridadTicketService.java:182)[0;39m - guardarBackupTicketActivo() - Confirmando transacción...
+11:47:58.314 [39mDEBUG[0;39m (class com.comerzzia.pos.gui.ventas.tickets.pagos.PagosController$12) [34mcom.comerzzia.pos.services.payments.PaymentsManagerImpl (PaymentsManagerImpl.java:325)[0;39m - pay() - Importe pendiente: 9.95
+11:47:58.315 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.componentes.simboloCargando.VentanaCargando (VentanaCargando.java:120)[0;39m - cerrar()
+11:47:58.322 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.componentes.simboloCargando.VentanaCargando (VentanaCargando.java:123)[0;39m - cerrar() close
+11:48:03.349 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.componentes.botonaccion.BotonBotoneraComponent (BotonBotoneraComponent.java:95)[0;39m - accionClick() - Acción : ACCION_TABLA_ULTIMO_REGISTRO
+11:48:03.349 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.componentes.botonaccion.BotonBotoneraComponent (BotonBotoneraComponent.java:169)[0;39m - realizarAccion() - Acción : ACCION_TABLA_ULTIMO_REGISTRO
+11:48:03.349 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.gui.ventas.tickets.pagos.PagosController (PagosController.java:1639)[0;39m - realizarAccion() - Realizando la acción : ACCION_TABLA_ULTIMO_REGISTRO de tipo : 
+11:48:03.349 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.gui.ventas.tickets.pagos.PagosController (PagosController.java:1657)[0;39m - Acción seleccionar último registro de la tabla
+11:48:03.349 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.gui.ventas.tickets.pagos.PagosController (PagosController.java:1595)[0;39m - accionBorrarRegistroTabla() - Acción ejecutada
+11:48:03.349 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.componentes.dialogos.VentanaDialogoComponent (VentanaDialogoComponent.java:670)[0;39m - crearVentanaConfirmacion() - Confirme operación.
+11:48:03.350 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.componentes.simboloCargando.VentanaCargando (VentanaCargando.java:120)[0;39m - cerrar()
+11:48:03.350 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.componentes.simboloCargando.VentanaCargando (VentanaCargando.java:123)[0;39m - cerrar() close
+11:48:03.351 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.componentes.dialogos.VentanaDialogoComponent (VentanaDialogoComponent.java:569)[0;39m - Iniciando showAndWait
+11:48:03.358 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.componentes.dialogos.VentanaDialogoComponent (VentanaDialogoComponent.java:231)[0;39m - -- ventanaDialogo -- onHidden: false on Shown: true
+11:48:03.358 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.componentes.dialogos.VentanaDialogoComponent (VentanaDialogoComponent.java:233)[0;39m - || ventanaDialogo || Otra ventana toma foco. Devolviendo foco a la ventana de diálogo
+11:48:04.117 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.componentes.dialogos.VentanaDialogoComponent (VentanaDialogoComponent.java:358)[0;39m - El usuario pulsa aceptar
+11:48:04.118 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.componentes.dialogos.VentanaDialogoComponent (VentanaDialogoComponent.java:266)[0;39m - Cerrando ventana de diálogo
+11:48:04.119 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.componentes.dialogos.VentanaDialogoComponent (VentanaDialogoComponent.java:231)[0;39m - -- ventanaDialogo -- onHidden: true on Shown: false
+11:48:04.119 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.componentes.dialogos.VentanaDialogoComponent (VentanaDialogoComponent.java:237)[0;39m - ** ventanaDialogo ** Ventana de diálogo pierde foco
+11:48:04.126 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.componentes.dialogos.VentanaDialogoComponent (VentanaDialogoComponent.java:571)[0;39m - Salida de showAndWait
+11:48:04.127 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.gui.ventas.tickets.pagos.PagosController (PagosController.java:1614)[0;39m - accionBorrarRegistroTabla() - El usuario quiere borrar el pago con ID: 0
+11:48:04.127 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.componentes.simboloCargando.VentanaCargando (VentanaCargando.java:108)[0;39m - mostrar()
+11:48:04.137 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.services.ticket.copiaSeguridad.CopiaSeguridadTicketService (CopiaSeguridadTicketService.java:128)[0;39m - guardarBackupTicketActivo()
+11:48:04.137 [34mINFO [0;39m (class com.comerzzia.pos.gui.ventas.tickets.pagos.PagosController$15) [34mcom.comerzzia.api.rest.client.movimientos.MovimientosRest (MovimientosRest.java:250)[0;39m - anularMovimientosProvisionalesTarjetaRegalo() - Realizando petición de anulación de movimientos
+11:48:04.137 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.services.ticket.copiaSeguridad.CopiaSeguridadTicketService (CopiaSeguridadTicketService.java:134)[0;39m - guardarBackupTicketActivo() - Eliminando copia de seguridad de ticket...
+11:48:04.139 [34mINFO [0;39m (class com.comerzzia.pos.gui.ventas.tickets.pagos.PagosController$15) [34mcom.comerzzia.api.rest.client.movimientos.MovimientosRest (MovimientosRest.java:255)[0;39m - anularMovimientosProvisionalesTarjetaRegalo() - URL de servicio rest en la que se realiza la petición: http://ametller.172.16.100.75.nip.io/comerzzia/ws/movimientos/anularMovimientosProvisionalesTarjetaRegalo
+11:48:04.219 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.services.ticket.copiaSeguridad.CopiaSeguridadTicketService (CopiaSeguridadTicketService.java:173)[0;39m - guardarBackupTicketActivo() - Guardando copia de seguridad de ticket...
+11:48:04.295 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.services.ticket.copiaSeguridad.CopiaSeguridadTicketService (CopiaSeguridadTicketService.java:182)[0;39m - guardarBackupTicketActivo() - Confirmando transacción...
+11:48:05.104 [39mDEBUG[0;39m (class com.comerzzia.pos.gui.ventas.tickets.pagos.PagosController$15) [34mcom.comerzzia.pos.services.ticket.copiaSeguridad.CopiaSeguridadTicketService (CopiaSeguridadTicketService.java:128)[0;39m - guardarBackupTicketActivo()
+11:48:05.104 [39mDEBUG[0;39m (class com.comerzzia.pos.gui.ventas.tickets.pagos.PagosController$15) [34mcom.comerzzia.pos.services.ticket.copiaSeguridad.CopiaSeguridadTicketService (CopiaSeguridadTicketService.java:134)[0;39m - guardarBackupTicketActivo() - Eliminando copia de seguridad de ticket...
+11:48:05.146 [39mDEBUG[0;39m (class com.comerzzia.pos.gui.ventas.tickets.pagos.PagosController$15) [34mcom.comerzzia.pos.services.ticket.copiaSeguridad.CopiaSeguridadTicketService (CopiaSeguridadTicketService.java:173)[0;39m - guardarBackupTicketActivo() - Guardando copia de seguridad de ticket...
+11:48:05.188 [39mDEBUG[0;39m (class com.comerzzia.pos.gui.ventas.tickets.pagos.PagosController$15) [34mcom.comerzzia.pos.services.ticket.copiaSeguridad.CopiaSeguridadTicketService (CopiaSeguridadTicketService.java:182)[0;39m - guardarBackupTicketActivo() - Confirmando transacción...
+11:48:05.188 [39mDEBUG[0;39m (class com.comerzzia.pos.gui.ventas.tickets.pagos.PagosController$15) [34mcom.comerzzia.pos.services.payments.PaymentsManagerImpl (PaymentsManagerImpl.java:604)[0;39m - recordCashFlow() - Se va a guardar un movimiento de caja: [medio de pago: 1000, importe: 2.00, signo: -]
+11:48:05.188 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.gui.ventas.tickets.pagos.PagosController (PagosController.java:957)[0;39m - refrescarDatosPantalla()
+11:48:05.190 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.gui.ventas.tickets.pagos.PagosController (PagosController.java:1003)[0;39m - refrescarDatosPantalla() - Activando y desactivando botones de aceptar y cancelar.
+11:48:05.190 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.gui.ventas.tickets.pagos.PagosController (PagosController.java:957)[0;39m - refrescarDatosPantalla()
+11:48:05.190 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.gui.ventas.tickets.pagos.PagosController (PagosController.java:1003)[0;39m - refrescarDatosPantalla() - Activando y desactivando botones de aceptar y cancelar.
+11:48:05.204 [39mDEBUG[0;39m (class com.comerzzia.pos.gui.ventas.tickets.pagos.PagosController$15) [34mcom.comerzzia.pos.services.cajas.CajasService (CajasService.java:135)[0;39m - consultarProximaLineaDetalleCaja() - Obteniendo próximo número de línea de detalle de caja para uidDiarioCaja: 9b84752d-343f-4835-8c4a-05cee455cbf5
+11:48:05.204 [39mDEBUG[0;39m (class com.comerzzia.pos.gui.ventas.tickets.pagos.PagosController$15) [34mcom.comerzzia.pos.services.cajas.CajasService (CajasService.java:139)[0;39m - crearMovimiento() - obteniendo el numero de linea del movimiento
+11:48:05.217 [39mDEBUG[0;39m (class com.comerzzia.pos.gui.ventas.tickets.pagos.PagosController$15) [34mcom.comerzzia.pos.services.cajas.CajasService (CajasService.java:305)[0;39m - crearMovimiento() - Insertando movimiento de caja
+11:48:05.258 [39mDEBUG[0;39m (class com.comerzzia.pos.gui.ventas.tickets.pagos.PagosController$15) [34mcom.comerzzia.pos.services.payments.PaymentsManagerImpl (PaymentsManagerImpl.java:343)[0;39m - saveTicketBackup() - Guardando copia de seguridad del ticket.
+11:48:05.258 [39mDEBUG[0;39m (class com.comerzzia.pos.gui.ventas.tickets.pagos.PagosController$15) [34mcom.comerzzia.pos.services.ticket.copiaSeguridad.CopiaSeguridadTicketService (CopiaSeguridadTicketService.java:128)[0;39m - guardarBackupTicketActivo()
+11:48:05.258 [39mDEBUG[0;39m (class com.comerzzia.pos.gui.ventas.tickets.pagos.PagosController$15) [34mcom.comerzzia.pos.services.ticket.copiaSeguridad.CopiaSeguridadTicketService (CopiaSeguridadTicketService.java:134)[0;39m - guardarBackupTicketActivo() - Eliminando copia de seguridad de ticket...
+11:48:05.377 [39mDEBUG[0;39m (class com.comerzzia.pos.gui.ventas.tickets.pagos.PagosController$15) [34mcom.comerzzia.pos.services.ticket.copiaSeguridad.CopiaSeguridadTicketService (CopiaSeguridadTicketService.java:173)[0;39m - guardarBackupTicketActivo() - Guardando copia de seguridad de ticket...
+11:48:05.452 [39mDEBUG[0;39m (class com.comerzzia.pos.gui.ventas.tickets.pagos.PagosController$15) [34mcom.comerzzia.pos.services.ticket.copiaSeguridad.CopiaSeguridadTicketService (CopiaSeguridadTicketService.java:182)[0;39m - guardarBackupTicketActivo() - Confirmando transacción...
+11:48:05.452 [39mDEBUG[0;39m (class com.comerzzia.pos.gui.ventas.tickets.pagos.PagosController$15) [34mcom.comerzzia.pos.services.payments.PaymentsManagerImpl (PaymentsManagerImpl.java:419)[0;39m - cancelPay() - Importe pendiente: 11.95
+11:48:05.452 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.componentes.simboloCargando.VentanaCargando (VentanaCargando.java:120)[0;39m - cerrar()
+11:48:05.458 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.core.gui.componentes.simboloCargando.VentanaCargando (VentanaCargando.java:123)[0;39m - cerrar() close
+11:48:06.849 [39mDEBUG[0;39m (JavaFX Application Thread) [34mcom.comerzzia.pos.gui.ventas.tickets.pagos.PagosController (PagosController.java:1425)[0;39m - accionCancelar() - Cancelando ticket sin pagos eliminables.
+oct 07, 2025 11:48:06 AM com.sun.javafx.css.StyleManager loadStylesheetUnPrivileged
+INFORMACIÓN: Could not find stylesheet: file:/C:/Users/Tier1/Desktop/CLIENTES/Ametller/pos/comerzzia-ametller-pos-resources/target/classes/skins/ametller/com/comerzzia/pos/gui/styles/styles.css
