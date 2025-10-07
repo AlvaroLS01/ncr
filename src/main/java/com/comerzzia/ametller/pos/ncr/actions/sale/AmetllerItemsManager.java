@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Primary;
@@ -13,6 +14,7 @@ import com.comerzzia.ametller.pos.ncr.ticket.AmetllerScoTicketManager;
 import com.comerzzia.pos.ncr.actions.sale.ItemsManager;
 import com.comerzzia.pos.ncr.messages.ItemException;
 import com.comerzzia.pos.ncr.messages.ItemSold;
+import com.comerzzia.pos.ncr.messages.VoidTransaction;
 import com.comerzzia.pos.services.ticket.TicketVentaAbono;
 import com.comerzzia.pos.services.ticket.lineas.LineaTicket;
 import com.comerzzia.pos.util.bigdecimal.BigDecimalUtil;
@@ -25,6 +27,10 @@ import com.comerzzia.pos.util.i18n.I18N;
 public class AmetllerItemsManager extends ItemsManager {
 
     private static final String DESCUENTO_25_DESCRIPTION = "Descuento del 25% aplicado";
+
+    @Autowired
+    @Lazy
+    private AmetllerPayManager ametllerPayManager;
 
     @Override
     protected ItemSold lineaTicketToItemSold(LineaTicket linea) {
@@ -111,6 +117,24 @@ public class AmetllerItemsManager extends ItemsManager {
         sendItemSold(response);
 
         linesCache.put(newLine.getIdLinea(), response);
+    }
+
+    @Override
+    public void newTicket() {
+        super.newTicket();
+
+        if (ametllerPayManager != null) {
+            ametllerPayManager.onTransactionStarted();
+        }
+    }
+
+    @Override
+    public void deleteAllItems(VoidTransaction message) {
+        if (ametllerPayManager != null) {
+            ametllerPayManager.onTransactionVoided();
+        }
+
+        super.deleteAllItems(message);
     }
 
 
