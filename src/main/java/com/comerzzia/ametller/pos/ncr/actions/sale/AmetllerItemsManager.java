@@ -1,6 +1,7 @@
 package com.comerzzia.ametller.pos.ncr.actions.sale;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -106,11 +107,7 @@ public class AmetllerItemsManager extends ItemsManager {
             return;
         }
 
-        if (ticketManager != null && ticketManager.getTicket() != null) {
-            ticketManager.getSesion().getSesionPromociones()
-                    .aplicarPromociones((TicketVentaAbono) ticketManager.getTicket());
-            ticketManager.getTicket().getTotales().recalcular();
-        }
+        applyPromotionsAndRecalculateTotals();
 
         ItemSold response = lineaTicketToItemSold(newLine);
 
@@ -148,8 +145,105 @@ public class AmetllerItemsManager extends ItemsManager {
             return;
         }
 
+        List<ItemSold> refreshedItems = collectUpdatedItems(null);
+
+        for (ItemSold refreshedItem : refreshedItems) {
+            ncrController.sendMessage(refreshedItem);
+            sendTotals();
+        }
+    }
+
+    @Override
+    public void newItemAndUpdateAllItems(final LineaTicket newLine) {
+        if (newLine == null) {
+            return;
+        }
+
+        applyPromotionsAndRecalculateTotals();
+
+        List<ItemSold> refreshedItems = collectUpdatedItems(newLine.getIdLinea());
+
+        ItemSold response = lineaTicketToItemSold(newLine);
+
+        sendItemSold(response);
+
+        linesCache.put(newLine.getIdLinea(), response);
+
+        if (!refreshedItems.isEmpty()) {
+            for (ItemSold refreshedItem : refreshedItems) {
+                ncrController.sendMessage(refreshedItem);
+            }
+
+            sendTotals();
+        }
+    }
+    
+    @Override
+    public boolean isCoupon(String code) {
+        boolean couponAlreadyApplied = globalDiscounts.containsKey(GLOBAL_DISCOUNT_COUPON_PREFIX + code);
+
+        boolean handled = super.isCoupon(code);
+
+        boolean couponApplied = globalDiscounts.containsKey(GLOBAL_DISCOUNT_COUPON_PREFIX + code);
+
+        if (handled && couponApplied && !couponAlreadyApplied) {
+            ItemException itemException = new ItemException();
+            itemException.setFieldValue(ItemException.UPC, "");
+            itemException.setFieldValue(ItemException.ExceptionType, "0");
+            itemException.setFieldValue(ItemException.ExceptionId, "25");
+            itemException.setFieldValue(ItemException.Message, I18N.getTexto("Tu cupon ha sido leído correctamente"));
+            itemException.setFieldValue(ItemException.TopCaption, I18N.getTexto("Cupon leído"));
+            ncrController.sendMessage(itemException);
+        }
+
+        return handled;
+    }
+
+    private void applyPromotionsAndRecalculateTotals() {
+        if (ticketManager != null && ticketManager.getTicket() != null) {
+            ticketManager.getSesion().getSesionPromociones()
+                    .aplicarPromociones((TicketVentaAbono) ticketManager.getTicket());
+            ticketManager.getTicket().getTotales().recalcular();
+        }
+    }
+
+    private boolean hasDifferences(ItemSold cachedItem, ItemSold refreshedItem) {
+        if (cachedItem == null || refreshedItem == null) {
+            return false;
+        }
+
+        String cachedPrice = cachedItem.getFieldValue(ItemSold.Price);
+        String refreshedPrice = refreshedItem.getFieldValue(ItemSold.Price);
+        String cachedExtendedPrice = cachedItem.getFieldValue(ItemSold.ExtendedPrice);
+        String refreshedExtendedPrice = refreshedItem.getFieldValue(ItemSold.ExtendedPrice);
+        String cachedDescription = cachedItem.getFieldValue(ItemSold.Description);
+        String refreshedDescription = refreshedItem.getFieldValue(ItemSold.Description);
+
+        return !StringUtils.equals(cachedPrice, refreshedPrice)
+                || !StringUtils.equals(cachedExtendedPrice, refreshedExtendedPrice)
+                || !StringUtils.equals(cachedDescription, refreshedDescription);
+    }
+
+    @SuppressWarnings("unchecked")
+    private List<ItemSold> collectUpdatedItems(final Integer excludeLineId) {
+        List<ItemSold> refreshedItems = new ArrayList<>();
+
+        if (ticketManager == null || ticketManager.getTicket() == null) {
+            return refreshedItems;
+        }
+
         for (LineaTicket ticketLine : (List<LineaTicket>) ticketManager.getTicket().getLineas()) {
-            ItemSold cachedItem = linesCache.get(ticketLine.getIdLinea());
+            if (ticketLine == null) {
+                continue;
+            }
+
+            Integer lineId = ticketLine.getIdLinea();
+
+            if (excludeLineId != null && excludeLineId.equals(lineId)) {
+                continue;
+            }
+
+            ItemSold cachedItem = linesCache.get(lineId);
 
             if (cachedItem == null) {
                 continue;
@@ -157,41 +251,12 @@ public class AmetllerItemsManager extends ItemsManager {
 
             ItemSold refreshedItem = lineaTicketToItemSold(ticketLine);
 
-            String cachedPrice = cachedItem.getFieldValue(ItemSold.Price);
-            String refreshedPrice = refreshedItem.getFieldValue(ItemSold.Price);
-            String cachedExtendedPrice = cachedItem.getFieldValue(ItemSold.ExtendedPrice);
-            String refreshedExtendedPrice = refreshedItem.getFieldValue(ItemSold.ExtendedPrice);
-            String cachedDescription = cachedItem.getFieldValue(ItemSold.Description);
-            String refreshedDescription = refreshedItem.getFieldValue(ItemSold.Description);
-
-            if (!StringUtils.equals(cachedPrice, refreshedPrice)
-                    || !StringUtils.equals(cachedExtendedPrice, refreshedExtendedPrice)
-                    || !StringUtils.equals(cachedDescription, refreshedDescription)) {
-                ncrController.sendMessage(refreshedItem);
-                sendTotals();
-                linesCache.put(ticketLine.getIdLinea(), refreshedItem);
+            if (hasDifferences(cachedItem, refreshedItem)) {
+                refreshedItems.add(refreshedItem);
+                linesCache.put(lineId, refreshedItem);
             }
         }
+
+        return refreshedItems;
     }
-    
-	@Override
-	public boolean isCoupon(String code) {
-		boolean couponAlreadyApplied = globalDiscounts.containsKey(GLOBAL_DISCOUNT_COUPON_PREFIX + code);
-
-		boolean handled = super.isCoupon(code);
-
-		boolean couponApplied = globalDiscounts.containsKey(GLOBAL_DISCOUNT_COUPON_PREFIX + code);
-
-		if (handled && couponApplied && !couponAlreadyApplied) {
-			ItemException itemException = new ItemException();
-			itemException.setFieldValue(ItemException.UPC, "");
-			itemException.setFieldValue(ItemException.ExceptionType, "0");
-			itemException.setFieldValue(ItemException.ExceptionId, "25");
-			itemException.setFieldValue(ItemException.Message, I18N.getTexto("Tu cupon ha sido leído correctamente"));
-			itemException.setFieldValue(ItemException.TopCaption, I18N.getTexto("Cupon leído"));
-			ncrController.sendMessage(itemException);
-		}
-
-		return handled;
-	}
 }
