@@ -1034,7 +1034,111 @@ public class AmetllerPayManager extends PayManager {
         @Override
         protected void processPaymentOk(PaymentOkEvent eventOk) {
                 registerOrClearGiftCardPayment(eventOk);
-                super.processPaymentOk(eventOk);
+
+                if (eventOk == null) {
+                        super.processPaymentOk(eventOk);
+                        return;
+                }
+
+                BigDecimal amount = eventOk.getAmount();
+
+                Object source = eventOk.getSource();
+                if (!(source instanceof PaymentMethodManager)) {
+                        super.processPaymentOk(eventOk);
+                        return;
+                }
+
+                PaymentMethodManager methodManager = (PaymentMethodManager) source;
+                String paymentCode = methodManager.getPaymentCode();
+                MedioPagoBean paymentMethod = mediosPagosService.getMedioPago(paymentCode);
+
+                Integer paymentId = eventOk.getPaymentId();
+                boolean cashFlowRecorded = methodManager.recordCashFlowImmediately();
+
+                PagoTicket payment = ticketManager.addPayToTicket(paymentCode, amount, paymentId, true, cashFlowRecorded);
+
+                applyGiftCardPaymentData(eventOk, payment);
+
+                Map<String, Object> extendedData = eventOk.getExtendedData();
+                if (paymentMethod != null && Boolean.TRUE.equals(paymentMethod.getTarjetaCredito()) && extendedData != null
+                                && extendedData.containsKey(BasicPaymentMethodManager.PARAM_RESPONSE_TEF)) {
+                        DatosRespuestaPagoTarjeta datosRespuestaPagoTarjeta = (DatosRespuestaPagoTarjeta) extendedData
+                                        .get(BasicPaymentMethodManager.PARAM_RESPONSE_TEF);
+                        payment.setDatosRespuestaPagoTarjeta(datosRespuestaPagoTarjeta);
+                }
+
+                TenderAccepted response = new TenderAccepted();
+                response.setFieldIntValue(TenderAccepted.Amount, amount);
+                response.setFieldValue(TenderAccepted.TenderType, comerzziaPaymentCodeToScoTenderType(paymentCode));
+                if (paymentMethod != null) {
+                        response.setFieldValue(TenderAccepted.Description, paymentMethod.getDesMedioPago());
+                }
+
+                ncrController.sendMessage(response);
+
+                itemsManager.sendTotals();
+        }
+
+        private void applyGiftCardPaymentData(PaymentOkEvent eventOk, PagoTicket payment) {
+                if (eventOk == null || payment == null) {
+                        return;
+                }
+
+                GiftCardBean giftCard = extractGiftCardFromEvent(eventOk);
+                if (giftCard == null) {
+                        return;
+                }
+
+                try {
+                        Method setter = findMethod(payment.getClass(), "setGiftcard", GiftCardBean.class);
+                        if (setter == null) {
+                                setter = findMethod(payment.getClass(), "setGiftCard", GiftCardBean.class);
+                        }
+                        if (setter != null) {
+                                setter.invoke(payment, giftCard);
+                                return;
+                        }
+
+                        Method adder = findMethod(payment.getClass(), "addGiftcard", GiftCardBean.class);
+                        if (adder == null) {
+                                adder = findMethod(payment.getClass(), "addGiftCard", GiftCardBean.class);
+                        }
+                        if (adder != null) {
+                                adder.invoke(payment, giftCard);
+                                return;
+                        }
+
+                        Method listSetter = findMethod(payment.getClass(), "setGiftcards", List.class);
+                        if (listSetter == null) {
+                                listSetter = findMethod(payment.getClass(), "setGiftCards", List.class);
+                        }
+                        if (listSetter != null) {
+                                listSetter.invoke(payment, Collections.singletonList(giftCard));
+                                return;
+                        }
+
+                        if (log.isDebugEnabled()) {
+                                log.debug(String.format(
+                                                "applyGiftCardPaymentData() - Unable to locate gift card setter for payment class %s",
+                                                payment.getClass().getName()));
+                        }
+                }
+                catch (Exception e) {
+                        log.error("applyGiftCardPaymentData() - Error applying gift card data to payment", e);
+                }
+        }
+
+        private GiftCardBean extractGiftCardFromEvent(PaymentOkEvent eventOk) {
+                Map<String, Object> extendedData = eventOk.getExtendedData();
+                if (extendedData == null || extendedData.isEmpty()) {
+                        return null;
+                }
+
+                Object value = extendedData.get(GiftCardManager.PARAM_TARJETA);
+                if (value instanceof GiftCardBean) {
+                        return (GiftCardBean) value;
+                }
+                return null;
         }
 
         private void registerOrClearGiftCardPayment(PaymentOkEvent eventOk) {
