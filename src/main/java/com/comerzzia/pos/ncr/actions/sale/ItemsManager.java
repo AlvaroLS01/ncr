@@ -97,11 +97,8 @@ public class ItemsManager implements ActionManager {
     	public ItemSold itemSoldMessage;
     }
         
-        protected HashMap <String, GlobalDiscountData> globalDiscounts = new HashMap <> ();
-        protected Integer globalDiscountCounter = GLOBAL_DISCOUNT_FIRST_ITEM_ID;
-
-        private boolean updateItemsRunning = false;
-        private boolean totalsSentInCurrentUpdateItems = false;
+    protected HashMap <String, GlobalDiscountData> globalDiscounts = new HashMap <> ();
+    protected Integer globalDiscountCounter = GLOBAL_DISCOUNT_FIRST_ITEM_ID;
     
 	@Autowired
 	protected NCRController ncrController;
@@ -210,13 +207,9 @@ public class ItemsManager implements ActionManager {
 		return headerDiscounts;
 	}
 
-        @SuppressWarnings("rawtypes")
-        public void sendTotals() {
-                if (updateItemsRunning) {
-                        totalsSentInCurrentUpdateItems = true;
-                }
-
-                ITotalesTicket totales = ticketManager.getTicket().getTotales();
+	@SuppressWarnings("rawtypes")
+	public void sendTotals() {
+		ITotalesTicket totales = ticketManager.getTicket().getTotales();
 		
 		BigDecimal headerDiscounts = getHeaderDiscounts();
 		BigDecimal totalAmount = totales.getTotalAPagar().subtract(headerDiscounts);		
@@ -761,30 +754,15 @@ public class ItemsManager implements ActionManager {
 			ticketManager.getTicket().getCabecera().setDatosFidelizado(fidelizado);
 			ticketManager.recalculateTicket();
 
-                                LoyaltyCard message = new LoyaltyCard();
-                                message.setFieldValue(LoyaltyCard.AccountNumber, fidelizado.getNumTarjetaFidelizado());
-                                message.setFieldValue(LoyaltyCard.Status, "1");
-                                message.setFieldValue(LoyaltyCard.CardType, "loyalty");
-                                ncrController.sendMessage(message);
+			LoyaltyCard message = new LoyaltyCard();
+			message.setFieldValue(LoyaltyCard.AccountNumber, fidelizado.getNumTarjetaFidelizado());
+			message.setFieldValue(LoyaltyCard.Status, "1");
+			message.setFieldValue(LoyaltyCard.CardType, "loyalty");
+			ncrController.sendMessage(message);
 
-                                boolean previousUpdateItemsRunning = updateItemsRunning;
-                                boolean previousTotalsSent = totalsSentInCurrentUpdateItems;
-
-                                updateItemsRunning = true;
-                                totalsSentInCurrentUpdateItems = false;
-
-                                try {
-                                        updateItems();
-                                } finally {
-                                        updateItemsRunning = previousUpdateItemsRunning;
-                                }
-
-                                boolean totalsSent = totalsSentInCurrentUpdateItems;
-                                totalsSentInCurrentUpdateItems = previousTotalsSent;
-
-                                if (!totalsSent) {
-                                        sendTotals();
-                                }
+			sendTotals();
+			
+			updateItems();
 		} catch (IllegalArgumentException e) {
 			LoyaltyCard message = new LoyaltyCard();
 			message.setFieldValue(LoyaltyCard.Status, "0");
