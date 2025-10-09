@@ -149,8 +149,8 @@ public class AmetllerItemsManager extends ItemsManager {
             return;
         }
 
-        boolean ticketTotalsUpdated = false;
-
+        boolean ticketToatalsUpdated = false;
+        
         for (LineaTicket ticketLine : (List<LineaTicket>) ticketManager.getTicket().getLineas()) {
             ItemSold cachedItem = linesCache.get(ticketLine.getIdLinea());
 
@@ -191,12 +191,12 @@ public class AmetllerItemsManager extends ItemsManager {
 
                 ncrController.sendMessage(priceChanged);
                 linesCache.put(ticketLine.getIdLinea(), refreshedItem);
-                ticketTotalsUpdated = true;
+                ticketToatalsUpdated = true;
             }
         }
-
-        if (ticketTotalsUpdated) {
-            sendTotals();
+        
+        if (ticketToatalsUpdated) {
+        	sendTotals();
         }
     }
     
