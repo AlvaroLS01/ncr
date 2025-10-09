@@ -148,8 +148,6 @@ public class AmetllerItemsManager extends ItemsManager {
             return;
         }
 
-        boolean totalsSentBeforeItemUpdates = false;
-
         for (LineaTicket ticketLine : (List<LineaTicket>) ticketManager.getTicket().getLineas()) {
             ItemSold cachedItem = linesCache.get(ticketLine.getIdLinea());
 
@@ -169,11 +167,6 @@ public class AmetllerItemsManager extends ItemsManager {
             if (!StringUtils.equals(cachedPrice, refreshedPrice)
                     || !StringUtils.equals(cachedExtendedPrice, refreshedExtendedPrice)
                     || !StringUtils.equals(cachedDescription, refreshedDescription)) {
-                if (!totalsSentBeforeItemUpdates) {
-                    sendTotals();
-                    totalsSentBeforeItemUpdates = true;
-                }
-
                 ncrController.sendMessage(refreshedItem);
                 linesCache.put(ticketLine.getIdLinea(), refreshedItem);
 
