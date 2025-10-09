@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import com.comerzzia.ametller.pos.ncr.ticket.AmetllerScoTicketManager;
 import com.comerzzia.pos.ncr.actions.sale.ItemsManager;
 import com.comerzzia.pos.ncr.messages.ItemException;
-import com.comerzzia.pos.ncr.messages.ItemPriceChanged;
 import com.comerzzia.pos.ncr.messages.ItemSold;
 import com.comerzzia.pos.ncr.messages.VoidTransaction;
 import com.comerzzia.pos.services.ticket.TicketVentaAbono;
@@ -149,8 +148,8 @@ public class AmetllerItemsManager extends ItemsManager {
             return;
         }
 
-        boolean ticketToatalsUpdated = false;
-        
+        boolean totalsSentBeforeItemUpdates = false;
+
         for (LineaTicket ticketLine : (List<LineaTicket>) ticketManager.getTicket().getLineas()) {
             ItemSold cachedItem = linesCache.get(ticketLine.getIdLinea());
 
@@ -170,33 +169,16 @@ public class AmetllerItemsManager extends ItemsManager {
             if (!StringUtils.equals(cachedPrice, refreshedPrice)
                     || !StringUtils.equals(cachedExtendedPrice, refreshedExtendedPrice)
                     || !StringUtils.equals(cachedDescription, refreshedDescription)) {
-                ItemPriceChanged priceChanged = new ItemPriceChanged();
-                priceChanged.setFieldValue(ItemPriceChanged.UPC, refreshedItem.getFieldValue(ItemSold.UPC));
-                priceChanged.setFieldValue(ItemPriceChanged.ItemNumber, refreshedItem.getFieldValue(ItemSold.ItemNumber));
-
-                BigDecimal precioConDto = ticketLine.getPrecioTotalConDto();
-                if (precioConDto != null) {
-                    priceChanged.setFieldIntValue(ItemPriceChanged.NewPrice, precioConDto);
+                if (!totalsSentBeforeItemUpdates) {
+                    sendTotals();
+                    totalsSentBeforeItemUpdates = true;
                 }
 
-                BigDecimal importeConDto = ticketLine.getImporteTotalConDto();
-                if (importeConDto != null) {
-                    priceChanged.setFieldIntValue(ItemPriceChanged.ExtendedPrice, importeConDto);
-                }
-
-                BigDecimal cantidad = ticketLine.getCantidad();
-                if (cantidad != null) {
-                    priceChanged.setFieldIntValue(ItemPriceChanged.Quantity, cantidad);
-                }
-
-                ncrController.sendMessage(priceChanged);
+                ncrController.sendMessage(refreshedItem);
                 linesCache.put(ticketLine.getIdLinea(), refreshedItem);
-                ticketToatalsUpdated = true;
+
+                sendTotals();
             }
-        }
-        
-        if (ticketToatalsUpdated) {
-        	sendTotals();
         }
     }
     
