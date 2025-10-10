@@ -117,14 +117,8 @@ public class AmetllerPayManager extends PayManager {
         public void processMessage(BasicNCRMessage message) {
                 if (message instanceof DataNeededReply) {
                         DataNeededReply reply = (DataNeededReply) message;
-                        if (itemsManager instanceof AmetllerItemsManager) {
-                                AmetllerItemsManager ametllerItemsManager = (AmetllerItemsManager) itemsManager;
-                                if (ametllerItemsManager.handleCouponAlertReply(reply)) {
-                                        if (log.isDebugEnabled()) {
-                                                log.debug("processMessage() - Consumed coupon alert reply");
-                                        }
-                                        return;
-                                }
+                        if (handleCouponAlertReply(reply)) {
+                                return;
                         }
                         if (handleDescuento25DataNeededReply(reply)) {
                                 return;
@@ -138,8 +132,29 @@ public class AmetllerPayManager extends PayManager {
 			}
 			return;
 		}
-		super.processMessage(message);
-	}
+                super.processMessage(message);
+        }
+
+        private boolean handleCouponAlertReply(DataNeededReply reply) {
+                String type = StringUtils.trimToEmpty(reply.getFieldValue(DataNeededReply.Type));
+                String id = StringUtils.trimToEmpty(reply.getFieldValue(DataNeededReply.Id));
+
+                if (!"1".equals(type) || !"2".equals(id)) {
+                        return false;
+                }
+
+                DataNeeded clear = new DataNeeded();
+                clear.setFieldValue(DataNeeded.Type, "0");
+                clear.setFieldValue(DataNeeded.Id, "0");
+
+                ncrController.sendMessage(clear);
+
+                if (log.isDebugEnabled()) {
+                        log.debug("handleCouponAlertReply() - Clear sent for coupon alert reply");
+                }
+
+                return true;
+        }
 
 	@Override
 	protected void activateTenderMode() {
