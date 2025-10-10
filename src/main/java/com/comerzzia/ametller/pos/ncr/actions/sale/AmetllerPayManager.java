@@ -113,15 +113,24 @@ public class AmetllerPayManager extends PayManager {
 		ncrController.registerActionManager(DataNeededReply.class, this);
 	}
 
-	@Override
-	public void processMessage(BasicNCRMessage message) {
-		if (message instanceof DataNeededReply) {
-			DataNeededReply reply = (DataNeededReply) message;
-			if (handleDescuento25DataNeededReply(reply)) {
-				return;
-			}
-			if (!handleDataNeededReply(reply)) {
-				String t = StringUtils.trimToEmpty(reply.getFieldValue(DataNeededReply.Type));
+        @Override
+        public void processMessage(BasicNCRMessage message) {
+                if (message instanceof DataNeededReply) {
+                        DataNeededReply reply = (DataNeededReply) message;
+                        if (itemsManager instanceof AmetllerItemsManager) {
+                                AmetllerItemsManager ametllerItemsManager = (AmetllerItemsManager) itemsManager;
+                                if (ametllerItemsManager.handleCouponAlertReply(reply)) {
+                                        if (log.isDebugEnabled()) {
+                                                log.debug("processMessage() - Consumed coupon alert reply");
+                                        }
+                                        return;
+                                }
+                        }
+                        if (handleDescuento25DataNeededReply(reply)) {
+                                return;
+                        }
+                        if (!handleDataNeededReply(reply)) {
+                                String t = StringUtils.trimToEmpty(reply.getFieldValue(DataNeededReply.Type));
 				String i = StringUtils.trimToEmpty(reply.getFieldValue(DataNeededReply.Id));
 				if ("0".equals(t) && "0".equals(i))
 					return;
