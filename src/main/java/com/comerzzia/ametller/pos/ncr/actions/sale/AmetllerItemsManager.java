@@ -188,9 +188,9 @@ public class AmetllerItemsManager extends ItemsManager {
             DataNeeded alert = new DataNeeded();
             alert.setFieldValue(DataNeeded.Type, "1");
             alert.setFieldValue(DataNeeded.Id, "2");
-            alert.setFieldValue("Data.1", I18N.getTexto("Tu cupón se ha leído correctamente"));
-            alert.setFieldValue("TopCaption.1", I18N.getTexto("Cupón leído"));
-            alert.setFieldValue("Destination.1", "customer");
+            alert.setFieldValue(DataNeeded.Mode, "0");
+            alert.setFieldValue(DataNeeded.TopCaption1, I18N.getTexto("Cupón leído"));
+            alert.setFieldValue(DataNeeded.SummaryInstruction1, I18N.getTexto("Tu cupón se ha leído correctamente"));
 
             ncrController.sendMessage(alert);
         }

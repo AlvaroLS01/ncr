@@ -125,13 +125,13 @@ public class AmetllerPayManager extends PayManager {
                         }
                         if (!handleDataNeededReply(reply)) {
                                 String t = StringUtils.trimToEmpty(reply.getFieldValue(DataNeededReply.Type));
-				String i = StringUtils.trimToEmpty(reply.getFieldValue(DataNeededReply.Id));
-				if ("0".equals(t) && "0".equals(i))
-					return;
-				log.warn("processMessage() - DataNeededReply not managed by gift card flow");
-			}
-			return;
-		}
+                                String i = StringUtils.trimToEmpty(reply.getFieldValue(DataNeededReply.Id));
+                                if ("0".equals(t) && "0".equals(i))
+                                        return;
+                                log.warn("processMessage() - DataNeededReply not managed by gift card flow");
+                        }
+                        return;
+                }
                 super.processMessage(message);
         }
 
@@ -143,14 +143,19 @@ public class AmetllerPayManager extends PayManager {
                         return false;
                 }
 
+                if (log.isDebugEnabled()) {
+                        log.debug("handleCouponAlertReply() - Consuming coupon alert reply");
+                }
+
                 DataNeeded clear = new DataNeeded();
                 clear.setFieldValue(DataNeeded.Type, "0");
                 clear.setFieldValue(DataNeeded.Id, "0");
+                clear.setFieldValue(DataNeeded.Mode, "1");
 
                 ncrController.sendMessage(clear);
 
                 if (log.isDebugEnabled()) {
-                        log.debug("handleCouponAlertReply() - Clear sent for coupon alert reply");
+                        log.debug("handleCouponAlertReply() - Sent Clear 0/0 to close coupon alert");
                 }
 
                 return true;
