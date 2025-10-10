@@ -11,8 +11,9 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 import com.comerzzia.ametller.pos.ncr.ticket.AmetllerScoTicketManager;
+
 import com.comerzzia.pos.ncr.actions.sale.ItemsManager;
-import com.comerzzia.pos.ncr.messages.ItemException;
+import com.comerzzia.pos.ncr.messages.DataNeeded;
 import com.comerzzia.pos.ncr.messages.ItemSold;
 import com.comerzzia.pos.ncr.messages.VoidTransaction;
 import com.comerzzia.pos.services.ticket.TicketVentaAbono;
@@ -175,24 +176,25 @@ public class AmetllerItemsManager extends ItemsManager {
         }
     }
     
-	@Override
-	public boolean isCoupon(String code) {
-		boolean couponAlreadyApplied = globalDiscounts.containsKey(GLOBAL_DISCOUNT_COUPON_PREFIX + code);
+    @Override
+    public boolean isCoupon(String code) {
+        boolean couponAlreadyApplied = globalDiscounts.containsKey(GLOBAL_DISCOUNT_COUPON_PREFIX + code);
 
-		boolean handled = super.isCoupon(code);
+        boolean handled = super.isCoupon(code);
 
-		boolean couponApplied = globalDiscounts.containsKey(GLOBAL_DISCOUNT_COUPON_PREFIX + code);
+        boolean couponApplied = globalDiscounts.containsKey(GLOBAL_DISCOUNT_COUPON_PREFIX + code);
 
-		if (handled && couponApplied && !couponAlreadyApplied) {
-			ItemException itemException = new ItemException();
-			itemException.setFieldValue(ItemException.UPC, "");
-			itemException.setFieldValue(ItemException.ExceptionType, "0");
-			itemException.setFieldValue(ItemException.ExceptionId, "25");
-			itemException.setFieldValue(ItemException.Message, I18N.getTexto("Tu cupon ha sido leído correctamente"));
-			itemException.setFieldValue(ItemException.TopCaption, I18N.getTexto("Cupon leído"));
-			ncrController.sendMessage(itemException);
-		}
+        if (handled && couponApplied && !couponAlreadyApplied) {
+            DataNeeded alert = new DataNeeded();
+            alert.setFieldValue(DataNeeded.Type, "1");
+            alert.setFieldValue(DataNeeded.Id, "2");
+            alert.setFieldValue(DataNeeded.Mode, "0");
+            alert.setFieldValue(DataNeeded.TopCaption1, I18N.getTexto("Cupón leído"));
+            alert.setFieldValue(DataNeeded.SummaryInstruction1, I18N.getTexto("Tu cupón se ha leído correctamente"));
 
-		return handled;
-	}
+            ncrController.sendMessage(alert);
+        }
+
+        return handled;
+    }
 }

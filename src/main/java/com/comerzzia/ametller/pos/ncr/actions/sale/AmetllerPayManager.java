@@ -113,24 +113,53 @@ public class AmetllerPayManager extends PayManager {
 		ncrController.registerActionManager(DataNeededReply.class, this);
 	}
 
-	@Override
-	public void processMessage(BasicNCRMessage message) {
-		if (message instanceof DataNeededReply) {
-			DataNeededReply reply = (DataNeededReply) message;
-			if (handleDescuento25DataNeededReply(reply)) {
-				return;
-			}
-			if (!handleDataNeededReply(reply)) {
-				String t = StringUtils.trimToEmpty(reply.getFieldValue(DataNeededReply.Type));
-				String i = StringUtils.trimToEmpty(reply.getFieldValue(DataNeededReply.Id));
-				if ("0".equals(t) && "0".equals(i))
-					return;
-				log.warn("processMessage() - DataNeededReply not managed by gift card flow");
-			}
-			return;
-		}
-		super.processMessage(message);
-	}
+        @Override
+        public void processMessage(BasicNCRMessage message) {
+                if (message instanceof DataNeededReply) {
+                        DataNeededReply reply = (DataNeededReply) message;
+                        if (handleCouponAlertReply(reply)) {
+                                return;
+                        }
+                        if (handleDescuento25DataNeededReply(reply)) {
+                                return;
+                        }
+                        if (!handleDataNeededReply(reply)) {
+                                String t = StringUtils.trimToEmpty(reply.getFieldValue(DataNeededReply.Type));
+                                String i = StringUtils.trimToEmpty(reply.getFieldValue(DataNeededReply.Id));
+                                if ("0".equals(t) && "0".equals(i))
+                                        return;
+                                log.warn("processMessage() - DataNeededReply not managed by gift card flow");
+                        }
+                        return;
+                }
+                super.processMessage(message);
+        }
+
+        private boolean handleCouponAlertReply(DataNeededReply reply) {
+                String type = StringUtils.trimToEmpty(reply.getFieldValue(DataNeededReply.Type));
+                String id = StringUtils.trimToEmpty(reply.getFieldValue(DataNeededReply.Id));
+
+                if (!"1".equals(type) || !"2".equals(id)) {
+                        return false;
+                }
+
+                if (log.isDebugEnabled()) {
+                        log.debug("handleCouponAlertReply() - Consuming coupon alert reply");
+                }
+
+                DataNeeded clear = new DataNeeded();
+                clear.setFieldValue(DataNeeded.Type, "0");
+                clear.setFieldValue(DataNeeded.Id, "0");
+                clear.setFieldValue(DataNeeded.Mode, "1");
+
+                ncrController.sendMessage(clear);
+
+                if (log.isDebugEnabled()) {
+                        log.debug("handleCouponAlertReply() - Sent Clear 0/0 to close coupon alert");
+                }
+
+                return true;
+        }
 
 	@Override
 	protected void activateTenderMode() {
