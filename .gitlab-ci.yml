@@ -1,40 +1,41 @@
 stages:
   - build
+  - release
   
 image: maven:3.6-jdk-8-slim
 
 variables:
   GIT_SUBMODULE_STRATEGY: normal
-  MAVEN_OPTS: "-Djava.awt.headless=true -Dmaven.repo.local=.m2/repository -DbuildTimestamp=${CI_COMMIT_TIMESTAMP} -DbuildNumber=${CI_PIPELINE_ID} -DbuildCommit=${CI_COMMIT_SHA} -DbuildUser=${GITLAB_USER_LOGIN}"  
-  MAVEN_CLI_OPTS: "-s .m2/settings.xml --batch-mode --errors --fail-at-end --show-version flatten:flatten"
+  MAVEN_OPTS: "-Djava.awt.headless=true -Dmaven.repo.local=.m2/repository"  
+  MAVEN_CLI_OPTS: "-s .m2/settings.xml -DaltReleaseDeploymentRepository=comerzzia::default::http://artifactory.tier1.es/artifactory/comerzzia-releases.local -DaltSnapshotDeploymentRepository=comerzzia::default::http://artifactory.tier1.es/artifactory/comerzzia-snapshots.local --batch-mode --errors --fail-at-end --show-version -s .m2/settings.xml"
   
 cache:
   key: ${CI_COMMIT_REF_SLUG}
   paths:
   - .m2/repository
-
-# Build normal para ramas principales
+  
 build:maven:
   stage: build
-  only: 
-    - main
-    - branches
+  only:
+  - master
+  - /^support/.*$/
+  - /^release/.*$/
   script:
-    - mvn $MAVEN_CLI_OPTS package -DskipTests
+  - mvn $MAVEN_CLI_OPTS package -DskipTests
   artifacts:
     paths:
-      - target/*.jar
+    - comerzzia-ncr-pos-application/target/*.jar
     expire_in: 1 hour
 
-# Build cuando se crea un tag
-build:tag:
-  stage: build
+
+build_release:
+  stage: release
   only:
-    - tags
+  - tags
   script:
-    - echo "Compilando versión ${CI_COMMIT_TAG}"
-    - mvn $MAVEN_CLI_OPTS package -DskipTests -Drevision=${CI_COMMIT_TAG}
+  - mvn $MAVEN_CLI_OPTS versions:set -DnewVersion=$CI_COMMIT_TAG
+  - mvn $MAVEN_CLI_OPTS deploy -DskipTests
   artifacts:
     paths:
-      - target/*.jar
-    expire_in: 1 hour
+    - comerzzia-ncr-pos-application/target/*.jar
+    expire_in: 1 day
