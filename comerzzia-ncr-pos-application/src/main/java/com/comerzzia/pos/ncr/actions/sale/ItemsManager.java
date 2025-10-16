@@ -507,7 +507,15 @@ public class ItemsManager implements ActionManager {
 					  voidItem.setFieldValue(VoidItem.ItemNumber, currentItemSold.getDiscountApplied().getFieldValue(ItemSold.ItemNumber));
 					  ncrController.sendMessage(voidItem);
 				  } else if (!StringUtils.equals(newDiscount, "0")) {
-					  ncrController.sendMessage(newItemSold.getDiscountApplied());					  
+					  ItemSold updatedItemSold = newItemSold.getDiscountApplied();
+
+					  if (updatedItemSold != null) {
+					  	updatedItemSold.setFieldValue(ItemSold.RequiresSecurityBagging, "3");
+					  	log.debug("Added RequiresSecurityBagging=3 to ItemSold (update) for ItemNumber "
+					  				+ updatedItemSold.getFieldValue(ItemSold.ItemNumber));
+
+					  	ncrController.sendMessage(updatedItemSold);
+					  }
 				  }
 				  sendTotals();
 				  
