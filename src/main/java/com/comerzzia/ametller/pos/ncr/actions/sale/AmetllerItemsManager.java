@@ -1,6 +1,7 @@
 package com.comerzzia.ametller.pos.ncr.actions.sale;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -88,7 +89,9 @@ public class AmetllerItemsManager extends ItemsManager {
 					String discountDescription = discountApplied.getFieldValue(ItemSold.Description);
 
 					if (StringUtils.isNotBlank(discountDescription)) {
-						itemSold.setFieldValue(ItemSold.Description, discountDescription);
+						String descripcionFormateada = ajustarDecimalesDescripcion(discountDescription);
+						itemSold.setFieldValue(ItemSold.Description, descripcionFormateada);
+						discountApplied.setFieldValue(ItemSold.Description, descripcionFormateada);
 					}
 
 					discountApplied.setFieldIntValue(ItemSold.Price, BigDecimal.ZERO);
@@ -318,6 +321,46 @@ public class AmetllerItemsManager extends ItemsManager {
 		couponLine.setFieldIntValue(ItemSold.ExtendedPrice, BigDecimal.ZERO);
 		couponLine.setFieldValue(ItemSold.RequiresSecurityBagging, "5");
 		return couponLine;
+	}
+
+	private String ajustarDecimalesDescripcion(String descripcion) {
+		if (StringUtils.isBlank(descripcion)) {
+			return descripcion;
+		}
+
+		int inicioNumero = -1;
+		int finNumero = -1;
+
+		for (int i = descripcion.length() - 1; i >= 0; i--) {
+			char caracter = descripcion.charAt(i);
+			boolean esParteNumero = Character.isDigit(caracter) || caracter == ',' || caracter == '.' || caracter == '-';
+			if (esParteNumero) {
+				if (finNumero < 0) {
+					finNumero = i;
+				}
+				inicioNumero = i;
+			}
+			else if (finNumero >= 0) {
+				break;
+			}
+		}
+
+		if (finNumero < 0 || inicioNumero < 0) {
+			return descripcion;
+		}
+
+		String numeroOriginal = descripcion.substring(inicioNumero, finNumero + 1);
+		try {
+			BigDecimal redondeado = new BigDecimal(numeroOriginal.replace(',', '.')).setScale(2, RoundingMode.HALF_UP);
+			String numeroFormateado = redondeado.toPlainString();
+			if (numeroOriginal.indexOf(',') >= 0) {
+				numeroFormateado = numeroFormateado.replace('.', ',');
+			}
+			return descripcion.substring(0, inicioNumero) + numeroFormateado + descripcion.substring(finNumero + 1);
+		}
+		catch (NumberFormatException ex) {
+			return descripcion;
+		}
 	}
 
 	@Override

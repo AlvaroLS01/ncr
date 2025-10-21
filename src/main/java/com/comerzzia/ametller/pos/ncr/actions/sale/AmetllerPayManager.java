@@ -344,7 +344,7 @@ public class AmetllerPayManager extends PayManager {
 		DataNeeded w = new DataNeeded();
 		w.setFieldValue(DataNeeded.Type, WAIT_TYPE);
 		w.setFieldValue(DataNeeded.Id, WAIT_ID);
-		w.setFieldValue(DataNeeded.Mode, "0"); // show
+                w.setFieldValue(DataNeeded.Mode, "0"); // mostrar
 		if (StringUtils.isNotBlank(caption)) {
 			w.setFieldValue(DataNeeded.TopCaption1, caption);
 		}

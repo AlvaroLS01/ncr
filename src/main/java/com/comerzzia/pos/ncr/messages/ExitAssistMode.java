@@ -1,10 +1,10 @@
 package com.comerzzia.pos.ncr.messages;
 
 /**
- * Placeholder message used to acknowledge the NCR {@code ExitAssistMode}
- * command so the message factory can create an instance without throwing a
- * {@code Message class not found} error.
+ * Mensaje provisional utilizado para reconocer el comando {@code ExitAssistMode}
+ * de NCR y permitir que la factoría de mensajes cree una instancia sin lanzar
+ * un error {@code Message class not found}.
  */
 public class ExitAssistMode extends BasicNCRMessage {
-    // no fields required
+    // no se necesitan campos
 }
