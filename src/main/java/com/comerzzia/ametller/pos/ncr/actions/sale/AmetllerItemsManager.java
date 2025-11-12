@@ -323,6 +323,7 @@ public class AmetllerItemsManager extends ItemsManager {
 		return couponLine;
 	}
 
+	// Añadimos un formateo adicional en la descripcion para controlar los decimales
 	private String ajustarDecimalesDescripcion(String descripcion) {
 		if (StringUtils.isBlank(descripcion)) {
 			return descripcion;
