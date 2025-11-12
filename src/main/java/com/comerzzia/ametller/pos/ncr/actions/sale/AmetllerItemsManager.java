@@ -47,6 +47,7 @@ public class AmetllerItemsManager extends ItemsManager {
 	@Override
 	protected ItemSold lineaTicketToItemSold(LineaTicket linea) {
 		ItemSold itemSold = super.lineaTicketToItemSold(linea);
+                String originalDescription = itemSold != null ? itemSold.getFieldValue(ItemSold.Description) : null;
 
 		if (linea != null && itemSold != null && ticketManager instanceof AmetllerScoTicketManager) {
 			AmetllerScoTicketManager ametllerScoTicketManager = (AmetllerScoTicketManager) ticketManager;
@@ -59,6 +60,9 @@ public class AmetllerItemsManager extends ItemsManager {
 
 					if (BigDecimalUtil.isMayorACero(ahorro)) {
 						itemSold.setDiscount(importeConDto, ahorro, DESCUENTO_25_DESCRIPTION);
+						if (StringUtils.isNotBlank(originalDescription) && !StringUtils.contains(originalDescription, DESCUENTO_25_DESCRIPTION)) {
+							itemSold.setFieldValue(ItemSold.Description, originalDescription + " - " + DESCUENTO_25_DESCRIPTION);
+						}
 					}
 					else {
 						ametllerScoTicketManager.removeDescuento25(linea.getIdLinea());
