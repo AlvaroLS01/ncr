@@ -392,32 +392,38 @@ public class AmetllerItemsManager extends ItemsManager {
                         descripcion.append(StringUtils.trim(descripcionOriginal));
                 }
 
-                if (StringUtils.isNotBlank(descripcionDescuento)) {
+                String descripcionFinalDescuento = null;
+
+                if (BigDecimalUtil.isMayorACero(importeDescuento)) {
+                        descripcionFinalDescuento = DESCUENTO_25_DESCRIPTION + " -" + formatDiscountAmount(importeDescuento);
+                }
+                else if (StringUtils.isNotBlank(descripcionDescuento)) {
+                        descripcionFinalDescuento = limpiarDescripcionDescuento(descripcionDescuento);
+                }
+
+                if (StringUtils.isNotBlank(descripcionFinalDescuento)) {
                         if (descripcion.length() > 0) {
                                 descripcion.append(" - ");
                         }
-                        descripcion.append(StringUtils.trim(descripcionDescuento));
-                }
-
-                String importeFormateado = formatearImporteDescuento(importeDescuento);
-
-                if (StringUtils.isNotBlank(importeFormateado) && (StringUtils.isBlank(descripcionDescuento)
-                                || !StringUtils.contains(descripcionDescuento, importeFormateado))) {
-                        if (descripcion.length() > 0) {
-                                descripcion.append(' ');
-                        }
-                        descripcion.append(importeFormateado);
+                        descripcion.append(descripcionFinalDescuento);
                 }
 
                 return descripcion.toString();
         }
 
-        private String formatearImporteDescuento(BigDecimal importeDescuento) {
-                if (!BigDecimalUtil.isMayorACero(importeDescuento)) {
-                        return null;
+        private String limpiarDescripcionDescuento(String descripcionDescuento) {
+                String descripcionRecortada = StringUtils.trim(descripcionDescuento);
+
+                if (StringUtils.isBlank(descripcionRecortada)) {
+                        return descripcionRecortada;
                 }
 
-                return "-" + formatDiscountAmount(importeDescuento);
+                int saltoLinea = descripcionRecortada.lastIndexOf('\n');
+                if (saltoLinea >= 0 && saltoLinea < descripcionRecortada.length() - 1) {
+                        descripcionRecortada = descripcionRecortada.substring(saltoLinea + 1);
+                }
+
+                return StringUtils.trim(descripcionRecortada);
         }
 
         private String buildDiscountDescription(BigDecimal ahorro) {
