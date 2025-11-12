@@ -334,7 +334,7 @@ public class AmetllerItemsManager extends ItemsManager {
 
 	private String buildDiscountDescription(BigDecimal ahorro) {
 		String importeFormateado = formatDiscountAmount(ahorro);
-		return DESCUENTO_25_DESCRIPTION + " (-" + importeFormateado + ")";
+		return DESCUENTO_25_DESCRIPTION + " -" + importeFormateado;
 	}
 
 	private String formatDiscountAmount(BigDecimal amount) {
@@ -343,7 +343,7 @@ public class AmetllerItemsManager extends ItemsManager {
 		symbols.setDecimalSeparator(',');
 		symbols.setGroupingSeparator('.');
 		DecimalFormat formatter = new DecimalFormat("#,##0.00", symbols);
-		return formatter.format(value) + " €";
+		return formatter.format(value);
 	}
 
 	// Añadimos un formateo adicional en la descripcion para controlar los decimales
