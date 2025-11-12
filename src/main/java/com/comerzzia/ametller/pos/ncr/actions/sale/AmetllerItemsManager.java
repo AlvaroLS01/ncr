@@ -2,9 +2,12 @@ package com.comerzzia.ametller.pos.ncr.actions.sale;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -36,6 +39,7 @@ import com.comerzzia.pos.services.cupones.CuponAplicationException;
 public class AmetllerItemsManager extends ItemsManager {
 
 	private static final String DESCUENTO_25_DESCRIPTION = "Descuento del 25% aplicado";
+	private static final Locale DESCUENTO_LOCALE = new Locale("es", "ES");
 
 	@Autowired
 	@Lazy
@@ -51,18 +55,19 @@ public class AmetllerItemsManager extends ItemsManager {
 
 		if (linea != null && itemSold != null && ticketManager instanceof AmetllerScoTicketManager) {
 			AmetllerScoTicketManager ametllerScoTicketManager = (AmetllerScoTicketManager) ticketManager;
-			if (ametllerScoTicketManager.hasDescuento25Aplicado(linea)) {
-				BigDecimal importeSinDto = linea.getImporteTotalSinDto();
-				BigDecimal importeConDto = linea.getImporteTotalConDto();
+                        if (ametllerScoTicketManager.hasDescuento25Aplicado(linea)) {
+                                BigDecimal importeSinDto = linea.getImporteTotalSinDto();
+                                BigDecimal importeConDto = linea.getImporteTotalConDto();
 
-				if (importeSinDto != null && importeConDto != null) {
-					BigDecimal ahorro = importeSinDto.subtract(importeConDto);
+                                if (importeSinDto != null && importeConDto != null) {
+                                        BigDecimal ahorro = importeSinDto.subtract(importeConDto);
 
-					if (BigDecimalUtil.isMayorACero(ahorro)) {
-						itemSold.setDiscount(importeConDto, ahorro, DESCUENTO_25_DESCRIPTION);
-						if (StringUtils.isNotBlank(originalDescription) && !StringUtils.contains(originalDescription, DESCUENTO_25_DESCRIPTION)) {
-							itemSold.setFieldValue(ItemSold.Description, originalDescription + " - " + DESCUENTO_25_DESCRIPTION);
-						}
+                                        if (BigDecimalUtil.isMayorACero(ahorro)) {
+                                                String descripcionDescuento = buildDiscountDescription(ahorro);
+                                                itemSold.setDiscount(importeConDto, ahorro, descripcionDescuento);
+                                                if (StringUtils.isNotBlank(originalDescription) && !StringUtils.contains(originalDescription, DESCUENTO_25_DESCRIPTION)) {
+                                                        itemSold.setFieldValue(ItemSold.Description, originalDescription + " - " + descripcionDescuento);
+                                                }
 					}
 					else {
 						ametllerScoTicketManager.removeDescuento25(linea.getIdLinea());
@@ -325,6 +330,20 @@ public class AmetllerItemsManager extends ItemsManager {
 		couponLine.setFieldIntValue(ItemSold.ExtendedPrice, BigDecimal.ZERO);
 		couponLine.setFieldValue(ItemSold.RequiresSecurityBagging, "5");
 		return couponLine;
+	}
+
+	private String buildDiscountDescription(BigDecimal ahorro) {
+		String importeFormateado = formatDiscountAmount(ahorro);
+		return DESCUENTO_25_DESCRIPTION + " (-" + importeFormateado + ")";
+	}
+
+	private String formatDiscountAmount(BigDecimal amount) {
+		BigDecimal value = amount != null ? amount.setScale(2, RoundingMode.HALF_UP) : BigDecimal.ZERO.setScale(2);
+		DecimalFormatSymbols symbols = new DecimalFormatSymbols(DESCUENTO_LOCALE);
+		symbols.setDecimalSeparator(',');
+		symbols.setGroupingSeparator('.');
+		DecimalFormat formatter = new DecimalFormat("#,##0.00", symbols);
+		return formatter.format(value) + " €";
 	}
 
 	// Añadimos un formateo adicional en la descripcion para controlar los decimales
