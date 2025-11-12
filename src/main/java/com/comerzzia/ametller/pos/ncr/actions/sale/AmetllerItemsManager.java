@@ -51,6 +51,8 @@ public class AmetllerItemsManager extends ItemsManager {
 	protected ItemSold lineaTicketToItemSold(LineaTicket linea) {
 		ItemSold itemSold = super.lineaTicketToItemSold(linea);
 
+		String descripcionOriginal = itemSold != null ? itemSold.getFieldValue(ItemSold.Description) : null;
+
 		if (linea != null && itemSold != null && ticketManager instanceof AmetllerScoTicketManager) {
 			AmetllerScoTicketManager ametllerScoTicketManager = (AmetllerScoTicketManager) ticketManager;
 			if (ametllerScoTicketManager.hasDescuento25Aplicado(linea)) {
@@ -93,8 +95,10 @@ public class AmetllerItemsManager extends ItemsManager {
 
 					if (StringUtils.isNotBlank(discountDescription)) {
 						String descripcionFormateada = ajustarDecimalesDescripcion(discountDescription);
-						itemSold.setFieldValue(ItemSold.Description, descripcionFormateada);
-						discountApplied.setFieldValue(ItemSold.Description, descripcionFormateada);
+						String descripcionConDescuento = construirDescripcionConDescuento(
+							descripcionOriginal, descripcionFormateada, importePromociones);
+						itemSold.setFieldValue(ItemSold.Description, descripcionConDescuento);
+						discountApplied.setFieldValue(ItemSold.Description, descripcionConDescuento);
 					}
 
 					discountApplied.setFieldIntValue(ItemSold.Price, BigDecimal.ZERO);
@@ -369,6 +373,42 @@ public class AmetllerItemsManager extends ItemsManager {
 		couponLine.setFieldIntValue(ItemSold.ExtendedPrice, BigDecimal.ZERO);
 		couponLine.setFieldValue(ItemSold.RequiresSecurityBagging, "5");
 		return couponLine;
+	}
+
+	private String construirDescripcionConDescuento(String descripcionOriginal, String descripcionDescuento,
+			BigDecimal importeDescuento) {
+		StringBuilder descripcion = new StringBuilder();
+
+		if (StringUtils.isNotBlank(descripcionOriginal)) {
+			descripcion.append(StringUtils.trim(descripcionOriginal));
+		}
+
+		if (StringUtils.isNotBlank(descripcionDescuento)) {
+			if (descripcion.length() > 0) {
+				descripcion.append(" - ");
+			}
+			descripcion.append(StringUtils.trim(descripcionDescuento));
+		}
+
+		String importeFormateado = formatearImporteDescuento(importeDescuento);
+
+		if (StringUtils.isNotBlank(importeFormateado)) {
+			if (descripcion.length() > 0) {
+				descripcion.append(' ');
+			}
+			descripcion.append(importeFormateado);
+		}
+
+		return descripcion.toString();
+	}
+
+	private String formatearImporteDescuento(BigDecimal importeDescuento) {
+		if (!BigDecimalUtil.isMayorACero(importeDescuento)) {
+			return null;
+		}
+
+		BigDecimal valor = importeDescuento.setScale(2, RoundingMode.HALF_UP);
+		return "-" + valor.toPlainString().replace('.', ',');
 	}
 
 	// Añadimos un formateo adicional en la descripcion para controlar los decimales
