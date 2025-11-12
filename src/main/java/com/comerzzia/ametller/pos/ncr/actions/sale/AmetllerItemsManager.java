@@ -9,6 +9,11 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import com.comerzzia.pos.ncr.messages.*;
+import com.comerzzia.pos.persistence.articulos.tarifas.TarifaDetalleBean;
+import com.comerzzia.pos.services.articulos.tarifas.ArticulosTarifaService;
+import com.comerzzia.pos.services.core.sesion.Sesion;
+import com.comerzzia.pos.util.config.SpringContext;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.DependsOn;
@@ -18,11 +23,6 @@ import org.springframework.stereotype.Service;
 
 import com.comerzzia.ametller.pos.ncr.ticket.AmetllerScoTicketManager;
 import com.comerzzia.pos.ncr.actions.sale.ItemsManager;
-import com.comerzzia.pos.ncr.messages.Coupon;
-import com.comerzzia.pos.ncr.messages.CouponException;
-import com.comerzzia.pos.ncr.messages.ItemSold;
-import com.comerzzia.pos.ncr.messages.VoidTransaction;
-import com.comerzzia.pos.ncr.messages.VoidItem;
 import com.comerzzia.pos.services.ticket.TicketVentaAbono;
 import com.comerzzia.pos.services.ticket.lineas.LineaTicket;
 import com.comerzzia.pos.util.bigdecimal.BigDecimalUtil;
@@ -40,6 +40,9 @@ public class AmetllerItemsManager extends ItemsManager {
 	@Autowired
 	@Lazy
 	private AmetllerPayManager ametllerPayManager;
+
+    @Autowired
+    protected Sesion sesion;
 
 	private boolean skipExistingLineRefresh;
 	private Integer lastAddedLineId;
@@ -102,6 +105,51 @@ public class AmetllerItemsManager extends ItemsManager {
 
 		return itemSold;
 	}
+
+    @Override
+    public void evaluateItemType(Item message) {
+        String codigo = message.getFieldValue("UPC");
+        if(codigo.length() == 13  && codigo.startsWith("21")) {
+            log.info("***** Codi original:" + codigo);
+            // Extraiem els valors que necessitem del codi de barres que comença per 21
+            String sCodart = codigo.substring(2,7);
+            String sImport = codigo.substring(7,12);
+            BigDecimal preu = (new BigDecimal(sImport)).divide(new BigDecimal(100));
+            try {
+                // Obtenim quantitat a partir del preu i la tarifa
+                ArticulosTarifaService servTarifes = SpringContext.getBean(ArticulosTarifaService.class);
+                TarifaDetalleBean tarifaArticle = servTarifes.consultarArticuloTarifa(String.valueOf(Integer.parseInt(sCodart)), sesion.getAplicacion().getTienda().getCodAlmacen());
+                BigDecimal quantitat = (preu).divide(tarifaArticle.getPrecioTotal(), 3, RoundingMode.HALF_UP);
+                // Formatem els valors finals
+                sCodart = String.format("%06d", Integer.parseInt(sCodart));
+
+                String sQuantitat = String.format("%05d", new BigDecimal(quantitat.setScale(3, RoundingMode.HALF_UP).toPlainString().replace(".", "")).intValue());
+                String sPreuVenda = String.format("%05d", new BigDecimal(new BigDecimal(String.valueOf(tarifaArticle.getPrecioTotal())).setScale(2, RoundingMode.HALF_UP).toPlainString().replace(".", "")).intValue());
+
+                // Formem codi de barres que comença per 23
+                // Com que el digit de control no el té en compte Comerzzia amb els codis de
+                // barra especials, concatenem un 0 i no el calculem.
+                codigo = "23"+sCodart+sQuantitat+sPreuVenda+sImport+"0";
+                log.info("***** Codi transformat:" + codigo);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        message.setFieldValue("UPC", codigo);
+
+
+        if (this.isLoyaltyCard(codigo)) {
+            return;
+        }
+        if (this.isCoupon(codigo)) {
+            return;
+        }
+        if (this.isEspecialBarcode(message)) {
+            return;
+        }
+        this.newItemMessage(message);
+    }
 
 	@Override
 	protected void sendItemSold(final ItemSold itemSold) {
